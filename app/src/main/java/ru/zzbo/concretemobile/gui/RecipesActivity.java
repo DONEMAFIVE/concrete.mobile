@@ -1,6 +1,6 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.Constants.editedRecepie;
+import static ru.zzbo.concretemobile.utils.Constants.editedRecipe;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
 
@@ -31,37 +31,33 @@ import ru.zzbo.concretemobile.adapters.RecipeAdapter;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.catalogs.EditRecipeActivity;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 
 public class RecipesActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
-    ExtendedFloatingActionButton createRecipeBtn, downloadFromPcBtn;
-    List<Recepie> recipes = new ArrayList<>();
-    ProgressBar loadRecipeToPLC;
-    DrawerLayout blockTouchLayout;
-    ConstraintLayout recipesNotFound;
-    RecipeAdapter adapter;
+    private RecyclerView recyclerView;
+    private ExtendedFloatingActionButton createRecipeBtn, downloadFromPcBtn;
+    private List<Recipe> recipes = new ArrayList<>();
+    private ProgressBar loadRecipeToPLC;
+    private DrawerLayout blockTouchLayout;
+    private ConstraintLayout recipesNotFound;
+    private RecipeAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
 
-        init();
+        initFieldUI();
         initData();
-        actions();
-
-        //TODO: По результатам полученным из БД,
-        //TODO: проверяем наличие рецептов. Если нет, то показываем изображение с сообщением
-
+        initActions();
     }
 
-    private void actions() {
+    private void initActions() {
         // определяем слушателя нажатия элемента FAB
         createRecipeBtn.setOnClickListener(e -> {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-            editedRecepie = new Recepie(
+            editedRecipe = new Recipe(
                     0,
                     sdf.format(new Date()),
                     "",
@@ -125,8 +121,8 @@ public class RecipesActivity extends AppCompatActivity {
             builder.setMessage("Вы действительно хотите удалить рецепт?");
             builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
             builder.setPositiveButton("Да", (dialog, id) -> {
-                editedRecepie = recipes.get(position);
-                new DBUtilDelete(getApplicationContext()).deleteRecepie(editedRecepie.getId());
+                editedRecipe = recipes.get(position);
+                new DBUtilDelete(getApplicationContext()).deleteRecepie(editedRecipe.getId());
                 Toast.makeText(getApplicationContext(), "Рецепт удален!", Toast.LENGTH_LONG).show();
             });
             AlertDialog alertDialog = builder.create();
@@ -135,7 +131,7 @@ public class RecipesActivity extends AppCompatActivity {
 
         // Редактирование рецепта
         RecipeAdapter.EditRecipeClickListener editRecipeClickListener = (recipe, position) -> {
-            editedRecepie = recipes.get(position);
+            editedRecipe = recipes.get(position);
             Toast.makeText(getApplicationContext(), recipe.getMark(), Toast.LENGTH_SHORT).show();
             finish();
             Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
@@ -159,6 +155,7 @@ public class RecipesActivity extends AppCompatActivity {
                     loadRecipeToPLC.incrementProgressBy(2);
                 }
             };
+
             new Thread(() -> {
                 try {
                     while (loadRecipeToPLC.getProgress() <= loadRecipeToPLC.getMax()) {
@@ -175,7 +172,6 @@ public class RecipesActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }).start();
-
         };
 
         // создаем адаптер
@@ -185,7 +181,7 @@ public class RecipesActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void init() {
+    private void initFieldUI() {
         recyclerView = findViewById(R.id.recyclerView);
         createRecipeBtn = findViewById(R.id.createBtn);
         downloadFromPcBtn = findViewById(R.id.loadBtn);
@@ -203,16 +199,6 @@ public class RecipesActivity extends AppCompatActivity {
         new Thread(() -> {
             recipes.clear();
             recipes.addAll(new DBUtilGet(this).getRecepies());
-
-//            if (exchangeLevel == 1) {
-//                try {
-//                    Gson gson = new Gson();
-//                    String query = OkHttpUtil.sendGet("192.168.250.59", "catalog?param=recipe");
-//                    recipes.addAll(gson.fromJson(query, new TypeToken<List<Recepie>>() {}.getType()));
-//                } catch (Exception exc) {
-//                    exc.printStackTrace();
-//                }
-//            }
 
             if (recipes.size() == 0) recipesNotFound.setVisibility(View.VISIBLE);
             else recipesNotFound.setVisibility(View.GONE);

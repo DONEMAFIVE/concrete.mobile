@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -19,7 +20,7 @@ import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class CementFragment extends PreferenceFragmentCompat {
 
@@ -36,6 +37,8 @@ public class CementFragment extends PreferenceFragmentCompat {
         EditTextPreference delayDischargeDc = findPreference("delay_discharge_dc");
         SwitchPreferenceCompat permissionStartVibroDc = findPreference("permission_start_vibro");
         Preference saveBtn = findPreference("saveBtn");
+
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         new Thread(() -> {
             try {
@@ -62,7 +65,6 @@ public class CementFragment extends PreferenceFragmentCompat {
 
                     if (answer.get(16).getIntValueIf() == 1) permissionStartVibroDc.setChecked(true);
 
-                    Toast.makeText(getContext(), "ДЦ - Загружено", Toast.LENGTH_SHORT).show();
                 });
 
             } catch (NullPointerException ex) {
@@ -75,6 +77,9 @@ public class CementFragment extends PreferenceFragmentCompat {
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
+
                     new CommandDispatcher(tagListManual.get(106)).writeSingleRegisterWithValue(autoResetDc.isChecked());
 
                     float delayDropDC = Float.parseFloat(delayDischargeDc.getText());
@@ -125,6 +130,8 @@ public class CementFragment extends PreferenceFragmentCompat {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                findPreference("saveCategory").setVisible(true);
             }).start();
             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "silosCounter", cementCount.getText());
             Toast.makeText(getContext(), "ДЦ - Сохранено", Toast.LENGTH_SHORT).show();

@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -20,6 +21,7 @@ import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class MixerFragment extends PreferenceFragmentCompat {
 
@@ -48,6 +50,8 @@ public class MixerFragment extends PreferenceFragmentCompat {
         EditTextPreference timePauseOpenMiddleShiber = findPreference("time_pause_open_middle_shiber"); //Время паузы
 
         Preference saveBtn = findPreference("saveBtn");
+
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         new Thread(() -> {
             try {
@@ -90,7 +94,6 @@ public class MixerFragment extends PreferenceFragmentCompat {
                     current = answer.get(104).getDIntValueIf();
                     timePauseOpenMiddleShiber.setText(String.valueOf(current / 1000));
 
-                    Toast.makeText(getContext(), "Смеситель - Загружено", Toast.LENGTH_SHORT).show();
                 });
             } catch (Exception ex3) {
                 ex3.printStackTrace();
@@ -100,6 +103,8 @@ public class MixerFragment extends PreferenceFragmentCompat {
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
                     //Импульсная разгрузка смесителя
                     new CommandDispatcher(tagListMain.get(135)).writeSingleRegisterWithValue(impulseDischarge.isChecked());
 
@@ -186,7 +191,11 @@ public class MixerFragment extends PreferenceFragmentCompat {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                } finally {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    findPreference("saveCategory").setVisible(true);
                 }
+
             }).start();
             Toast.makeText(getContext(), "Смеситель - Сохранено", Toast.LENGTH_SHORT).show();
             return true;

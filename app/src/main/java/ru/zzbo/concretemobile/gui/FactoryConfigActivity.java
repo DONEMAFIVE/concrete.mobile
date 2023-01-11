@@ -7,8 +7,6 @@ import static ru.zzbo.concretemobile.utils.Constants.tagListMain;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -27,15 +25,12 @@ import ru.zzbo.concretemobile.protocol.profinet.collectors.DynamicTagBuilder;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.BlockMultiple;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.Constants;
-
 
 public class FactoryConfigActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
-    private TabLayout tabLayout;
+    private TabLayout settingTabMenu;
     private FragmentAdditionalOptionsAdapter adapter;
     private FloatingActionButton nextBtn;
-
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -43,23 +38,25 @@ public class FactoryConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factory_config);
 
-        new Thread(()->initAnswer()).start();
-
         tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");
         tagListManual = new DBTags(getApplicationContext()).getTags("tags_manual");
         tagListOptions = new DBTags(getApplicationContext()).getTags("tags_options");
 
         viewPager2 = findViewById(R.id.view_pager);
-        tabLayout = findViewById(R.id.tabLayout);
+        settingTabMenu = findViewById(R.id.tabLayout);
         nextBtn = findViewById(R.id.nextBtn);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new FragmentAdditionalOptionsAdapter(fragmentManager, getLifecycle());
         viewPager2.setAdapter(adapter);
 
+        initActions();
+    }
+
+    private void initActions() {
         nextBtn.setOnClickListener(e -> super.onBackPressed());
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        settingTabMenu.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager2.setCurrentItem(tab.getPosition());
@@ -79,27 +76,9 @@ public class FactoryConfigActivity extends AppCompatActivity {
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
+                settingTabMenu.selectTab(settingTabMenu.getTabAt(position));
             }
         });
-
-    }
-
-    public void initAnswer() {
-        CommandDispatcher commandDispatcher = new CommandDispatcher();
-
-        List<Tag> getTagListAdditionalOptions = new DBTags(this).getTags("tags_additional_options");
-        DynamicTagBuilder dynamicTagCollector = new DynamicTagBuilder(getTagListAdditionalOptions);
-        dynamicTagCollector.buildSortedTags();
-
-        List<BlockMultiple> tagIntAnswer = dynamicTagCollector.getTagIntAnswer();
-        List<BlockMultiple> tagDIntAnswer = dynamicTagCollector.getTagDIntAnswer();
-        List<BlockMultiple> tagRealAnswer = dynamicTagCollector.getTagRealAnswer();
-
-        answer = new ArrayList<>();
-        answer.addAll(commandDispatcher.readMultipleIntRegister(tagIntAnswer, getTagListAdditionalOptions));
-        answer.addAll(commandDispatcher.readMultipleDIntRegister(tagDIntAnswer, getTagListAdditionalOptions));
-        answer.addAll(commandDispatcher.readMultipleRealRegister(tagRealAnswer, getTagListAdditionalOptions));
     }
 
     @Override

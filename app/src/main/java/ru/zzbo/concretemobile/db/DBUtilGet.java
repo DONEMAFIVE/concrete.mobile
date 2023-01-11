@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import static ru.zzbo.concretemobile.db.DBConstants.*;
 
 import java.io.File;
@@ -18,13 +19,12 @@ import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Parameter;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.models.Users;
 
 public class DBUtilGet {
 
-    //private Context context;
     private DBInitializer dbInitializer;
     private SQLiteDatabase sqLiteDatabase;
 
@@ -32,11 +32,11 @@ public class DBUtilGet {
         dbInitializer = new DBInitializer(context);
     }
 
-    public void openDbConfig(){
+    public void openDbConfig() {
         sqLiteDatabase = dbInitializer.getWritableDatabase();
     }
 
-    public void closeSession(){
+    public void closeSession() {
         dbInitializer.close();
         sqLiteDatabase.close();
     }
@@ -48,7 +48,7 @@ public class DBUtilGet {
 
     //GETTERS
     @SuppressLint("Range")
-    public Current getCurrent(){
+    public Current getCurrent() {
         openDbConfig();
         try {
             Current result = null;
@@ -61,13 +61,13 @@ public class DBUtilGet {
             }
             cursor.close();
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
 
     @SuppressLint("Range")
-    public List<Parameter> getFromParameterTable(String table){
+    public List<Parameter> getFromParameterTable(String table) {
         openDbConfig();
         try {
             List<Parameter> result = new ArrayList<>();
@@ -86,7 +86,7 @@ public class DBUtilGet {
     }
 
     @SuppressLint("Range")
-    public List<Users> getUsers(){
+    public List<Users> getUsers() {
         openDbConfig();
         try {
             List<Users> result = new ArrayList<>();
@@ -108,12 +108,12 @@ public class DBUtilGet {
     }
 
     @SuppressLint("Range")
-    public List<Mix> getMixList(){
+    public List<Mix> getMixList() {
         openDbConfig();
-        try{
+        try {
             List<Mix> result = new ArrayList<>();
-            Cursor cursor = sqLiteDatabase.query("mixes",null,null,null,null,null,null);
-            while (cursor.moveToNext()){
+            Cursor cursor = sqLiteDatabase.query("mixes", null, null, null, null, null, null);
+            while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 String nameOrder = cursor.getString(cursor.getColumnIndex("nameOrder"));
                 int numberOrder = cursor.getInt(cursor.getColumnIndex("numberOrder"));
@@ -186,7 +186,7 @@ public class DBUtilGet {
                 ));
             }
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
@@ -194,7 +194,7 @@ public class DBUtilGet {
     @SuppressLint("Range")
     public List<Order> getOrdersByRangeDate(List<String> dates, boolean filter) {
         openDbConfig();
-        try{
+        try {
             List<Order> result = new ArrayList<>();
             int orderState = 0;
             if (filter) orderState = 1;
@@ -272,7 +272,7 @@ public class DBUtilGet {
                 }
             }
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
@@ -280,7 +280,7 @@ public class DBUtilGet {
     @SuppressLint("Range")
     public List<Order> getOrders() {
         openDbConfig();
-        try{
+        try {
             List<Order> result = new ArrayList<>();
             Cursor cursor = sqLiteDatabase.query("orders", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
@@ -365,7 +365,7 @@ public class DBUtilGet {
             List<Mix> result = new ArrayList<>();
             Cursor cursor = sqLiteDatabase.query("mixes", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
-                if (cursor.getString(cursor.getColumnIndex("date")).equals(date)){
+                if (cursor.getString(cursor.getColumnIndex("date")).equals(date)) {
                     result.add(new Mix(
                             cursor.getInt(cursor.getColumnIndex("id")),
                             cursor.getString(cursor.getColumnIndex("nameOrder")),
@@ -411,136 +411,83 @@ public class DBUtilGet {
     }
 
     @SuppressLint("Range")
-    public List<Mix> getMixesByRangeDate(List<String> dates) {
+    public List<Recipe> getRecepies() {
         openDbConfig();
         try {
-            List<Mix> result = new ArrayList<>();
-            for (int i = 0; i < dates.size(); i++) {
-                Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM mixes WHERE date = '" + dates.get(i) + "'", null);
-                while (cursor.moveToNext()) {
-                    result.add(new Mix(
-                            cursor.getInt(cursor.getColumnIndex("id")),
-                            cursor.getString(cursor.getColumnIndex("nameOrder")),
-                            cursor.getInt(cursor.getColumnIndex("numberOrder")),
-                            cursor.getString(cursor.getColumnIndex("date")),
-                            cursor.getString(cursor.getColumnIndex("time")),
-                            cursor.getString(cursor.getColumnIndex("uploadAddress")),
-                            cursor.getFloat(cursor.getColumnIndex("amountConcrete")),
-                            cursor.getString(cursor.getColumnIndex("paymentOption")),
-                            cursor.getString(cursor.getColumnIndex("operator")),
-                            cursor.getString(cursor.getColumnIndex("organization")),
-                            cursor.getInt(cursor.getColumnIndex("organizationID")),
-                            cursor.getString(cursor.getColumnIndex("transporter")),
-                            cursor.getInt(cursor.getColumnIndex("transporterID")),
-                            cursor.getString(cursor.getColumnIndex("recepie")),
-                            cursor.getInt(cursor.getColumnIndex("recepieID")),
-                            cursor.getInt(cursor.getColumnIndex("mixCounter")),
-                            cursor.getFloat(cursor.getColumnIndex("completeCapacity")),
-                            cursor.getFloat(cursor.getColumnIndex("totalCapacity")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker11")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker12")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker21")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker22")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker31")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker32")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker41")),
-                            cursor.getFloat(cursor.getColumnIndex("bunker42")),
-                            cursor.getFloat(cursor.getColumnIndex("silos1")),
-                            cursor.getFloat(cursor.getColumnIndex("silos2")),
-                            cursor.getFloat(cursor.getColumnIndex("water1")),
-                            cursor.getFloat(cursor.getColumnIndex("water2")),
-                            cursor.getFloat(cursor.getColumnIndex("dwpl")),
-                            cursor.getFloat(cursor.getColumnIndex("chemy1")),
-                            cursor.getFloat(cursor.getColumnIndex("chemy2")),
-                            cursor.getString(cursor.getColumnIndex("loadingTime"))
-                    ));
-                }
-            }
-            return result;
-        } finally {
-            closeSession();
-        }
-    }
-
-
-    @SuppressLint("Range")
-    public List<Recepie> getRecepies(){
-        openDbConfig();
-        try {
-            List<Recepie> result = new ArrayList<>();
-            Cursor cursor = sqLiteDatabase.query("recepies",null,null,null,null,null,null);
+            List<Recipe> result = new ArrayList<>();
+            Cursor cursor = sqLiteDatabase.query("recepies", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
-                result.add(new Recepie(
-                    cursor.getInt(cursor.getColumnIndex("id")),
-                    cursor.getString(cursor.getColumnIndex("date")),
-                    cursor.getString(cursor.getColumnIndex("time")),
-                    cursor.getString(cursor.getColumnIndex("name")),
-                    cursor.getString(cursor.getColumnIndex("mark")),
-                    cursor.getString(cursor.getColumnIndex("classPie")),
-                    cursor.getString(cursor.getColumnIndex("description")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie11")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie12")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie21")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie22")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie31")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie32")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie41")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerRecepie42")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage11")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage12")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage21")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage22")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage31")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage32")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage41")),
-                    cursor.getFloat(cursor.getColumnIndex("bunckerShortage42")),
-                    cursor.getFloat(cursor.getColumnIndex("chemyRecepie1")),
-                    cursor.getFloat(cursor.getColumnIndex("chemyShortage1")),
-                    cursor.getFloat(cursor.getColumnIndex("chemyShortage2")),
-                    cursor.getFloat(cursor.getColumnIndex("water1Recepie")),
-                    cursor.getFloat(cursor.getColumnIndex("water2Recepie")),
-                    cursor.getFloat(cursor.getColumnIndex("water1Shortage")),
-                    cursor.getFloat(cursor.getColumnIndex("water2Shortage")),
-                    cursor.getFloat(cursor.getColumnIndex("silosRecepie1")),
-                    cursor.getFloat(cursor.getColumnIndex("silosRecepie2")),
-                    cursor.getFloat(cursor.getColumnIndex("silosShortage1")),
-                    cursor.getFloat(cursor.getColumnIndex("silosShortage2")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity11")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity12")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity21")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity22")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity31")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity32")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity41")),
-                    cursor.getFloat(cursor.getColumnIndex("humidity42")),
-                    cursor.getString(cursor.getColumnIndex("uniNumber")),
-                    cursor.getInt(cursor.getColumnIndex("timeMix")),
-                    cursor.getFloat(cursor.getColumnIndex("chemy2Recepie")),
-                    cursor.getFloat(cursor.getColumnIndex("chemy3Recepie")),
-                    cursor.getFloat(cursor.getColumnIndex("chemy2Shortage")),
-                    cursor.getFloat(cursor.getColumnIndex("chemy3Shortage")),
-                    cursor.getInt(cursor.getColumnIndex("pathToHumidity")),
-                    cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")))
+                result.add(new Recipe(
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("date")),
+                        cursor.getString(cursor.getColumnIndex("time")),
+                        cursor.getString(cursor.getColumnIndex("name")),
+                        cursor.getString(cursor.getColumnIndex("mark")),
+                        cursor.getString(cursor.getColumnIndex("classPie")),
+                        cursor.getString(cursor.getColumnIndex("description")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie11")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie12")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie21")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie22")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie31")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie32")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie41")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerRecepie42")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage11")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage12")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage21")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage22")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage31")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage32")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage41")),
+                        cursor.getFloat(cursor.getColumnIndex("bunckerShortage42")),
+                        cursor.getFloat(cursor.getColumnIndex("chemyRecepie1")),
+                        cursor.getFloat(cursor.getColumnIndex("chemyShortage1")),
+                        cursor.getFloat(cursor.getColumnIndex("chemyShortage2")),
+                        cursor.getFloat(cursor.getColumnIndex("water1Recepie")),
+                        cursor.getFloat(cursor.getColumnIndex("water2Recepie")),
+                        cursor.getFloat(cursor.getColumnIndex("water1Shortage")),
+                        cursor.getFloat(cursor.getColumnIndex("water2Shortage")),
+                        cursor.getFloat(cursor.getColumnIndex("silosRecepie1")),
+                        cursor.getFloat(cursor.getColumnIndex("silosRecepie2")),
+                        cursor.getFloat(cursor.getColumnIndex("silosShortage1")),
+                        cursor.getFloat(cursor.getColumnIndex("silosShortage2")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity11")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity12")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity21")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity22")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity31")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity32")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity41")),
+                        cursor.getFloat(cursor.getColumnIndex("humidity42")),
+                        cursor.getString(cursor.getColumnIndex("uniNumber")),
+                        cursor.getInt(cursor.getColumnIndex("timeMix")),
+                        cursor.getFloat(cursor.getColumnIndex("chemy2Recepie")),
+                        cursor.getFloat(cursor.getColumnIndex("chemy3Recepie")),
+                        cursor.getFloat(cursor.getColumnIndex("chemy2Shortage")),
+                        cursor.getFloat(cursor.getColumnIndex("chemy3Shortage")),
+                        cursor.getInt(cursor.getColumnIndex("pathToHumidity")),
+                        cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")))
                 );
             }
             if (result.isEmpty()) {
-                result.add(new Recepie(-1,"","","","","","",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"",0,0,0,0,0,0,0));
+                result.add(new Recipe(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0));
             }
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
 
     @SuppressLint("Range")
-    public Recepie getRecepieForID(int searchID){
+    public Recipe getRecepieForID(int searchID) {
         openDbConfig();
         try {
-            Cursor cursor = sqLiteDatabase.query("recepies",null,null,null,null,null,null);
+            Cursor cursor = sqLiteDatabase.query("recepies", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 if (id == searchID) {
-                    return new Recepie(
+                    return new Recipe(
                             id,
                             cursor.getString(cursor.getColumnIndex("date")),
                             cursor.getString(cursor.getColumnIndex("time")),
@@ -594,14 +541,14 @@ public class DBUtilGet {
                     );
                 } else continue;
             }
-        }finally {
+        } finally {
             closeSession();
         }
-        return new Recepie(-1,"","","","","","",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,"",0,0,0,0,0,0,0);
+        return new Recipe(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0);
     }
 
     @SuppressLint("Range")
-    public List<Organization> getOrgs(){
+    public List<Organization> getOrgs() {
         openDbConfig();
         try {
             List<Organization> result = new ArrayList<>();
@@ -624,7 +571,7 @@ public class DBUtilGet {
                 );
             }
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
@@ -651,7 +598,7 @@ public class DBUtilGet {
                 );
             }
             return result;
-        }finally {
+        } finally {
             closeSession();
         }
     }
@@ -662,16 +609,16 @@ public class DBUtilGet {
         try {
             Set<String> recipes = new HashSet<>();
             for (int i = 0; i < dates.size(); i++) {
-                Cursor cursor = sqLiteDatabase.rawQuery("SELECT DISTINCT recepie FROM mixes WHERE date = '"+dates.get(i)+"'", null);
+                Cursor cursor = sqLiteDatabase.rawQuery("SELECT DISTINCT recepie FROM mixes WHERE date = '" + dates.get(i) + "'", null);
                 cursor.moveToFirst();
-                while(cursor.isAfterLast() == false) {
+                while (cursor.isAfterLast() == false) {
                     recipes.add(cursor.getString(cursor.getColumnIndex("recepie")));
                     cursor.moveToNext();
                 }
             }
 
             return recipes;
-        }finally {
+        } finally {
             closeSession();
         }
     }
@@ -680,7 +627,7 @@ public class DBUtilGet {
     public Order getOrderForID(int searchID) {
         openDbConfig();
         try {
-            Cursor cursor = sqLiteDatabase.query("orders",null,null,null,null,null,null);
+            Cursor cursor = sqLiteDatabase.query("orders", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 if (id == searchID) {

@@ -46,15 +46,19 @@ public class OrganizationActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.organization_activity);
-        initialUI();
-        initialFieldsUI();
-        startListeners();
+
+        initUI();
+        initFieldsUI();
+        initActions();
     }
 
-    private void startListeners() {
+    private void initActions() {
         personaChecker.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "При активации опции Физическое лицо заполняется только поле - Название организации", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),
+                    "При активации опции Физическое лицо заполняется только поле - Название организации",
+                    Toast.LENGTH_SHORT).show();
         });
+
         saveBtn.setOnClickListener(view -> {
             Organization org;
             int persona = 0;
@@ -90,13 +94,15 @@ public class OrganizationActivity extends AppCompatActivity {
                             String.valueOf(contactNameField.getText()),
                             String.valueOf(contactPhoneField.getText())
                     );
-                    new Thread(()->{
+                    new Thread(() -> {
                         if (exchangeLevel == 1) {
                             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                            if (editedOrganization.getId() != 0) OkHttpUtil.updOrganization(gson.toJson(org));
+                            if (editedOrganization.getId() != 0)
+                                OkHttpUtil.updOrganization(gson.toJson(org));
                             else OkHttpUtil.newOrganization(gson.toJson(org));
-                        }else {
-                            if (editedOrganization.getId() != 0) new DBUtilUpdate(getApplicationContext()).updateOrganization(org);
+                        } else {
+                            if (editedOrganization.getId() != 0)
+                                new DBUtilUpdate(getApplicationContext()).updateOrganization(org);
                             else new DBUtilInsert(getApplicationContext()).insertIntoOrgs(org);
                         }
                     }).start();
@@ -136,23 +142,25 @@ public class OrganizationActivity extends AppCompatActivity {
 
         });
         delBtn.setOnClickListener(view -> {
-            new Thread(()->{
+            new Thread(() -> {
                 if (exchangeLevel == 1) {
                     OkHttpUtil.delOrganization(editedOrganization.getId());
-                }else {
+                } else {
                     new DBUtilDelete(getApplicationContext()).deleteOrg(editedOrganization.getId());
                 }
             }).start();
 
             super.onBackPressed();
-            Toast.makeText(getApplicationContext(), "Организация " + editedOrganization.getOrganizationName() + " удалена", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),
+                    "Организация " + editedOrganization.getOrganizationName() + " удалена",
+                    Toast.LENGTH_SHORT).show();
         });
         closeBtn.setOnClickListener(view -> {
             super.onBackPressed();
         });
     }
 
-    private void initialUI() {
+    private void initUI() {
         organizationIDField = findViewById(R.id.organizationIDField);
         personaChecker = findViewById(R.id.personaChecker);
         dateCreateField = findViewById(R.id.typeOrganizationField);
@@ -175,7 +183,7 @@ public class OrganizationActivity extends AppCompatActivity {
 
     }
 
-    private void initialFieldsUI() {
+    private void initFieldsUI() {
         organizationIDField.setText(String.valueOf(editedOrganization.getId()));
         headNameField.setText(String.valueOf(editedOrganization.getOrganizationHeadName()));
         orgNameField.setText(String.valueOf(editedOrganization.getOrganizationName()));

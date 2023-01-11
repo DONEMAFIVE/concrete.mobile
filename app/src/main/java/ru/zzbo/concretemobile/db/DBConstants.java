@@ -28,6 +28,4 @@ public class DBConstants {
     public static String COLUMN_NAME_USERS_PASSWORD = "password";
     public static String COLUMN_NAME_USERS_ACCESSLEVEL = "accessLevel";
 
-    //таблица mixes
-
 }

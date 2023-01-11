@@ -37,11 +37,17 @@
             app:showSeekBarValue="true" />
     </PreferenceCategory>
 
-    <PreferenceCategory>
+    <PreferenceCategory
+        app:key="saveCategory">
         <Preference
             app:icon="@android:drawable/ic_menu_save"
             app:key="saveBtn"
             app:title="Записать в PLC" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_key_loading">
+        <Preference android:widgetLayout="@layout/preference_loading_placeholder" />
     </PreferenceCategory>
 
 

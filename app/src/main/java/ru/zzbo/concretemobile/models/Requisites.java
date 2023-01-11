@@ -16,7 +16,7 @@ public class Requisites {
     private String loadAddress;         //место погрузки
     private String dispatcherName;      //ФИО диспетчера
 
-    public Requisites(int id,String organizationType, String organizationName, String inn, String address, String headName, String phone, String fax, String site, String email, String comment, String loadAddress, String dispatcherName) {
+    public Requisites(int id, String organizationType, String organizationName, String inn, String address, String headName, String phone, String fax, String site, String email, String comment, String loadAddress, String dispatcherName) {
         this.id = id;
         this.organizationType = organizationType;
         this.organizationName = organizationName;

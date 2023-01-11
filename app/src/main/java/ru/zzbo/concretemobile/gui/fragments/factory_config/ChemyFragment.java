@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -19,6 +20,7 @@ import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class ChemyFragment extends PreferenceFragmentCompat {
 
@@ -33,6 +35,8 @@ public class ChemyFragment extends PreferenceFragmentCompat {
         EditTextPreference delayOnPumpDischarge = findPreference("delay_on_pump_discharge");
         EditTextPreference delayOffValveDischarge = findPreference("delay_off_valve_discharge");
         Preference saveBtn = findPreference("saveBtn");
+
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         new Thread(() -> {
             try {
@@ -55,7 +59,6 @@ public class ChemyFragment extends PreferenceFragmentCompat {
                     current = answer.get(83).getDIntValueIf();
                     delayOffValveDischarge.setText(String.valueOf(current / 1000));
 
-                    Toast.makeText(getContext(), "ДХ - Загружено", Toast.LENGTH_SHORT).show();
                 });
 
             } catch (NullPointerException ex) {
@@ -68,6 +71,8 @@ public class ChemyFragment extends PreferenceFragmentCompat {
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
                     new CommandDispatcher(tagListManual.get(105)).writeSingleRegisterWithValue(autoResetDch.isChecked());
 
                     //Кол-во химии на дозатор
@@ -107,6 +112,8 @@ public class ChemyFragment extends PreferenceFragmentCompat {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                findPreference("saveCategory").setVisible(true);
             }).start();
             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "chemyCounter", chemyCount.getText());
             Toast.makeText(getContext(), "ДХ - Сохранено", Toast.LENGTH_SHORT).show();

@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBInitializer extends SQLiteOpenHelper {
 
-    public DBInitializer(Context context){
+    public DBInitializer(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

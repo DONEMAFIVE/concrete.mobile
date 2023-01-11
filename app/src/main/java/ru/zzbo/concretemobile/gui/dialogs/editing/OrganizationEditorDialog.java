@@ -12,10 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.catalogs.OrganizationActivity;
 import ru.zzbo.concretemobile.models.Organization;
 
@@ -34,7 +32,7 @@ public class OrganizationEditorDialog extends DialogFragment {
         showList[0] = "Создать новую организацию";
 
         int i = 1;
-        for (Organization org : organizationList){
+        for (Organization org : organizationList) {
             showList[i] = org.getId() + ":" + org.getOrganizationHeadName();
             i++;
         }
@@ -67,7 +65,6 @@ public class OrganizationEditorDialog extends DialogFragment {
                         Intent intent = new Intent(getActivity().getApplicationContext(), OrganizationActivity.class);
                         startActivity(intent);
                     }
-                })
-                .create();
+                }).create();
     }
 }

@@ -11,32 +11,30 @@ import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.models.Transporter;
 
 public class DBUtilInsert {
 
-    private Context context;
     private DBInitializer dbInitializer;
     private SQLiteDatabase sqLiteDatabase;
 
     public DBUtilInsert(Context context) {
-        this.context = context;
         dbInitializer = new DBInitializer(context);
     }
 
-    public void openDbConfig(){
+    public void openDbConfig() {
         sqLiteDatabase = dbInitializer.getWritableDatabase();
     }
 
-    public void closeSession(){
+    public void closeSession() {
         dbInitializer.close();
         sqLiteDatabase.close();
     }
 
-    public void insertIntoTrans(Transporter trans){
+    public void insertIntoTrans(Transporter trans) {
         openDbConfig();
-        try{
+        try {
             ContentValues cv = new ContentValues();
 
             cv.put("regNumberAuto", trans.getRegNumberAuto());
@@ -48,16 +46,15 @@ public class DBUtilInsert {
             cv.put("phone", trans.getPhone());
             cv.put("address", trans.getAddress());
             cv.put("comment", trans.getComment());
-            sqLiteDatabase.insert("transporters", null,cv);
-
-        }finally {
+            sqLiteDatabase.insert("transporters", null, cv);
+        } finally {
             closeSession();
         }
     }
 
-    public void insertIntoOrgs(Organization org){
+    public void insertIntoOrgs(Organization org) {
         openDbConfig();
-        try{
+        try {
             ContentValues cv = new ContentValues();
 
             cv.put("name", org.getOrganizationName());
@@ -71,72 +68,69 @@ public class DBUtilInsert {
             cv.put("comment", org.getComment());
             cv.put("contactName", org.getContactName());
             cv.put("contactPhone", org.getContactPhone());
-            sqLiteDatabase.insert("organizations", null,cv);
-
-        }finally {
+            sqLiteDatabase.insert("organizations", null, cv);
+        } finally {
             closeSession();
         }
     }
 
-    public void insertIntoRecepie(Recepie recepie){
-
+    public void insertIntoRecepie(Recipe recipe) {
         openDbConfig();
 
-        try{
+        try {
             ContentValues cv = new ContentValues();
-            cv.put("date", recepie.getDate());
-            cv.put("time", recepie.getTime());
-            cv.put("name", recepie.getName());
-            cv.put("mark", recepie.getMark());
-            cv.put("classPie", recepie.getClassPie());
-            cv.put("description", recepie.getDescription());
-            cv.put("bunckerRecepie11", recepie.getBunckerRecepie11());
-            cv.put("bunckerRecepie12", recepie.getBunckerRecepie12());
-            cv.put("bunckerRecepie21", recepie.getBunckerRecepie21());
-            cv.put("bunckerRecepie22", recepie.getBunckerRecepie22());
-            cv.put("bunckerRecepie31", recepie.getBunckerRecepie31());
-            cv.put("bunckerRecepie32", recepie.getBunckerRecepie32());
-            cv.put("bunckerRecepie41", recepie.getBunckerRecepie41());
-            cv.put("bunckerRecepie42", recepie.getBunckerRecepie42());
-            cv.put("bunckerShortage11", recepie.getBunckerShortage11());
-            cv.put("bunckerShortage12", recepie.getBunckerShortage12());
-            cv.put("bunckerShortage21", recepie.getBunckerShortage21());
-            cv.put("bunckerShortage22", recepie.getBunckerShortage22());
-            cv.put("bunckerShortage31", recepie.getBunckerShortage31());
-            cv.put("bunckerShortage32", recepie.getBunckerShortage32());
-            cv.put("bunckerShortage41", recepie.getBunckerShortage41());
-            cv.put("bunckerShortage42", recepie.getBunckerShortage42());
-            cv.put("chemyRecepie1", recepie.getChemyRecepie1());
-            cv.put("chemyShortage1", recepie.getChemyShortage1());
-            cv.put("chemyShortage2", recepie.getChemyShortage2());
-            cv.put("water1Recepie", recepie.getWater1Recepie());
-            cv.put("water2Recepie", recepie.getWater2Recepie());
-            cv.put("water1Shortage", recepie.getWater1Shortage());
-            cv.put("water2Shortage", recepie.getWater2Shortage());
-            cv.put("silosRecepie1", recepie.getSilosRecepie1());
-            cv.put("silosRecepie2", recepie.getSilosRecepie2());
-            cv.put("silosShortage1", recepie.getSilosShortage1());
-            cv.put("silosShortage2", recepie.getSilosShortage2());
-            cv.put("humidity11", recepie.getHumidity11());
-            cv.put("humidity12", recepie.getHumidity12());
-            cv.put("humidity21", recepie.getHumidity21());
-            cv.put("humidity22", recepie.getHumidity22());
-            cv.put("humidity31", recepie.getHumidity31());
-            cv.put("humidity32", recepie.getHumidity32());
-            cv.put("humidity41", recepie.getHumidity41());
-            cv.put("humidity42", recepie.getHumidity42());
-            cv.put("uniNumber", recepie.getUniNumber());
-            cv.put("timeMix", recepie.getTimeMix());
-            cv.put("chemy2Recepie", recepie.getChemy2Recepie());
-            cv.put("chemy3Recepie", recepie.getChemy3Recepie());
-            cv.put("chemy2Shortage", recepie.getChemy2Shortage());
-            cv.put("chemy3Shortage", recepie.getChemy3Shortage());
-            cv.put("pathToHumidity", recepie.getPathToHumidity());
-            cv.put("preDosingWaterPercent", recepie.getPreDosingWaterPercent());
+            cv.put("date", recipe.getDate());
+            cv.put("time", recipe.getTime());
+            cv.put("name", recipe.getName());
+            cv.put("mark", recipe.getMark());
+            cv.put("classPie", recipe.getClassPie());
+            cv.put("description", recipe.getDescription());
+            cv.put("bunckerRecepie11", recipe.getBunckerRecepie11());
+            cv.put("bunckerRecepie12", recipe.getBunckerRecepie12());
+            cv.put("bunckerRecepie21", recipe.getBunckerRecepie21());
+            cv.put("bunckerRecepie22", recipe.getBunckerRecepie22());
+            cv.put("bunckerRecepie31", recipe.getBunckerRecepie31());
+            cv.put("bunckerRecepie32", recipe.getBunckerRecepie32());
+            cv.put("bunckerRecepie41", recipe.getBunckerRecepie41());
+            cv.put("bunckerRecepie42", recipe.getBunckerRecepie42());
+            cv.put("bunckerShortage11", recipe.getBunckerShortage11());
+            cv.put("bunckerShortage12", recipe.getBunckerShortage12());
+            cv.put("bunckerShortage21", recipe.getBunckerShortage21());
+            cv.put("bunckerShortage22", recipe.getBunckerShortage22());
+            cv.put("bunckerShortage31", recipe.getBunckerShortage31());
+            cv.put("bunckerShortage32", recipe.getBunckerShortage32());
+            cv.put("bunckerShortage41", recipe.getBunckerShortage41());
+            cv.put("bunckerShortage42", recipe.getBunckerShortage42());
+            cv.put("chemyRecepie1", recipe.getChemyRecepie1());
+            cv.put("chemyShortage1", recipe.getChemyShortage1());
+            cv.put("chemyShortage2", recipe.getChemyShortage2());
+            cv.put("water1Recepie", recipe.getWater1Recepie());
+            cv.put("water2Recepie", recipe.getWater2Recepie());
+            cv.put("water1Shortage", recipe.getWater1Shortage());
+            cv.put("water2Shortage", recipe.getWater2Shortage());
+            cv.put("silosRecepie1", recipe.getSilosRecepie1());
+            cv.put("silosRecepie2", recipe.getSilosRecepie2());
+            cv.put("silosShortage1", recipe.getSilosShortage1());
+            cv.put("silosShortage2", recipe.getSilosShortage2());
+            cv.put("humidity11", recipe.getHumidity11());
+            cv.put("humidity12", recipe.getHumidity12());
+            cv.put("humidity21", recipe.getHumidity21());
+            cv.put("humidity22", recipe.getHumidity22());
+            cv.put("humidity31", recipe.getHumidity31());
+            cv.put("humidity32", recipe.getHumidity32());
+            cv.put("humidity41", recipe.getHumidity41());
+            cv.put("humidity42", recipe.getHumidity42());
+            cv.put("uniNumber", recipe.getUniNumber());
+            cv.put("timeMix", recipe.getTimeMix());
+            cv.put("chemy2Recepie", recipe.getChemy2Recepie());
+            cv.put("chemy3Recepie", recipe.getChemy3Recepie());
+            cv.put("chemy2Shortage", recipe.getChemy2Shortage());
+            cv.put("chemy3Shortage", recipe.getChemy3Shortage());
+            cv.put("pathToHumidity", recipe.getPathToHumidity());
+            cv.put("preDosingWaterPercent", recipe.getPreDosingWaterPercent());
 
-            sqLiteDatabase.insert("recepies", null,cv);
-
-        }finally {
+            sqLiteDatabase.insert("recepies", null, cv);
+        } finally {
             closeSession();
         }
     }
@@ -154,8 +148,8 @@ public class DBUtilInsert {
             cv.put("organizationID", order.getOrganizationID());
             cv.put("transporter", order.getTransporter());
             cv.put("transporterID", order.getTransporterID());
-            cv.put("recepie", order.getRecepie());
-            cv.put("recepieID", order.getRecepieID());
+            cv.put("recepie", order.getRecipe());
+            cv.put("recepieID", order.getRecipeID());
             cv.put("totalCapacity", order.getTotalCapacity());
             cv.put("maxMixCapacity", order.getMaxMixCapacity());
             cv.put("totalMixCounter", order.getTotalMixCounter());
@@ -211,8 +205,7 @@ public class DBUtilInsert {
             cv.put("operator", order.getOperator());
             cv.put("comment", order.getComment());
 
-            sqLiteDatabase.insert("orders", null,cv);
-
+            sqLiteDatabase.insert("orders", null, cv);
         } finally {
             closeSession();
         }
@@ -220,9 +213,10 @@ public class DBUtilInsert {
 
     //вставка новой записи в таблицу mixes
     @SuppressLint("Range")
-    public void insertIntoMix(Mix mix){
+    public void insertIntoMix(Mix mix) {
         openDbConfig();
-        try{
+
+        try {
             //todo: добавить проверку на пустую таблицу
             Mix lastMix;
             String sqlStr = "SELECT * FROM mixes ORDER BY id DESC LIMIT 1";
@@ -266,19 +260,19 @@ public class DBUtilInsert {
                     cursor.getString(cursor.getColumnIndex("loadingTime"))
             );
 
-            if (    (lastMix.getBuncker11() == mix.getBuncker11()) &&
+            if ((lastMix.getBuncker11() == mix.getBuncker11()) &&
                     (lastMix.getBuncker21() == mix.getBuncker21()) &&
                     (lastMix.getBuncker31() == mix.getBuncker31()) &&
                     (lastMix.getBuncker41() == mix.getBuncker31()) &&
                     (lastMix.getWater1() == mix.getWater1()) &&
                     (lastMix.getSilos1() == mix.getSilos1()) &&
                     (lastMix.getChemy1() == mix.getChemy1())
-                ) {
-                    Log.e(null, ">Find duplicate! Data shall not recording");
-                    return;
-                }
+            ) {
+                Log.e(null, ">Find duplicate! Data shall not recording");
+                return;
+            }
 
-            if (    (lastMix.getBuncker11() == mix.getBuncker11()) &&
+            if ((lastMix.getBuncker11() == mix.getBuncker11()) &&
                     (lastMix.getBuncker21() == mix.getBuncker21()) &&
                     (lastMix.getBuncker31() == mix.getBuncker31()) &&
                     (lastMix.getBuncker41() == mix.getBuncker31()) &&
@@ -300,42 +294,42 @@ public class DBUtilInsert {
 
             //вставка
             ContentValues cv = new ContentValues();
-            cv.put("nameOrder",mix.getNameOrder());
-            cv.put("numberOrder",mix.getNumberOrder());
-            cv.put("date",mix.getDate());
-            cv.put("time",mix.getTime());
-            cv.put("organization",mix.getOrganization());
-            cv.put("organizationID",mix.getOrganizationID());
-            cv.put("transporter",mix.getTransporter());
-            cv.put("transporterID",mix.getTransporterID());
-            cv.put("recepie",mix.getRecepie());
-            cv.put("recepieID",mix.getRecepieID());
-            cv.put("mixCounter",mix.getMixCounter());
-            cv.put("completeCapacity",mix.getCompleteCapacity());
-            cv.put("totalCapacity",mix.getTotalCapacity());
-            cv.put("silos1",mix.getSilos1());
-            cv.put("silos2",mix.getSilos2());
-            cv.put("bunker11",mix.getBuncker11());
-            cv.put("bunker12",mix.getBuncker12());
-            cv.put("bunker21",mix.getBuncker21());
-            cv.put("bunker22",mix.getBuncker22());
-            cv.put("bunker31",mix.getBuncker31());
-            cv.put("bunker32",mix.getBuncker32());
-            cv.put("bunker41",mix.getBuncker41());
-            cv.put("bunker42",mix.getBuncker42());
-            cv.put("water1",mix.getWater1());
-            cv.put("water2",mix.getWater2());
-            cv.put("dwpl",mix.getDwpl());
-            cv.put("chemy1",mix.getChemy1());
-            cv.put("chemy2",mix.getChemy2());
-            cv.put("uploadAddress",mix.getUploadAddress());
-            cv.put("amountConcrete",mix.getAmountConcrete());
-            cv.put("paymentOption",mix.getPaymentOption());
-            cv.put("operator",mix.getOperator());
-            cv.put("loadingTime",mix.getLoadingTime());
-            sqLiteDatabase.insert("mixes", null,cv);
+            cv.put("nameOrder", mix.getNameOrder());
+            cv.put("numberOrder", mix.getNumberOrder());
+            cv.put("date", mix.getDate());
+            cv.put("time", mix.getTime());
+            cv.put("organization", mix.getOrganization());
+            cv.put("organizationID", mix.getOrganizationID());
+            cv.put("transporter", mix.getTransporter());
+            cv.put("transporterID", mix.getTransporterID());
+            cv.put("recepie", mix.getRecipe());
+            cv.put("recepieID", mix.getRecipeID());
+            cv.put("mixCounter", mix.getMixCounter());
+            cv.put("completeCapacity", mix.getCompleteCapacity());
+            cv.put("totalCapacity", mix.getTotalCapacity());
+            cv.put("silos1", mix.getSilos1());
+            cv.put("silos2", mix.getSilos2());
+            cv.put("bunker11", mix.getBuncker11());
+            cv.put("bunker12", mix.getBuncker12());
+            cv.put("bunker21", mix.getBuncker21());
+            cv.put("bunker22", mix.getBuncker22());
+            cv.put("bunker31", mix.getBuncker31());
+            cv.put("bunker32", mix.getBuncker32());
+            cv.put("bunker41", mix.getBuncker41());
+            cv.put("bunker42", mix.getBuncker42());
+            cv.put("water1", mix.getWater1());
+            cv.put("water2", mix.getWater2());
+            cv.put("dwpl", mix.getDwpl());
+            cv.put("chemy1", mix.getChemy1());
+            cv.put("chemy2", mix.getChemy2());
+            cv.put("uploadAddress", mix.getUploadAddress());
+            cv.put("amountConcrete", mix.getAmountConcrete());
+            cv.put("paymentOption", mix.getPaymentOption());
+            cv.put("operator", mix.getOperator());
+            cv.put("loadingTime", mix.getLoadingTime());
 
-        }finally {
+            sqLiteDatabase.insert("mixes", null, cv);
+        } finally {
             closeSession();
         }
     }

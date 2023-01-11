@@ -19,7 +19,7 @@ public class TransporterListDialog extends DialogFragment {
 
     private List<Transporter> transporterList;
 
-    public TransporterListDialog(List<Transporter> transporterList){
+    public TransporterListDialog(List<Transporter> transporterList) {
         this.transporterList = transporterList;
     }
 
@@ -35,10 +35,9 @@ public class TransporterListDialog extends DialogFragment {
             i++;
         }
 
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder
                 .setTitle("Выберите перевозчика")
-
                 .setItems(transNames, (dialog, which) -> {
                     Toast.makeText(getActivity(),
                             "Выбранный водитель: " + transNames[which],

@@ -1,8 +1,5 @@
 package ru.zzbo.concretemobile.gui.fragments.reports;
 
-import static ru.zzbo.concretemobile.utils.Constants.configList;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,10 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import ru.zzbo.concretemobile.R;
-import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Configs;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.DatesGenerate;
@@ -79,7 +73,7 @@ public class ReportForTotalFragment extends Fragment {
                 if (!req.trim().equals("Empty")) {
                     report = new Gson().fromJson(req, new TypeToken<List<Mix>>() {
                     }.getType());
-                    for (Mix mix : report) recipes.add(mix.getRecepie());
+                    for (Mix mix : report) recipes.add(mix.getRecipe());
                     Set<String> set = new HashSet<>(recipes);
                     recipes.clear();
                     recipes.addAll(set);
@@ -116,7 +110,7 @@ public class ReportForTotalFragment extends Fragment {
                 for (int r = 0; r < recipes.size(); r++) {
                     for (int d = 0; d < mixes.size(); d++) {
                         if (mixes.get(d).getDate().equals(dates.get(j))) {
-                            if (mixes.get(d).getRecepie().equals(recipes.get(r))) {
+                            if (mixes.get(d).getRecipe().equals(recipes.get(r))) {
                                 sum += mixes.get(d).getCompleteCapacity();
                             }
                         }
@@ -163,7 +157,7 @@ public class ReportForTotalFragment extends Fragment {
 
                             for (int m = 0; m < mixes.size(); m++) {
                                 if (mixes.get(m).getDate().equals(dates.get(d))) {
-                                    if (mixes.get(m).getRecepie().equals(recipes.get(j))) {
+                                    if (mixes.get(m).getRecipe().equals(recipes.get(j))) {
                                         sum += mixes.get(m).getCompleteCapacity();
                                     }
                                 }

@@ -11,10 +11,10 @@ import android.os.Looper;
 import android.text.InputType;
 import android.widget.Toast;
 
-import androidx.preference.CheckBoxPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreference;
@@ -25,6 +25,7 @@ import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class DKFragment extends PreferenceFragmentCompat {
 
@@ -48,8 +49,9 @@ public class DKFragment extends PreferenceFragmentCompat {
         SwitchPreference hopper2 = findPreference("hopper2");
         SwitchPreference hopper3 = findPreference("hopper3");
         SwitchPreference hopper4 = findPreference("hopper4");
-
         Preference saveBtn = findPreference("saveBtn");
+
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         //Установка формата ввода "NUMBER"
         dkCount.setOnBindEditTextListener(e -> e.setInputType(InputType.TYPE_CLASS_NUMBER));
@@ -62,6 +64,7 @@ public class DKFragment extends PreferenceFragmentCompat {
         timeBeltOperDk.setOnBindEditTextListener(e -> e.setInputType(InputType.TYPE_CLASS_NUMBER));
         timeBeltPauseDk.setOnBindEditTextListener(e -> e.setInputType(InputType.TYPE_CLASS_NUMBER));
 
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
         //TODO Прочитать из PLC
         new Thread(() -> {
                 new Handler(Looper.getMainLooper()).post(() -> {
@@ -97,7 +100,6 @@ public class DKFragment extends PreferenceFragmentCompat {
                         if (answer.get(2).getIntValueIf() == 1) hopper3.setChecked(true);
                         if (answer.get(3).getIntValueIf() == 1) hopper4.setChecked(true);
 
-                        Toast.makeText(getContext(), "ДК - Загружено", Toast.LENGTH_SHORT).show();
                     } catch (NullPointerException ex) {
                         Toast.makeText(getContext(), "ДК - Ошибка загрузки", Toast.LENGTH_SHORT).show();
                     }
@@ -108,6 +110,9 @@ public class DKFragment extends PreferenceFragmentCompat {
             //TODO собрать и записать в PLC
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
+
                     new CommandDispatcher(tagListManual.get(103)).writeSingleRegisterWithValue(autoZeroDk.isChecked());
 
                     //Тип транспортера инертных
@@ -186,7 +191,6 @@ public class DKFragment extends PreferenceFragmentCompat {
                     tag.setDIntValueIf((long) timeDischargeDK);
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
-
                     //Разделение бункеров
                     tag = tagListOptions.get(6);
                     new CommandDispatcher(tag).writeSingleRegisterWithValue(hopper1.isChecked());
@@ -201,6 +205,9 @@ public class DKFragment extends PreferenceFragmentCompat {
                     new CommandDispatcher(tag).writeSingleRegisterWithValue(hopper4.isChecked());
 
                     new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(getContext(), "ДК - Сохранено", Toast.LENGTH_SHORT).show());
+
+                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    findPreference("saveCategory").setVisible(true);
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -218,6 +225,8 @@ public class DKFragment extends PreferenceFragmentCompat {
             prefEditor.putBoolean("hopper3", hopper3.isChecked());
             prefEditor.putBoolean("hopper4", hopper4.isChecked());
             prefEditor.apply();
+
+
             return true;
         });
 

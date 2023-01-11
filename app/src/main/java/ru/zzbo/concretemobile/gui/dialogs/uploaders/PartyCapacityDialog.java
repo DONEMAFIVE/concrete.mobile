@@ -33,11 +33,13 @@ public class PartyCapacityDialog extends DialogFragment {
                 .setTitle("Укажите параметры партии")
                 .setView(partyCapacity)
                 .setPositiveButton("Принять", (dialogInterface, i) -> {
-                    new Thread(()-> {
+
+                    new Thread(() -> {
                         tagListManual = new DBTags(getContext()).getTags("tags_manual");
                         try {
                             float totalWeightParty = Float.valueOf(partyCapacity.getText().toString());
-                            if (exchangeLevel == 1){
+
+                            if (exchangeLevel == 1) {
                                 new CommandDispatcher(64).writeValue(String.valueOf(totalWeightParty));
                             } else {
                                 Tag weightPartyTag = Constants.tagListManual.get(64);
@@ -51,11 +53,13 @@ public class PartyCapacityDialog extends DialogFragment {
                                 Thread.sleep(100);
                                 new CommandDispatcher(Constants.tagListManual.get(82)).writeSingleRegisterWithValue(false);
                             }
-                        } catch (Exception e) {e.printStackTrace();}
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }).start();
 
-
-                    Toast.makeText(getActivity(), "Партия: " + partyCapacity.getText(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Партия: " + partyCapacity.getText(), Toast.LENGTH_LONG).show();
                 })
                 .setNegativeButton("Отмена", null)
                 .create();

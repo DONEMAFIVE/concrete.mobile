@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -26,6 +27,7 @@ import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class WaterFragment extends PreferenceFragmentCompat {
 
@@ -45,6 +47,7 @@ public class WaterFragment extends PreferenceFragmentCompat {
         EditTextPreference delayOffValvePouring = findPreference("delay_off_valve_pouring");
         EditTextPreference delayDischarge = findPreference("delay_discharge");
         Preference saveBtn = findPreference("saveBtn");
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         new Thread(() -> {
             try {
@@ -81,7 +84,6 @@ public class WaterFragment extends PreferenceFragmentCompat {
                     current = answer.get(102).getDIntValueIf();
                     delayOffValvePouring.setText(String.valueOf(current / 1000));
 
-                    Toast.makeText(getContext(), "ДВ - Загружено", Toast.LENGTH_SHORT).show();
                 });
 
             } catch (NullPointerException ex) {
@@ -95,6 +97,9 @@ public class WaterFragment extends PreferenceFragmentCompat {
             //TODO собрать и записать в PLC
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
+
                     new CommandDispatcher(tagListManual.get(104)).writeSingleRegisterWithValue(autoResetDw.isChecked());
 
                    MasterFactoryComplectation factoryOptionList = new FactoryComplectationBuilder()
@@ -161,6 +166,9 @@ public class WaterFragment extends PreferenceFragmentCompat {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                } finally {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    findPreference("saveCategory").setVisible(true);
                 }
 
             }).start();

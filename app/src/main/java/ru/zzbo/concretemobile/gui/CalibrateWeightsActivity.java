@@ -58,6 +58,19 @@ public class CalibrateWeightsActivity extends AppCompatActivity {
         tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");
         tagListManual = new DBTags(getApplicationContext()).getTags("tags_manual");
 
+        initFieldUI();
+        initUI();
+        initActions();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        threadState = false;
+        super.onBackPressed();
+    }
+
+    private void initFieldUI() {
         analogWeightDWView = findViewById(R.id.inputAnalogDW);
         analogWeightDKView = findViewById(R.id.inputAnalogDK);
         analogWeightCementView = findViewById(R.id.inputAnalogDC);
@@ -87,9 +100,9 @@ public class CalibrateWeightsActivity extends AppCompatActivity {
         acceptCalibrateValueDC = findViewById(R.id.currentWeightCalibrateDC);
         acceptCalibrateValueDCh = findViewById(R.id.currentWeightCalibrateDCH);
         acceptCalibrateValueDF = findViewById(R.id.currentWeightCalibrateDF);
+    }
 
-        initActions();
-
+    private void initUI() {
         new Thread(() -> {
             WeightCollector weightCollector = new WeightCollector(this);
             while (threadState) {
@@ -118,13 +131,7 @@ public class CalibrateWeightsActivity extends AppCompatActivity {
         }).start();
     }
 
-    @Override
-    public void onBackPressed() {
-        threadState = false;
-        super.onBackPressed();
-    }
-
-    public void initActions() {
+    private void initActions() {
         /**
          * обработчики нажатий кнопок
          * у обработчиков кнопок считывается аналоговый сигнал не поле ввода

@@ -2,8 +2,6 @@ package ru.zzbo.concretemobile.gui;
 
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 
-import android.content.Intent;
-import android.icu.util.EthiopicCalendar;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,8 +19,6 @@ import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Configs;
-import ru.zzbo.concretemobile.utils.Constants;
 
 public class SystemConfigActivity extends AppCompatActivity {
     @Override
@@ -109,8 +105,6 @@ public class SystemConfigActivity extends AppCompatActivity {
                     alertDialog.show();
                     return true;
                 });
-
-
             }
         }
     }

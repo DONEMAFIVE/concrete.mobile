@@ -20,16 +20,14 @@ import java.util.List;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Configs;
-
 
 public class LicenseUtil {
 
     public static String getLocalIpAddress() {
         try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
                         return inetAddress.getHostAddress();
@@ -86,7 +84,7 @@ public class LicenseUtil {
 
                 StringBuilder res1 = new StringBuilder();
                 for (byte b : macBytes) {
-                    res1.append(String.format("%02X:",b));
+                    res1.append(String.format("%02X:", b));
                 }
 
                 if (res1.length() > 0) {
@@ -106,7 +104,7 @@ public class LicenseUtil {
         String key = new CryptoUtil(configList.getHardkey()).decrypt().trim();
         //TODO:Получить mac устройства
         String mac = getMacFromIP(configList.getPlcIP());
-        Log.e("LICENCE", key +"="+ mac);
+        Log.e("LICENCE", key + "=" + mac);
         //TODO:Сравнить hardkey = mac
         return mac.equals(key);
     }

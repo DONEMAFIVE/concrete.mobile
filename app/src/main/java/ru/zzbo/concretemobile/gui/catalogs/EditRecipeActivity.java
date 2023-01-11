@@ -1,6 +1,6 @@
 package ru.zzbo.concretemobile.gui.catalogs;
 
-import static ru.zzbo.concretemobile.utils.Constants.editedRecepie;
+import static ru.zzbo.concretemobile.utils.Constants.editedRecipe;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.os.Bundle;
@@ -21,7 +21,7 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilInsert;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class EditRecipeActivity extends AppCompatActivity {
@@ -29,8 +29,8 @@ public class EditRecipeActivity extends AppCompatActivity {
     private EditText recipeIDField;
     private EditText dateCreateField;
     private EditText recipeNameField;
-    private EditText recepieMarkField;
-    private EditText recepieClassField;
+    private EditText recipeMarkField;
+    private EditText recipeClassField;
     private EditText uniNumberField;
     private EditText descriptionField;
     private EditText mixTimeField;
@@ -71,25 +71,26 @@ public class EditRecipeActivity extends AppCompatActivity {
     private EditText weightWater2;
     private EditText shortageWater2;
     private EditText pathToHumidityField;
-    private Button saveRecepie;
-    private Button delRecepie;
+    private Button saveRecipe;
+    private Button delRecipe;
     private Button closeWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recepie_activity);
-        initialUIElements();
-        initialFieldForRecepie();
-        runActions();
+
+        initUI();
+        initFieldForRecipe();
+        initActions();
     }
 
-    private void runActions() {
-        saveRecepie.setOnClickListener(view -> {
+    private void initActions() {
+        saveRecipe.setOnClickListener(view -> {
             try {
                 if (
                         (!recipeNameField.equals("")) &&
-                                (!recepieMarkField.equals("")) &&
+                                (!recipeMarkField.equals("")) &&
                                 (!uniNumberField.equals("")) &&
                                 (!mixTimeField.equals("")) &&
                                 (!weightBuncker11.equals("")) &&
@@ -130,13 +131,13 @@ public class EditRecipeActivity extends AppCompatActivity {
                     SimpleDateFormat datePattern = new SimpleDateFormat("dd.MM.yyyy");
                     SimpleDateFormat timePattern = new SimpleDateFormat("HH:mm:ss");
 
-                    Recepie recepie = new Recepie(
+                    Recipe recipe = new Recipe(
                             Integer.parseInt(String.valueOf(recipeIDField.getText())),
                             datePattern.format(new Date()),
                             timePattern.format(new Date()),
                             String.valueOf(recipeNameField.getText()),
-                            String.valueOf(recepieMarkField.getText()),
-                            String.valueOf(recepieClassField.getText()),
+                            String.valueOf(recipeMarkField.getText()),
+                            String.valueOf(recipeClassField.getText()),
                             String.valueOf(descriptionField.getText()),
                             Float.valueOf(String.valueOf(weightBuncker11.getText())),
                             Float.valueOf(String.valueOf(weightBuncker12.getText())),
@@ -182,20 +183,20 @@ public class EditRecipeActivity extends AppCompatActivity {
                             0,
                             100
                     );
-                    if (recepie.getId() != 0){
+                    if (recipe.getId() != 0) {
                         if (exchangeLevel == 1) {
-                            new Thread(()->{
+                            new Thread(() -> {
                                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                OkHttpUtil.updRecipe(gson.toJson(recepie));
+                                OkHttpUtil.updRecipe(gson.toJson(recipe));
                             }).start();
-                        } else new DBUtilUpdate(getApplicationContext()).updateRecepie(recepie);
+                        } else new DBUtilUpdate(getApplicationContext()).updateRecepie(recipe);
                     } else {
                         if (exchangeLevel == 1) {
-                            new Thread(()->{
+                            new Thread(() -> {
                                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                                OkHttpUtil.newRecipe(gson.toJson(recepie));
+                                OkHttpUtil.newRecipe(gson.toJson(recipe));
                             }).start();
-                        } else new DBUtilInsert(getApplicationContext()).insertIntoRecepie(recepie);
+                        } else new DBUtilInsert(getApplicationContext()).insertIntoRecepie(recipe);
                     }
 
                     Toast.makeText(getApplicationContext(), "Рецепт записан", Toast.LENGTH_LONG).show();
@@ -208,10 +209,10 @@ public class EditRecipeActivity extends AppCompatActivity {
                 Toast.makeText(null, "Проверьте ввод, некорректное заполнение полей!", Toast.LENGTH_LONG).show();
             }
         });
-        delRecepie.setOnClickListener(view -> {
-            new Thread(()->{
-                if (exchangeLevel == 1) OkHttpUtil.delRecipe(editedRecepie.getId());
-                else new DBUtilDelete(getApplicationContext()).deleteRecepie(editedRecepie.getId());
+        delRecipe.setOnClickListener(view -> {
+            new Thread(() -> {
+                if (exchangeLevel == 1) OkHttpUtil.delRecipe(editedRecipe.getId());
+                else new DBUtilDelete(getApplicationContext()).deleteRecepie(editedRecipe.getId());
             }).start();
 
             Toast.makeText(getApplicationContext(), "Рецепт удален!", Toast.LENGTH_LONG).show();
@@ -222,60 +223,60 @@ public class EditRecipeActivity extends AppCompatActivity {
         });
     }
 
-    private void initialFieldForRecepie() {
-        recipeIDField.setText(String.valueOf(editedRecepie.getId()));
-        dateCreateField.setText(String.valueOf(editedRecepie.getDate()));
-        recipeNameField.setText(String.valueOf(editedRecepie.getName()));
-        recepieMarkField.setText(String.valueOf(editedRecepie.getMark()));
-        recepieClassField.setText(String.valueOf(editedRecepie.getClassPie()));
-        uniNumberField.setText(String.valueOf(editedRecepie.getUniNumber()));
-        descriptionField.setText(String.valueOf(editedRecepie.getDescription()));
-        mixTimeField.setText(String.valueOf(editedRecepie.getTimeMix()));
-        weightBuncker11.setText(String.valueOf(editedRecepie.getBunckerRecepie11()));
-        shortageBuncker11.setText(String.valueOf(editedRecepie.getBunckerShortage11()));
-        humidityBuncker11.setText(String.valueOf(editedRecepie.getHumidity11()));
-        weightBuncker12.setText(String.valueOf(editedRecepie.getBunckerRecepie12()));
-        shortageBuncker12.setText(String.valueOf(editedRecepie.getBunckerShortage12()));
-        humidityBuncker12.setText(String.valueOf(editedRecepie.getHumidity12()));
-        weightBuncker21.setText(String.valueOf(editedRecepie.getBunckerRecepie21()));
-        shortageBuncker21.setText(String.valueOf(editedRecepie.getBunckerShortage21()));
-        humidityBuncker21.setText(String.valueOf(editedRecepie.getHumidity21()));
-        weightBuncker22.setText(String.valueOf(editedRecepie.getBunckerRecepie22()));
-        shortageBuncker22.setText(String.valueOf(editedRecepie.getBunckerShortage22()));
-        humidityBuncker22.setText(String.valueOf(editedRecepie.getHumidity22()));
-        weightBuncker31.setText(String.valueOf(editedRecepie.getBunckerRecepie31()));
-        shortageBuncker31.setText(String.valueOf(editedRecepie.getBunckerShortage31()));
-        humidityBuncker31.setText(String.valueOf(editedRecepie.getHumidity31()));
-        weightBuncker32.setText(String.valueOf(editedRecepie.getBunckerRecepie32()));
-        shortageBuncker32.setText(String.valueOf(editedRecepie.getBunckerShortage32()));
-        humidityBuncker32.setText(String.valueOf(editedRecepie.getHumidity32()));
-        weightBuncker41.setText(String.valueOf(editedRecepie.getBunckerRecepie41()));
-        shortageBuncker41.setText(String.valueOf(editedRecepie.getBunckerShortage41()));
-        humidityBuncker41.setText(String.valueOf(editedRecepie.getHumidity41()));
-        weightBuncker42.setText(String.valueOf(editedRecepie.getBunckerRecepie42()));
-        shortageBuncker42.setText(String.valueOf(editedRecepie.getBunckerShortage42()));
-        humidityBuncker42.setText(String.valueOf(editedRecepie.getHumidity42()));
-        weightChemy1.setText(String.valueOf(editedRecepie.getChemyRecepie1()));
-        shortageChemy1.setText(String.valueOf(editedRecepie.getChemyShortage1()));
-        weightChemy2.setText(String.valueOf(editedRecepie.getChemy2Recepie()));
-        shortageChemy2.setText(String.valueOf(editedRecepie.getChemyShortage2()));
-        weightSilos1.setText(String.valueOf(editedRecepie.getSilosRecepie1()));
-        shortageSilos1.setText(String.valueOf(editedRecepie.getSilosShortage1()));
-        weightSilos2.setText(String.valueOf(editedRecepie.getSilosRecepie2()));
-        shortageSilos2.setText(String.valueOf(editedRecepie.getSilosShortage2()));
-        weightWater.setText(String.valueOf(editedRecepie.getWater1Recepie()));
-        shortageWater.setText(String.valueOf(editedRecepie.getWater1Shortage()));
-        weightWater2.setText(String.valueOf(editedRecepie.getWater2Recepie()));
-        shortageWater2.setText(String.valueOf(editedRecepie.getWater2Shortage()));
-        pathToHumidityField.setText(String.valueOf(editedRecepie.getPathToHumidity()));
+    private void initFieldForRecipe() {
+        recipeIDField.setText(String.valueOf(editedRecipe.getId()));
+        dateCreateField.setText(String.valueOf(editedRecipe.getDate()));
+        recipeNameField.setText(String.valueOf(editedRecipe.getName()));
+        recipeMarkField.setText(String.valueOf(editedRecipe.getMark()));
+        recipeClassField.setText(String.valueOf(editedRecipe.getClassPie()));
+        uniNumberField.setText(String.valueOf(editedRecipe.getUniNumber()));
+        descriptionField.setText(String.valueOf(editedRecipe.getDescription()));
+        mixTimeField.setText(String.valueOf(editedRecipe.getTimeMix()));
+        weightBuncker11.setText(String.valueOf(editedRecipe.getBunckerRecepie11()));
+        shortageBuncker11.setText(String.valueOf(editedRecipe.getBunckerShortage11()));
+        humidityBuncker11.setText(String.valueOf(editedRecipe.getHumidity11()));
+        weightBuncker12.setText(String.valueOf(editedRecipe.getBunckerRecepie12()));
+        shortageBuncker12.setText(String.valueOf(editedRecipe.getBunckerShortage12()));
+        humidityBuncker12.setText(String.valueOf(editedRecipe.getHumidity12()));
+        weightBuncker21.setText(String.valueOf(editedRecipe.getBunckerRecepie21()));
+        shortageBuncker21.setText(String.valueOf(editedRecipe.getBunckerShortage21()));
+        humidityBuncker21.setText(String.valueOf(editedRecipe.getHumidity21()));
+        weightBuncker22.setText(String.valueOf(editedRecipe.getBunckerRecepie22()));
+        shortageBuncker22.setText(String.valueOf(editedRecipe.getBunckerShortage22()));
+        humidityBuncker22.setText(String.valueOf(editedRecipe.getHumidity22()));
+        weightBuncker31.setText(String.valueOf(editedRecipe.getBunckerRecepie31()));
+        shortageBuncker31.setText(String.valueOf(editedRecipe.getBunckerShortage31()));
+        humidityBuncker31.setText(String.valueOf(editedRecipe.getHumidity31()));
+        weightBuncker32.setText(String.valueOf(editedRecipe.getBunckerRecepie32()));
+        shortageBuncker32.setText(String.valueOf(editedRecipe.getBunckerShortage32()));
+        humidityBuncker32.setText(String.valueOf(editedRecipe.getHumidity32()));
+        weightBuncker41.setText(String.valueOf(editedRecipe.getBunckerRecepie41()));
+        shortageBuncker41.setText(String.valueOf(editedRecipe.getBunckerShortage41()));
+        humidityBuncker41.setText(String.valueOf(editedRecipe.getHumidity41()));
+        weightBuncker42.setText(String.valueOf(editedRecipe.getBunckerRecepie42()));
+        shortageBuncker42.setText(String.valueOf(editedRecipe.getBunckerShortage42()));
+        humidityBuncker42.setText(String.valueOf(editedRecipe.getHumidity42()));
+        weightChemy1.setText(String.valueOf(editedRecipe.getChemyRecepie1()));
+        shortageChemy1.setText(String.valueOf(editedRecipe.getChemyShortage1()));
+        weightChemy2.setText(String.valueOf(editedRecipe.getChemy2Recepie()));
+        shortageChemy2.setText(String.valueOf(editedRecipe.getChemyShortage2()));
+        weightSilos1.setText(String.valueOf(editedRecipe.getSilosRecepie1()));
+        shortageSilos1.setText(String.valueOf(editedRecipe.getSilosShortage1()));
+        weightSilos2.setText(String.valueOf(editedRecipe.getSilosRecepie2()));
+        shortageSilos2.setText(String.valueOf(editedRecipe.getSilosShortage2()));
+        weightWater.setText(String.valueOf(editedRecipe.getWater1Recepie()));
+        shortageWater.setText(String.valueOf(editedRecipe.getWater1Shortage()));
+        weightWater2.setText(String.valueOf(editedRecipe.getWater2Recepie()));
+        shortageWater2.setText(String.valueOf(editedRecipe.getWater2Shortage()));
+        pathToHumidityField.setText(String.valueOf(editedRecipe.getPathToHumidity()));
     }
 
-    private void initialUIElements() {
+    private void initUI() {
         recipeIDField = findViewById(R.id.recipeIDField);
         dateCreateField = findViewById(R.id.typeOrganizationField);
         recipeNameField = findViewById(R.id.recipeNameField);
-        recepieMarkField = findViewById(R.id.recepieMarkField);
-        recepieClassField = findViewById(R.id.recepieClassField);
+        recipeMarkField = findViewById(R.id.recepieMarkField);
+        recipeClassField = findViewById(R.id.recepieClassField);
         uniNumberField = findViewById(R.id.uniNumberField);
         descriptionField = findViewById(R.id.descriptionField);
         mixTimeField = findViewById(R.id.mixTimeField);
@@ -316,9 +317,9 @@ public class EditRecipeActivity extends AppCompatActivity {
         weightWater2 = findViewById(R.id.weightWater2);
         shortageWater2 = findViewById(R.id.shortageWater2);
         pathToHumidityField = findViewById(R.id.pathToHumidityField);
-        saveRecepie = findViewById(R.id.saveOrder);
-        delRecepie = findViewById(R.id.delOrder);
+        saveRecipe = findViewById(R.id.saveOrder);
+        delRecipe = findViewById(R.id.delOrder);
         closeWindow = findViewById(R.id.close);
-        if (editedRecepie.getId() == 0) delRecepie.setVisibility(View.INVISIBLE);
+        if (editedRecipe.getId() == 0) delRecipe.setVisibility(View.INVISIBLE);
     }
 }

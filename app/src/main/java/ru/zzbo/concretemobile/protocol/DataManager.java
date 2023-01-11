@@ -5,13 +5,9 @@ import static ru.zzbo.concretemobile.utils.Constants.tagListMain;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.content.Context;
-import android.widget.Toast;
-
-import java.net.SocketTimeoutException;
 
 import ru.zzbo.concretemobile.db.DBTags;
 import ru.zzbo.concretemobile.protocol.profinet.collectors.DynamicTagCollector;
-import ru.zzbo.concretemobile.utils.Constants;
 
 /**
  * назначить слой для сбора данных
@@ -26,7 +22,7 @@ public class DataManager {
 
     private Context context;
 
-    public DataManager(Context context){
+    public DataManager(Context context) {
         this.context = context;
     }
 
@@ -41,8 +37,8 @@ public class DataManager {
                 break;
             }
             case 1: {   //PC
-                    DynamicTagCollector service = DynamicTagCollector.getTagCollector();
-                    new Thread(() -> service.getValuesFromPC(context)).start();
+                DynamicTagCollector service = DynamicTagCollector.getTagCollector();
+                new Thread(() -> service.getValuesFromPC(context)).start();
                 break;
             }
         }

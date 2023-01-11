@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,26 +21,26 @@ public class DBTags {
         dbInitializer = new DBInitializer(context);
     }
 
-    public void openDbConfig(){
+    public void openDbConfig() {
         sqLiteDatabase = dbInitializer.getWritableDatabase();
     }
 
-    public void closeSession(){
+    public void closeSession() {
         dbInitializer.close();
         sqLiteDatabase.close();
     }
 
     @SuppressLint("Range")
-    public List<Tag> getTags(String table){
+    public List<Tag> getTags(String table) {
         //todo: implement this
         openDbConfig();
         List<Tag> result = new ArrayList<>();
 
         try {
             Cursor cursor = sqLiteDatabase.query(table, null, null, null, null, null, null);
-            Tag current  = null;
-            while (cursor.moveToNext()){
-                 int id = cursor.getInt(cursor.getColumnIndex("id"));
+            Tag current;
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
                 String tagName = cursor.getString(cursor.getColumnIndex("tagName"));
                 int number = cursor.getInt(cursor.getColumnIndex("number"));
                 int start = cursor.getInt(cursor.getColumnIndex("start"));
@@ -66,7 +63,7 @@ public class DBTags {
                 long DIntValueIf = 0;
                 float realValueIf = 0;
 
-                if (typeGet.equals("Bool")){
+                if (typeGet.equals("Bool")) {
                     if (valueGet.equals("true")) boolValueIf = true;
                     else boolValueIf = false;
                 }
@@ -90,7 +87,7 @@ public class DBTags {
                 );
                 result.add(current);
             }
-        }finally {
+        } finally {
             closeSession();
         }
 
@@ -154,8 +151,7 @@ public class DBTags {
             closeSession();
         }
 
-//        JOptionPane.showMessageDialog(null, "В Базе тэгов ничего не найдено, проверьте сотвествие тэгов основного потока");
-        return null;
+        return new Tag();
     }
 
 }

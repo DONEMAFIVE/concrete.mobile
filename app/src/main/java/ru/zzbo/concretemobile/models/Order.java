@@ -15,8 +15,8 @@ public class Order {
     private int organizationID;
     private String transporter;
     private int transporterID;
-    private String recepie;
-    private int recepieID;
+    private String recipe;
+    private int recipeID;
     private float totalCapacity;    //общий объем
     private float maxMixCapacity;   //максимальный объем замеса
     private int totalMixCounter;    //счетчик замесов
@@ -75,7 +75,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(int id, String nameOrder, int numberOrder, String date, String completionDate, String organizationName, int organizationID, String transporter, int transporterID, String recepie, int recepieID, float totalCapacity, float maxMixCapacity, int totalMixCounter, String markConcrete, String classConcrete, float pieBuncker11, float pieBuncker12, float pieBuncker21, float pieBuncker22, float pieBuncker31, float pieBuncker32, float pieBuncker41, float pieBuncker42, float pieChemy1, float pieChemy2, float pieWater1, float pieWater2, float pieSilos1, float pieSilos2, float shortageBuncker11, float shortageBuncker12, float shortageBuncker21, float shortageBuncker22, float shortageBuncker31, float shortageBuncker32, float shortageBuncker41, float shortageBuncker42, float shortageChemy1, float shortageChemy2, float shortageWater1, float shortageWater2, float shortageSilos1, float shortageSilos2, float countBuncker11, float countBuncker12, float countBuncker21, float countBuncker22, float countBuncker31, float countBuncker32, float countBuncker41, float countBuncker42, float countChemy1, float countChemy2, float countWater1, float countWater2, float countSilos1, float countSilos2, int state, int currentMixCount, String uploadAddress, String amountConcrete, String paymentOption, String operator, String comment) {
+    public Order(int id, String nameOrder, int numberOrder, String date, String completionDate, String organizationName, int organizationID, String transporter, int transporterID, String recipe, int recipeID, float totalCapacity, float maxMixCapacity, int totalMixCounter, String markConcrete, String classConcrete, float pieBuncker11, float pieBuncker12, float pieBuncker21, float pieBuncker22, float pieBuncker31, float pieBuncker32, float pieBuncker41, float pieBuncker42, float pieChemy1, float pieChemy2, float pieWater1, float pieWater2, float pieSilos1, float pieSilos2, float shortageBuncker11, float shortageBuncker12, float shortageBuncker21, float shortageBuncker22, float shortageBuncker31, float shortageBuncker32, float shortageBuncker41, float shortageBuncker42, float shortageChemy1, float shortageChemy2, float shortageWater1, float shortageWater2, float shortageSilos1, float shortageSilos2, float countBuncker11, float countBuncker12, float countBuncker21, float countBuncker22, float countBuncker31, float countBuncker32, float countBuncker41, float countBuncker42, float countChemy1, float countChemy2, float countWater1, float countWater2, float countSilos1, float countSilos2, int state, int currentMixCount, String uploadAddress, String amountConcrete, String paymentOption, String operator, String comment) {
         this.id = id;
         this.nameOrder = nameOrder;
         this.numberOrder = numberOrder;
@@ -85,8 +85,8 @@ public class Order {
         this.organizationID = organizationID;
         this.transporter = transporter;
         this.transporterID = transporterID;
-        this.recepie = recepie;
-        this.recepieID = recepieID;
+        this.recipe = recipe;
+        this.recipeID = recipeID;
         this.totalCapacity = totalCapacity;
         this.maxMixCapacity = maxMixCapacity;
         this.totalMixCounter = totalMixCounter;
@@ -143,7 +143,7 @@ public class Order {
         this.comment = comment;
     }
 
-    public Order(String nameOrder, int numberOrder, String date, String completionDate, String organizationName, int organizationID, String transporter, int transporterID, String recepie, int recepieID, float totalCapacity, float maxMixCapacity, int totalMixCounter, String markConcrete, String classConcrete, float pieBuncker11, float pieBuncker12, float pieBuncker21, float pieBuncker22, float pieBuncker31, float pieBuncker32, float pieBuncker41, float pieBuncker42, float pieChemy1, float pieChemy2, float pieWater1, float pieWater2, float pieSilos1, float pieSilos2, float shortageBuncker11, float shortageBuncker12, float shortageBuncker21, float shortageBuncker22, float shortageBuncker31, float shortageBuncker32, float shortageBuncker41, float shortageBuncker42, float shortageChemy1, float shortageChemy2, float shortageWater1, float shortageWater2, float shortageSilos1, float shortageSilos2, float countBuncker11, float countBuncker12, float countBuncker21, float countBuncker22, float countBuncker31, float countBuncker32, float countBuncker41, float countBuncker42, float countChemy1, float countChemy2, float countWater1, float countWater2, float countSilos1, float countSilos2, int state, int currentMixCount, String uploadAddress, String amountConcrete, String paymentOption, String operator, String comment) {
+    public Order(String nameOrder, int numberOrder, String date, String completionDate, String organizationName, int organizationID, String transporter, int transporterID, String recipe, int recipeID, float totalCapacity, float maxMixCapacity, int totalMixCounter, String markConcrete, String classConcrete, float pieBuncker11, float pieBuncker12, float pieBuncker21, float pieBuncker22, float pieBuncker31, float pieBuncker32, float pieBuncker41, float pieBuncker42, float pieChemy1, float pieChemy2, float pieWater1, float pieWater2, float pieSilos1, float pieSilos2, float shortageBuncker11, float shortageBuncker12, float shortageBuncker21, float shortageBuncker22, float shortageBuncker31, float shortageBuncker32, float shortageBuncker41, float shortageBuncker42, float shortageChemy1, float shortageChemy2, float shortageWater1, float shortageWater2, float shortageSilos1, float shortageSilos2, float countBuncker11, float countBuncker12, float countBuncker21, float countBuncker22, float countBuncker31, float countBuncker32, float countBuncker41, float countBuncker42, float countChemy1, float countChemy2, float countWater1, float countWater2, float countSilos1, float countSilos2, int state, int currentMixCount, String uploadAddress, String amountConcrete, String paymentOption, String operator, String comment) {
         this.nameOrder = nameOrder;
         this.numberOrder = numberOrder;
         this.date = date;
@@ -152,8 +152,8 @@ public class Order {
         this.organizationID = organizationID;
         this.transporter = transporter;
         this.transporterID = transporterID;
-        this.recepie = recepie;
-        this.recepieID = recepieID;
+        this.recipe = recipe;
+        this.recipeID = recipeID;
         this.totalCapacity = totalCapacity;
         this.maxMixCapacity = maxMixCapacity;
         this.totalMixCounter = totalMixCounter;
@@ -282,20 +282,20 @@ public class Order {
         this.transporterID = transporterID;
     }
 
-    public String getRecepie() {
-        return recepie;
+    public String getRecipe() {
+        return recipe;
     }
 
-    public void setRecepie(String recepie) {
-        this.recepie = recepie;
+    public void setRecipe(String recipe) {
+        this.recipe = recipe;
     }
 
-    public int getRecepieID() {
-        return recepieID;
+    public int getRecipeID() {
+        return recipeID;
     }
 
-    public void setRecepieID(int recepieID) {
-        this.recepieID = recepieID;
+    public void setRecipeID(int recipeID) {
+        this.recipeID = recipeID;
     }
 
     public float getTotalCapacity() {
@@ -740,8 +740,8 @@ public class Order {
                 organizationID + "|" +
                 transporter + "|" +
                 transporterID + "|" +
-                recepie + "|" +
-                recepieID + "|" +
+                recipe + "|" +
+                recipeID + "|" +
                 totalCapacity + "|" +
                 maxMixCapacity + "|" +
                 totalMixCounter + "|" +

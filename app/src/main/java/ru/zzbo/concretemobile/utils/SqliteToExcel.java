@@ -1,8 +1,6 @@
 package ru.zzbo.concretemobile.utils;
 
-import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
 
 import android.content.Context;
 import android.os.Environment;
@@ -32,17 +30,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Configs;
 import ru.zzbo.concretemobile.models.Mix;
 
 public class SqliteToExcel {
     private Context context;
     private String folderReports = "/reports/";
     private List<String> dates;
-
     private XSSFWorkbook book;
     private XSSFSheet mixesSheet;
     private XSSFSheet partySheet;
@@ -51,7 +46,6 @@ public class SqliteToExcel {
     private List<Mix> report;
     private String dateStart;
     private String dateEnd;
-    private ConfigBuilder configBuilder;
     private Gson gson;
 
     public SqliteToExcel(Context context, String dateStart, String dateEnd) {
@@ -60,7 +54,6 @@ public class SqliteToExcel {
         this.context = context;
         this.dates = new DatesGenerate(dateStart, dateEnd).getLostDates();
         this.book = new XSSFWorkbook();
-        this.configBuilder = new ConfigBuilder();
         this.gson = new Gson();
 
         File folder = new File(Environment.getExternalStorageDirectory() + folderReports);
@@ -73,7 +66,8 @@ public class SqliteToExcel {
         List<List<String>> dataTable = new ArrayList<>();
 
         if (exchangeLevel == 1) {
-            report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
+            report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
+            }.getType());
         } else report = new DBUtilGet(context).getMixList();
 
         String singleRow = "ID | Заказ | № заказа | Дата | Время | Заказчик | ID Заказчика | Перевозчик | ID Перевозчика | Рецепт | ID Рецепта | Замес | Партия | Объем | Силос 1 | Силос 2 | Бункер 11 | Бункер 12 | Бункер 21 | Бункер 22 | Бункер 31 | Бункер 32 | Бункер 41 | Бункер 42 | Вода 1 | Вода 2 | ДВПЛ | Химия 1 | Химия 2 | Адрес выгрузки | Стоимость | Способ оплаты | Оператор | Время погрузки";
@@ -100,8 +94,8 @@ public class SqliteToExcel {
                             dataForm.add(String.valueOf(mix.getOrganizationID()));
                             dataForm.add(mix.getTransporter());
                             dataForm.add(String.valueOf(mix.getTransporterID()));
-                            dataForm.add(mix.getRecepie());
-                            dataForm.add(String.valueOf(mix.getRecepieID()));
+                            dataForm.add(mix.getRecipe());
+                            dataForm.add(String.valueOf(mix.getRecipeID()));
                             dataForm.add(String.valueOf(mix.getMixCounter()));
                             dataForm.add(String.valueOf(mix.getCompleteCapacity()));
                             dataForm.add(String.valueOf(mix.getTotalCapacity()));
@@ -164,7 +158,8 @@ public class SqliteToExcel {
         try {
 
             if (exchangeLevel == 1) {
-                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
+                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
+                }.getType());
             } else report = new DBUtilGet(context).getMixList();
 
             new Handler(Looper.getMainLooper()).post(() -> {
@@ -193,8 +188,8 @@ public class SqliteToExcel {
                     dataForm.add(String.valueOf(mix.getOrganizationID()));
                     dataForm.add(mix.getTransporter());
                     dataForm.add(String.valueOf(mix.getTransporterID()));
-                    dataForm.add(mix.getRecepie());
-                    dataForm.add(String.valueOf(mix.getRecepieID()));
+                    dataForm.add(mix.getRecipe());
+                    dataForm.add(String.valueOf(mix.getRecipeID()));
                     dataForm.add(String.valueOf(mix.getMixCounter()));
                     dataForm.add(String.valueOf(mix.getCompleteCapacity()));
                     dataForm.add(String.valueOf(mix.getTotalCapacity()));
@@ -255,8 +250,9 @@ public class SqliteToExcel {
 
         if (Constants.exchangeLevel == 1) {
             try {
-                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
-                for (Mix mix: report) recipes.add(mix.getRecepie());
+                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
+                }.getType());
+                for (Mix mix : report) recipes.add(mix.getRecipe());
                 Set<String> set = new HashSet<>(recipes);
                 recipes.clear();
                 recipes.addAll(set);
@@ -264,7 +260,8 @@ public class SqliteToExcel {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
+        } else
+            recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
 
         headTable.add("Дата/Марка");
         for (String string : recipes) headTable.add(string);
@@ -279,7 +276,8 @@ public class SqliteToExcel {
 
             for (int j = 0; j < dates.size(); j++) {
                 if (Constants.exchangeLevel == 1) {
-                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {}.getType()));
+                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
+                    }.getType()));
                 } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
 
                 List<String> dataForm = new ArrayList<>();
@@ -288,7 +286,7 @@ public class SqliteToExcel {
                 for (int i = 0; i < recipes.size(); i++) {
                     for (int m = 0; m < report.size(); m++) {
                         if (report.get(m).getDate().equals(dates.get(j))) {
-                            if (report.get(m).getRecepie().equals(recipes.get(i))) {
+                            if (report.get(m).getRecipe().equals(recipes.get(i))) {
                                 sum += report.get(m).getCompleteCapacity();
                             }
                         }
@@ -342,8 +340,9 @@ public class SqliteToExcel {
 
         if (Constants.exchangeLevel == 1) {
             try {
-                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
-                for (Mix mix: report) recipes.add(mix.getRecepie());
+                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
+                }.getType());
+                for (Mix mix : report) recipes.add(mix.getRecipe());
                 Set<String> set = new HashSet<>(recipes);
                 recipes.clear();
                 recipes.addAll(set);
@@ -351,7 +350,8 @@ public class SqliteToExcel {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
+        } else
+            recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
 
         if (recipes.size() > tableHeadSize) tableHeadSize = recipes.size();
         for (int i = 2; i < tableHeadSize; i++) headTable.add("  "); //String.valueOf(i)
@@ -364,7 +364,8 @@ public class SqliteToExcel {
 
             for (int j = 0; j < dates.size(); j++) {
                 if (Constants.exchangeLevel == 1) {
-                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {}.getType()));
+                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
+                    }.getType()));
                 } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
 
                 List<String> dataForm = new ArrayList<>();
@@ -373,7 +374,7 @@ public class SqliteToExcel {
                 for (int r = 0; r < recipes.size(); r++) {
                     for (int d = 0; d < report.size(); d++) {
                         if (report.get(d).getDate().equals(dates.get(j))) {
-                            if (report.get(d).getRecepie().equals(recipes.get(r))) {
+                            if (report.get(d).getRecipe().equals(recipes.get(r))) {
                                 sum += report.get(d).getCompleteCapacity();
                             }
                         }
@@ -404,12 +405,13 @@ public class SqliteToExcel {
 
                     for (int d = 0; d < dates.size(); d++) {
                         if (Constants.exchangeLevel == 1) {
-                            report = gson.fromJson(OkHttpUtil.getMixes(dates.get(d), dates.get(d)), new TypeToken<List<Mix>>() {}.getType());
+                            report = gson.fromJson(OkHttpUtil.getMixes(dates.get(d), dates.get(d)), new TypeToken<List<Mix>>() {
+                            }.getType());
                         } else report = new DBUtilGet(context).getMixListForDate(dates.get(d));
 
                         for (int m = 0; m < report.size(); m++) {
                             if (report.get(m).getDate().equals(dates.get(d))) {
-                                if (report.get(m).getRecepie().equals(recipes.get(j))) {
+                                if (report.get(m).getRecipe().equals(recipes.get(j))) {
                                     sum += report.get(m).getCompleteCapacity();
                                 }
                             }
@@ -436,7 +438,8 @@ public class SqliteToExcel {
 
                 for (int j = 0; j < dates.size(); j++) {
                     if (Constants.exchangeLevel == 1) {
-                        report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {}.getType()));
+                        report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
+                        }.getType()));
                     } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
 
                 }
@@ -622,8 +625,8 @@ public class SqliteToExcel {
                     mixList.get(i).getOrganizationID(),
                     mixList.get(i).getTransporter(),
                     mixList.get(i).getTransporterID(),
-                    mixList.get(i).getRecepie(),
-                    mixList.get(i).getRecepieID(),
+                    mixList.get(i).getRecipe(),
+                    mixList.get(i).getRecipeID(),
                     mixList.get(i).getMixCounter() + 1,       //+1 делается потомучто из прошивки замесы начинаются с нуля
                     totalCapacity.floatValue(),
                     mixList.get(i).getTotalCapacity(),
@@ -705,8 +708,8 @@ public class SqliteToExcel {
                             mixList.get(i + 1).getOrganizationID(),
                             mixList.get(i + 1).getTransporter(),
                             mixList.get(i + 1).getTransporterID(),
-                            mixList.get(i + 1).getRecepie(),
-                            mixList.get(i + 1).getRecepieID(),
+                            mixList.get(i + 1).getRecipe(),
+                            mixList.get(i + 1).getRecipeID(),
                             mixList.get(i + 1).getMixCounter() + 1,
                             totalCapacity.floatValue(),
                             mixList.get(i + 1).getTotalCapacity(),

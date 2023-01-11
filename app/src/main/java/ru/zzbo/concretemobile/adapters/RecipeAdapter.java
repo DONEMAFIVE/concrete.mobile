@@ -10,28 +10,28 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 import ru.zzbo.concretemobile.R;
-import ru.zzbo.concretemobile.models.Recepie;
-import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.models.Recipe;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder>{
+/**
+ * Адаптер объекта "рецепт" в списке RecyclerView
+ */
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
     public interface DelRecipeClickListener {
-        void onClick(Recepie recipe, int position);
+        void onClick(Recipe recipe, int position);
     }
 
     public interface EditRecipeClickListener {
-        void onClick(Recepie recipe, int position);
+        void onClick(Recipe recipe, int position);
     }
 
     public interface LoadToPlcClickListener {
-        void onClick(Recepie recipe,int position);
+        void onClick(Recipe recipe, int position);
     }
 
     private final DelRecipeClickListener delRecipeClickListener;
@@ -39,15 +39,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private final LoadToPlcClickListener loadToPlcClickListener;
 
     private final LayoutInflater inflater;
-    private List<Recepie> recipes;
+    private List<Recipe> recipes;
 
-    public RecipeAdapter(Context context, List<Recepie> recipes, EditRecipeClickListener editRecipeClickListener, LoadToPlcClickListener loadToPlcClickListener, DelRecipeClickListener delRecipeClickListener) {
+    public RecipeAdapter(Context context, List<Recipe> recipes, EditRecipeClickListener editRecipeClickListener,
+                         LoadToPlcClickListener loadToPlcClickListener, DelRecipeClickListener delRecipeClickListener) {
         this.delRecipeClickListener = delRecipeClickListener;
         this.editRecipeClickListener = editRecipeClickListener;
         this.loadToPlcClickListener = loadToPlcClickListener;
         this.recipes = recipes;
         this.inflater = LayoutInflater.from(context);
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.recipe_item, parent, false);
@@ -56,23 +58,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Recepie recipe = recipes.get(position);
+        Recipe recipe = recipes.get(position);
         holder.id.setText(String.valueOf(recipe.getId()));
         holder.nameRecipe.setText(recipe.getName());
         holder.marka.setText(recipe.getMark());
         holder.description.setText(recipe.getDescription());
 
-        holder.delRecipeBtn.setOnClickListener(v -> {
-            delRecipeClickListener.onClick(recipe, position);
-        });
+        holder.delRecipeBtn.setOnClickListener(v -> delRecipeClickListener.onClick(recipe, position));
 
-        holder.editRecipeBtn.setOnClickListener(v -> {
-            editRecipeClickListener.onClick(recipe, position);
-        });
+        holder.editRecipeBtn.setOnClickListener(v -> editRecipeClickListener.onClick(recipe, position));
 
-        holder.loadToPlcBtn.setOnClickListener(v -> {
-            loadToPlcClickListener.onClick(recipe, position);
-        });
+        holder.loadToPlcBtn.setOnClickListener(v -> loadToPlcClickListener.onClick(recipe, position));
     }
 
     @Override
@@ -80,15 +76,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         return recipes.size();
     }
 
-    public void filterList(List<Recepie> filteredList){
-        recipes = filteredList;
-        notifyDataSetChanged();
-    }
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView nameRecipe, id, description, marka;
         final ExtendedFloatingActionButton delRecipeBtn, editRecipeBtn, loadToPlcBtn;
-        ViewHolder(View view){
+
+        ViewHolder(View view) {
             super(view);
             id = view.findViewById(R.id.id);
             nameRecipe = view.findViewById(R.id.name);

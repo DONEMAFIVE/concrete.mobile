@@ -3,12 +3,12 @@ package ru.zzbo.concretemobile.models;
 public class Current {
 
     private int orderID;
-    private int recepieID;
+    private int recipeID;
     private String state;
 
-    public Current(int orderID, int recepieID, String state) {
+    public Current(int orderID, int recipeID, String state) {
         this.orderID = orderID;
-        this.recepieID = recepieID;
+        this.recipeID = recipeID;
         this.state = state;
     }
 
@@ -16,8 +16,8 @@ public class Current {
         return orderID;
     }
 
-    public int getRecepieID() {
-        return recepieID;
+    public int getRecipeID() {
+        return recipeID;
     }
 
     public String getState() {

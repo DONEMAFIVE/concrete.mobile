@@ -4,7 +4,6 @@ import static ru.zzbo.concretemobile.utils.Constants.editedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
-import static ru.zzbo.concretemobile.utils.Constants.selectedOrg;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.DateTimeUtils.getDateFromDatePicker;
@@ -45,18 +44,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.IllegalFormatCodePointException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.DBUtilInsert;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.gui.catalogs.EditOrderActivity;
 import ru.zzbo.concretemobile.models.Order;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
@@ -68,7 +65,7 @@ import ru.zzbo.concretemobile.utils.TableView;
 public class OrdersActivity extends AppCompatActivity {
     private DatePicker dateBeginWidget;
     private DatePicker dateEndWidget;
-    private CheckBox compliteOrders;
+    private CheckBox completeOrders;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
     private Button applyBtn;
     private Button closeDialog;
@@ -96,7 +93,7 @@ public class OrdersActivity extends AppCompatActivity {
 
         initUI();
         firstRun();
-        actions();
+        initActions();
     }
 
     @Override
@@ -112,7 +109,7 @@ public class OrdersActivity extends AppCompatActivity {
         dates = new DatesGenerate(startDate, endDate).getLostDates();
     }
 
-    private void actions() {
+    private void initActions() {
         listOrdersTableView.setTableViewListener(new TableView.OnTableViewListener() {
             @Override
             public void onRowClicked(@NonNull TableRow tableRow, int position, List<String> row) {
@@ -121,12 +118,14 @@ public class OrdersActivity extends AppCompatActivity {
                 popupMenu.setOnMenuItemClickListener(menuItem -> {
 
                     if (exchangeLevel == 1) {
-                        for (Order ord : order) if (ord.getId() == Integer.valueOf(row.get(0))) currentOrder = ord;
+                        for (Order ord : order)
+                            if (ord.getId() == Integer.valueOf(row.get(0))) currentOrder = ord;
                     } else {
                         currentOrder = new DBUtilGet(getApplicationContext()).getOrderForID(Integer.valueOf(row.get(0)));
                     }
 
-                    if (currentOrder.equals(null)) Toast.makeText(getApplicationContext(), "Ошибка NULL", Toast.LENGTH_LONG).show();
+                    if (currentOrder.equals(null))
+                        Toast.makeText(getApplicationContext(), "Ошибка NULL", Toast.LENGTH_LONG).show();
 
                     switch (menuItem.getItemId()) {
                         case R.id.upload: {
@@ -154,8 +153,8 @@ public class OrdersActivity extends AppCompatActivity {
                                             if (exchangeLevel == 1) {
                                                 OkHttpUtil.uplOrder(currentOrder.getId(), Float.parseFloat(partyCapacity.getText().toString()));
                                             } else {
-                                                Recepie recepie = new DBUtilGet(getApplicationContext()).getRecepieForID(currentOrder.getRecepieID());
-                                                if (new SetRecipe().sendRecipeToPLC(recepie)){
+                                                Recipe recipe = new DBUtilGet(getApplicationContext()).getRecepieForID(currentOrder.getRecipeID());
+                                                if (new SetRecipe().sendRecipeToPLC(recipe)) {
                                                     Tag weightPartyTag = tagListManual.get(64);
                                                     Tag weightSingleMixTag = tagListManual.get(62);
 
@@ -264,7 +263,7 @@ public class OrdersActivity extends AppCompatActivity {
                                 try {
                                     new Thread(() -> {
                                         if (exchangeLevel == 1) {
-                                           OkHttpUtil.delOrder(currentOrder.getId());
+                                            OkHttpUtil.delOrder(currentOrder.getId());
                                         } else {
                                             new DBUtilDelete(getApplicationContext()).deleteOrder(currentOrder.getId());
                                         }
@@ -291,7 +290,7 @@ public class OrdersActivity extends AppCompatActivity {
 
             @Override
             public void onLongClicked(@NonNull TableRow tableRow, int position, List<String> row) {
-                if (exchangeLevel != 1){
+                if (exchangeLevel != 1) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(OrdersActivity.this);
                     builder.setTitle("Удаление").setMessage("Вы действительно хотите удалить все заказы?");
                     builder.setPositiveButton("Удалить", (dialog, id) -> {
@@ -470,7 +469,7 @@ public class OrdersActivity extends AppCompatActivity {
         closeDialog = mFilterView.findViewById(R.id.closeDialog);
         dateBeginWidget = mFilterView.findViewById(R.id.dateBeginWidget);
         dateEndWidget = mFilterView.findViewById(R.id.dateEndWidget);
-        compliteOrders = mFilterView.findViewById(R.id.compliteOrders);
+        completeOrders = mFilterView.findViewById(R.id.compliteOrders);
     }
 
     @Override
@@ -491,11 +490,12 @@ public class OrdersActivity extends AppCompatActivity {
         listOrdersTableView.clear();
         new Thread(() -> {
             if (exchangeLevel == 1) {
-                String res = OkHttpUtil.getOrders(startDate, endDate, compliteOrders.isChecked());
-                order = new Gson().fromJson(res, new TypeToken<List<Order>>() {}.getType());
+                String res = OkHttpUtil.getOrders(startDate, endDate, completeOrders.isChecked());
+                order = new Gson().fromJson(res, new TypeToken<List<Order>>() {
+                }.getType());
 //                order = Arrays.asList(new Gson().fromJson(res, Order[].class));
             } else {
-                order = new DBUtilGet(getApplicationContext()).getOrdersByRangeDate(dates, compliteOrders.isChecked());
+                order = new DBUtilGet(getApplicationContext()).getOrdersByRangeDate(dates, completeOrders.isChecked());
             }
             new Handler(Looper.getMainLooper()).post(() -> {
                 try {

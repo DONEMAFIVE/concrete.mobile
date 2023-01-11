@@ -14,6 +14,9 @@ import ru.zzbo.concretemobile.gui.fragments.factory_config.OtherFragment;
 import ru.zzbo.concretemobile.gui.fragments.factory_config.SkipLTFragment;
 import ru.zzbo.concretemobile.gui.fragments.factory_config.WaterFragment;
 
+/**
+ * Адаптер фрагментов - переключение между вкладками в уставках
+ */
 public class FragmentAdditionalOptionsAdapter extends FragmentStateAdapter {
     public FragmentAdditionalOptionsAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
@@ -22,13 +25,13 @@ public class FragmentAdditionalOptionsAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        switch (position){
-            case 1:return new DKFragment();
-            case 2:return new WaterFragment();
-            case 3:return new ChemyFragment();
-            case 4:return new CementFragment();
-            case 5:return new MixerFragment();
-            case 6:return new SkipLTFragment();
+        switch (position) {
+            case 1: return new DKFragment();
+            case 2: return new WaterFragment();
+            case 3: return new ChemyFragment();
+            case 4: return new CementFragment();
+            case 5: return new MixerFragment();
+            case 6: return new SkipLTFragment();
         }
         return new OtherFragment();
     }

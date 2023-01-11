@@ -398,7 +398,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/recepieChemy1"
                             app:layout_constraintStart_toStartOf="@+id/recepieChemy1"
                             app:layout_constraintTop_toBottomOf="@+id/recepieChemy1" />
@@ -468,7 +468,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/recepieChemy2"
                             app:layout_constraintStart_toStartOf="@+id/recepieChemy2"
                             app:layout_constraintTop_toBottomOf="@+id/recepieChemy2" />
@@ -538,7 +538,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/recepieChemy3"
                             app:layout_constraintStart_toStartOf="@+id/recepieChemy3"
                             app:layout_constraintTop_toBottomOf="@+id/recepieChemy3" />
@@ -728,7 +728,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
                             app:layout_constraintStart_toStartOf="@+id/bunckerWater1"
                             app:layout_constraintTop_toBottomOf="@+id/recepieWater1" />
@@ -804,7 +804,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
                             app:layout_constraintStart_toStartOf="@+id/bunckerWater2"
                             app:layout_constraintTop_toBottomOf="@+id/recepieWater2" />
@@ -969,7 +969,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/silos1View"
                             app:layout_constraintStart_toStartOf="@+id/silos1View"
                             app:layout_constraintTop_toBottomOf="@+id/recepieSilos1" />
@@ -1087,7 +1087,7 @@
                             android:layout_height="wrap_content"
                             android:text="Доза"
                             android:textAlignment="center"
-                            android:textColor="#FF000000"
+                            android:textColor="#7D000000"
                             app:layout_constraintEnd_toEndOf="@+id/silos2View"
                             app:layout_constraintStart_toStartOf="@+id/silos2View"
                             app:layout_constraintTop_toBottomOf="@+id/recepieSilos2" />

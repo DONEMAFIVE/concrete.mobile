@@ -1,7 +1,6 @@
 package ru.zzbo.concretemobile.gui.fragments.factory_config;
 
 import static ru.zzbo.concretemobile.utils.Constants.answer;
-import static ru.zzbo.concretemobile.utils.Constants.lockStateRequests;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 
@@ -11,22 +10,16 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ru.zzbo.concretemobile.R;
-import ru.zzbo.concretemobile.db.DBTags;
-import ru.zzbo.concretemobile.protocol.profinet.collectors.DynamicTagBuilder;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
-import ru.zzbo.concretemobile.protocol.profinet.models.BlockMultiple;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class OtherFragment extends PreferenceFragmentCompat {
 
@@ -40,6 +33,7 @@ public class OtherFragment extends PreferenceFragmentCompat {
         SeekBarPreference chemy = findPreference("chemy");
         SeekBarPreference cement = findPreference("cement");
         Preference saveBtn = findPreference("saveBtn");
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         //Установка максимального значения
         dk.setMax(3);
@@ -62,7 +56,6 @@ public class OtherFragment extends PreferenceFragmentCompat {
                     water.setValue(answer.get(41).getIntValueIf());
                     cement.setValue(answer.get(42).getIntValueIf());
 
-                    Toast.makeText(getContext(), "Общее - Загружено", Toast.LENGTH_SHORT).show();
                 } catch (NullPointerException ex) {
                     Toast.makeText(getContext(), "Ошибка загрузки", Toast.LENGTH_SHORT).show();
                 }
@@ -72,6 +65,8 @@ public class OtherFragment extends PreferenceFragmentCompat {
         saveBtn.setOnPreferenceClickListener(e-> {
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
                     if (autoQueue.isChecked()) {
                         new CommandDispatcher(tagListManual.get(107)).writeSingleRegisterWithValue(true);
                         Thread.sleep(100);
@@ -112,6 +107,9 @@ public class OtherFragment extends PreferenceFragmentCompat {
                     });
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                } finally {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    findPreference("saveCategory").setVisible(true);
                 }
             }).start();
             return true;

@@ -15,8 +15,8 @@ public class Mix {
     private int organizationID;
     private String transporter;
     private int transporterID;
-    private String recepie;
-    private int recepieID;
+    private String recipe;
+    private int recipeID;
     private int mixCounter;
     private float completeCapacity;
     private float totalCapacity;
@@ -37,7 +37,7 @@ public class Mix {
     private float chemy2;
     private String loadingTime;
 
-    public Mix(int id, String nameOrder, int numberOrder, String date, String time, String uploadAddress, float amountConcrete, String paymentOption, String operator, String organization, int organizationID, String transporter, int transporterID, String recepie, int recepieID, int mixCounter, float completeCapacity, float totalCapacity, float buncker11, float buncker12, float buncker21, float buncker22, float buncker31, float buncker32, float buncker41, float buncker42, float silos1, float silos2, float water1, float water2, float dwpl, float chemy1, float chemy2, String loadingTime) {
+    public Mix(int id, String nameOrder, int numberOrder, String date, String time, String uploadAddress, float amountConcrete, String paymentOption, String operator, String organization, int organizationID, String transporter, int transporterID, String recipe, int recipeID, int mixCounter, float completeCapacity, float totalCapacity, float buncker11, float buncker12, float buncker21, float buncker22, float buncker31, float buncker32, float buncker41, float buncker42, float silos1, float silos2, float water1, float water2, float dwpl, float chemy1, float chemy2, String loadingTime) {
         this.id = id;
         this.nameOrder = nameOrder;
         this.numberOrder = numberOrder;
@@ -51,8 +51,8 @@ public class Mix {
         this.organizationID = organizationID;
         this.transporter = transporter;
         this.transporterID = transporterID;
-        this.recepie = recepie;
-        this.recepieID = recepieID;
+        this.recipe = recipe;
+        this.recipeID = recipeID;
         this.mixCounter = mixCounter;
         this.completeCapacity = completeCapacity;
         this.totalCapacity = totalCapacity;
@@ -74,7 +74,7 @@ public class Mix {
         this.loadingTime = loadingTime;
     }
 
-    public Mix(String nameOrder, int numberOrder, String date, String time, String uploadAddress, float amountConcrete, String paymentOption, String operator, String organization, int organizationID, String transporter, int transporterID, String recepie, int recepieID, int mixCounter, float completeCapacity, float totalCapacity, float buncker11, float buncker12, float buncker21, float buncker22, float buncker31, float buncker32, float buncker41, float buncker42, float silos1, float silos2, float water1, float water2, float dwpl, float chemy1, float chemy2, String loadingTime) {
+    public Mix(String nameOrder, int numberOrder, String date, String time, String uploadAddress, float amountConcrete, String paymentOption, String operator, String organization, int organizationID, String transporter, int transporterID, String recipe, int recipeID, int mixCounter, float completeCapacity, float totalCapacity, float buncker11, float buncker12, float buncker21, float buncker22, float buncker31, float buncker32, float buncker41, float buncker42, float silos1, float silos2, float water1, float water2, float dwpl, float chemy1, float chemy2, String loadingTime) {
         this.nameOrder = nameOrder;
         this.numberOrder = numberOrder;
         this.date = date;
@@ -87,8 +87,8 @@ public class Mix {
         this.organizationID = organizationID;
         this.transporter = transporter;
         this.transporterID = transporterID;
-        this.recepie = recepie;
-        this.recepieID = recepieID;
+        this.recipe = recipe;
+        this.recipeID = recipeID;
         this.mixCounter = mixCounter;
         this.completeCapacity = completeCapacity;
         this.totalCapacity = totalCapacity;
@@ -162,12 +162,12 @@ public class Mix {
         return transporterID;
     }
 
-    public String getRecepie() {
-        return recepie;
+    public String getRecipe() {
+        return recipe;
     }
 
-    public int getRecepieID() {
-        return recepieID;
+    public int getRecipeID() {
+        return recipeID;
     }
 
     public int getMixCounter() {

@@ -11,13 +11,14 @@ import android.widget.Toast;
 import androidx.preference.EditTextPreference;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class SkipLTFragment extends PreferenceFragmentCompat {
 
@@ -34,6 +35,8 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
         EditTextPreference dischargeSkip = findPreference("discharge_skip");    //Время выгрузки скипа
         EditTextPreference alarmStopSkip = findPreference("alarm_stop_skip");   //Время до аварийной остановки
         EditTextPreference dischargeLT = findPreference("discharge_lt");        //Время выгрузки ЛТ
+
+        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
 
         Preference saveBtn = findPreference("saveBtn");
 
@@ -63,7 +66,6 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
                     current = answer.get(107).getDIntValueIf();
                     alarmStopSkip.setText(String.valueOf(current / 1000));
 
-                    Toast.makeText(getContext(), "Скип/Лента - Загружено", Toast.LENGTH_SHORT).show();
                 });
             } catch (Exception e12) {
                 e12.printStackTrace();
@@ -73,9 +75,11 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    findPreference("saveCategory").setVisible(false);
                     float timeSkipDrop = Float.parseFloat(dischargeSkip.getText());
                     float timeDelaySkipUp = Float.parseFloat(delayLift.getText());
-                    float timeDropLT = Float.parseFloat(dischargeLT.getText());
+
                     //Время выгрузки скипа
 
                     Tag tag = tagListOptions.get(52);
@@ -94,15 +98,20 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
                         }
                     }
 
+                    if (answer.get(25).getIntValueIf() == 12) {
+                        float timeDropLT = Float.parseFloat(dischargeLT.getText());
+                        tag = tagListOptions.get(125);
+                        timeDropLT *= 1000;
+                        tag.setDIntValueIf((long) timeDropLT);
+                        new CommandDispatcher(tag).writeSingleRegisterWithLock();
+                    }
+
                     tag = tagListOptions.get(117);
                     timeDelaySkipUp *= 1000;
                     tag.setDIntValueIf((long) timeDelaySkipUp);
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
-                    tag = tagListOptions.get(125);
-                    timeDropLT *= 1000;
-                    tag.setDIntValueIf((long) timeDropLT);
-                    new CommandDispatcher(tag).writeSingleRegisterWithLock();
+
 
                     new CommandDispatcher(tagListOptions.get(118)).writeSingleRegisterWithValue(noLiftCement.isChecked());
                     new CommandDispatcher(tagListOptions.get(119)).writeSingleRegisterWithValue(noLiftWater.isChecked());
@@ -116,6 +125,9 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                } finally {
+                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    findPreference("saveCategory").setVisible(true);
                 }
             }).start();
             Toast.makeText(getContext(), "Скип/Лента - Сохранено", Toast.LENGTH_SHORT).show();

@@ -14,7 +14,7 @@ public class MasterFactoryComplectation {
     float mixCapacity;
     boolean hydroGate;
 
-    public MasterFactoryComplectation(){};
+    public MasterFactoryComplectation() {}
 
     public MasterFactoryComplectation(int inertBunckerCounter, boolean comboBunckerOption, int silosCounter, boolean water2, boolean humidityMixerSensor, int chemyCounter, int transporterType, boolean fibraOption, boolean dropConveyor, float mixCapacity, boolean hydroGate) {
         this.inertBunckerCounter = inertBunckerCounter;

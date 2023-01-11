@@ -19,7 +19,7 @@ public class OrganizationListDialog extends DialogFragment {
 
     private List<Organization> organizationList;
 
-    public OrganizationListDialog(List<Organization> organizationList){
+    public OrganizationListDialog(List<Organization> organizationList) {
         this.organizationList = organizationList;
     }
 
@@ -34,8 +34,6 @@ public class OrganizationListDialog extends DialogFragment {
             orgNamesArray[i] = org.getOrganizationName();
             i++;
         }
-
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder

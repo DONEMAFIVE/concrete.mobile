@@ -1,10 +1,8 @@
 package ru.zzbo.concretemobile.gui.dialogs.uploaders;
 
-import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,16 +19,16 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
 
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class RecipeLoaderDialog extends DialogFragment {
 
-    private ProgressDialog progressDialog;;
-    private List<Recepie> recipes;
+    private ProgressDialog progressDialog;
+    private List<Recipe> recipes;
 
-    public RecipeLoaderDialog(List<Recepie> recipes){
+    public RecipeLoaderDialog(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 
@@ -38,24 +36,24 @@ public class RecipeLoaderDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        String[] recepieList = new String[this.recipes.size()];
+        String[] recipeList = new String[this.recipes.size()];
 
         int i = 0;
-        for (Recepie recepie : this.recipes){
-            recepieList[i] = recepie.getName() + " [" + recepie.getMark()+ "]";
+        for (Recipe recipe : this.recipes) {
+            recipeList[i] = recipe.getName() + " [" + recipe.getMark() + "]";
             i++;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder
                 .setTitle("Выберите рецепт")
-                .setItems(recepieList, new DialogInterface.OnClickListener() {
+                .setItems(recipeList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Toast.makeText(getActivity(), "Подождите, загружается рецепт - " + recipes.get(i).getMark(), Toast.LENGTH_LONG).show();
                         selectedRecepie = recipes.get(i).getMark();
                         selectedOrder = "Не указано";
-                        new Thread(()->{
+                        new Thread(() -> {
                             if (exchangeLevel == 1) OkHttpUtil.uplRecipe(recipes.get(i).getId());
                             else new SetRecipe().sendRecipeToPLC(recipes.get(i));
                         }).start();
