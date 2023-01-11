@@ -1,0 +1,69 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/dw_header">
+        <SwitchPreferenceCompat
+            app:key="auto_reset_dw"
+            app:title="Авто обнуление весов" />
+
+        <SwitchPreferenceCompat
+            app:key="water2"
+            app:title="Шламовая вода" />
+
+        <SwitchPreferenceCompat
+            app:key="humidity_mixer_sensor"
+            app:title="Датчик влажности в смесителе" />
+
+        <ListPreference
+            app:key="type_dw"
+            app:title="Тип дозатора"
+            app:entries="@array/water_type"
+            app:entryValues="@array/water_type"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="min_weight"
+            app:title="Минимальный вес дозации, кг"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="time_discharge"
+            app:title="Время слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_on_pump_discharge"
+            app:title="Задержка на вкл. насоса слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_off_valve_discharge"
+            app:title="Задержка на откл. клапана слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_on_pump_pouring"
+            app:title="Задержка на вкл. насоса налива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_off_valve_pouring"
+            app:title="Задержка на откл. клапана налива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_discharge"
+            app:title="Задержка на сброс, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:icon="@android:drawable/ic_menu_save"
+            app:key="saveBtn"
+            app:title="Записать в PLC" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

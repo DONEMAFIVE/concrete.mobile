@@ -1,0 +1,43 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/dch_header">
+        <SwitchPreferenceCompat
+            app:key="auto_reset_dch"
+            app:title="Авто обнуление весов" />
+
+        <EditTextPreference
+            app:key="chemy_count"
+            app:title="Кол-во химии на дозатор"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="min_weight_dch"
+            app:title="Минимальный вес дозации, кг"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="time_discharge_dch"
+            app:title="Время слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_on_pump_discharge"
+            app:title="Задержка на вкл. насоса слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_off_valve_discharge"
+            app:title="Задержка на откл. клапана слива, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:icon="@android:drawable/ic_menu_save"
+            app:key="saveBtn"
+            app:title="Записать в PLC" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

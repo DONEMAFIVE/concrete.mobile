@@ -1,0 +1,2095 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3D3D3D"
+
+    android:orientation="horizontal"
+    tools:context=".gui.OperatorViewActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <!-- TOUCH LOCK -->
+
+    <LinearLayout
+        android:id="@+id/infoBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu">
+
+        <TextView
+            android:id="@+id/operatorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Оператор смены"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mixCounterTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Всего циклов"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/mixCounterCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Счетчик циклов"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/recepieName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Текущий рецепт/заказ:"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/stateFactory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Статус работы завода"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dailyCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Произведено за сегодня"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/reportsMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/accounting" />
+
+                <ImageView
+                    android:id="@+id/catalogsMenu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/archive" />
+
+                <ImageView
+                    android:id="@+id/touchLock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/unlock" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/mixOptionBtn"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="замес"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/partyOptionBtn"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="партия"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/driverSelectBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Водитель\nНе выбрано"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/organizationSelectBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Заказчик\nНе выбрано"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/recepieOptionBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Рецепт"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+            </TableRow>
+
+        </TableLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/verticalLift"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/mixer"
+        app:layout_constraintStart_toEndOf="@+id/dk">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/runVerticalConv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:text="Запуск"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                android:textSize="10sp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/liftToMixer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/skipSensorUp2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/skipUp"
+                    app:srcCompat="@drawable/shiber_empty" />
+
+                <ImageView
+                    android:id="@+id/skipSensorUp1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/skipSensorUp2"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/shiber_empty" />
+
+                <ImageView
+                    android:id="@+id/verticalConveyorView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/vertical_conveyor" />
+
+                <ImageView
+                    android:id="@+id/skipUp"
+                    android:layout_width="70dp"
+                    android:layout_height="75dp"
+                    android:contentDescription="123"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="@+id/skipMiddle"
+                    app:layout_constraintStart_toEndOf="@+id/skipMiddle"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/skip"
+                    tools:ignore="content_description"
+                    tools:srcCompat="@drawable/skip" />
+
+                <ImageView
+                    android:id="@+id/skipDown"
+                    android:layout_width="70dp"
+                    android:layout_height="75dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/verticalConveyorView"
+                    app:srcCompat="@drawable/skip"
+                    tools:srcCompat="@drawable/skip" />
+
+                <ImageView
+                    android:id="@+id/skipMiddle"
+                    android:layout_width="70dp"
+                    android:layout_height="75dp"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toTopOf="@+id/skipDown"
+                    app:layout_constraintEnd_toEndOf="@+id/skipDown"
+                    app:layout_constraintStart_toEndOf="@+id/skipDown"
+                    app:srcCompat="@drawable/skip"
+                    tools:srcCompat="@drawable/skip" />
+
+                <ImageView
+                    android:id="@+id/skipSensorDown1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/skipSensorDown2"
+                    app:srcCompat="@drawable/shiber_empty" />
+
+                <ImageView
+                    android:id="@+id/skipSensorDown2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/skipDown"
+                    app:srcCompat="@drawable/shiber_empty" />
+
+                <ImageButton
+                    android:id="@+id/skipArrowDown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@+id/skipDown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/skipDown"
+                    app:layout_constraintTop_toBottomOf="@+id/skipMiddle"
+                    app:srcCompat="@drawable/arrow_down_off"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/skipArrowUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toTopOf="@+id/skipMiddle"
+                    app:layout_constraintEnd_toStartOf="@+id/skipUp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/skipUp"
+                    app:srcCompat="@drawable/arrow_up_off"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageView
+                    android:id="@+id/verticalConveyorUpArrowIndication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3dp"
+                    android:rotation="21"
+                    app:layout_constraintBottom_toBottomOf="@+id/skipMiddle"
+                    app:layout_constraintEnd_toEndOf="@+id/verticalConveyorView"
+                    app:layout_constraintStart_toStartOf="@+id/verticalConveyorView"
+                    app:layout_constraintTop_toTopOf="@+id/skipMiddle"
+                    app:srcCompat="@drawable/arrow_up" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chemy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toStartOf="@+id/water"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/chemy1LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/chemy1CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bunckerChemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker"
+                            tools:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/titleChemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 1"
+                            android:textAlignment="center"
+                            android:textColor="#F6FFFFFF"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/doseChemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/recepieChemy1"
+                            app:layout_constraintStart_toStartOf="@+id/recepieChemy1"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieChemy1" />
+
+                        <TextView
+                            android:id="@+id/recepieChemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/titleChemy1"
+                            app:layout_constraintStart_toStartOf="@+id/titleChemy1"
+                            app:layout_constraintTop_toBottomOf="@+id/titleChemy1" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserChemy1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintEnd_toEndOf="@+id/bunckerChemy1"
+                        app:layout_constraintStart_toStartOf="@+id/bunckerChemy1"
+                        app:layout_constraintTop_toBottomOf="@+id/bunckerChemy1"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/chemy2LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/chemy2CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bunckerChemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker"
+                            tools:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/titleChemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 2"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/doseChemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/recepieChemy2"
+                            app:layout_constraintStart_toStartOf="@+id/recepieChemy2"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieChemy2" />
+
+                        <TextView
+                            android:id="@+id/recepieChemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/titleChemy2"
+                            app:layout_constraintStart_toStartOf="@+id/titleChemy2"
+                            app:layout_constraintTop_toBottomOf="@+id/titleChemy2" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserChemy2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintEnd_toEndOf="@+id/bunckerChemy2"
+                        app:layout_constraintStart_toEndOf="@+id/bunckerChemy1"
+                        app:layout_constraintTop_toBottomOf="@+id/bunckerChemy1"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/chemy3LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/chemy3CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bunckerChemy3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker"
+                            tools:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/titleChemy3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 3"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/doseChemy3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/recepieChemy3"
+                            app:layout_constraintStart_toStartOf="@+id/recepieChemy3"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieChemy3" />
+
+                        <TextView
+                            android:id="@+id/recepieChemy3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/titleChemy3"
+                            app:layout_constraintStart_toStartOf="@+id/titleChemy3"
+                            app:layout_constraintTop_toBottomOf="@+id/titleChemy3" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserChemy3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintEnd_toEndOf="@+id/bunckerChemy3"
+                        app:layout_constraintStart_toEndOf="@+id/bunckerChemy1"
+                        app:layout_constraintTop_toBottomOf="@+id/bunckerChemy1"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dispenserChemyCL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/overflowChemy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/dispenserChemyLL"
+                    app:srcCompat="@drawable/shiber_empty" />
+
+                <LinearLayout
+                    android:id="@+id/dispenserChemyLL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/dispenserChemyView"
+                            android:layout_width="160dp"
+                            android:layout_height="90dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/dispenser_chemy" />
+
+                        <TextView
+                            android:id="@+id/weightDCh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Весы"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/dispenserChemyView"
+                            app:layout_constraintEnd_toEndOf="@+id/dispenserChemyView"
+                            app:layout_constraintStart_toStartOf="@+id/dispenserChemyView"
+                            app:layout_constraintTop_toTopOf="@+id/dispenserChemyView" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserDispenserChemy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteX="49dp"
+                        tools:layout_editor_absoluteY="163dp" />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/water"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toStartOf="@+id/cement"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/correctWater"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/incrementWater"
+                    android:layout_width="65dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/plus"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="+"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/decrementWater"
+                    android:layout_width="65dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/minus"
+                    android:layout_marginLeft="5dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="-"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/water1LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/water1CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bunckerWater1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/titleWater1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="18dp"
+                            android:text="Вода"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater1"
+                            app:layout_constraintTop_toTopOf="@+id/bunckerWater1" />
+
+                        <TextView
+                            android:id="@+id/doseWater1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater1"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieWater1" />
+
+                        <TextView
+                            android:id="@+id/recepieWater1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater1"
+                            app:layout_constraintTop_toBottomOf="@+id/titleWater1" />
+
+                        <ImageView
+                            android:id="@+id/valveWater"
+                            android:layout_width="47dp"
+                            android:layout_height="41dp"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/doseWater1"
+                            app:layout_constraintStart_toStartOf="@+id/doseWater1"
+                            app:layout_constraintTop_toBottomOf="@+id/doseWater1"
+                            app:srcCompat="@drawable/faucet_close" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/pumpWater"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/water2LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/water2CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/bunckerWater2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/titleWater2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="18dp"
+                            android:text="Вода2"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater2"
+                            app:layout_constraintTop_toTopOf="@+id/bunckerWater2" />
+
+                        <TextView
+                            android:id="@+id/doseWater2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater2"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieWater2" />
+
+                        <TextView
+                            android:id="@+id/recepieWater2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
+                            app:layout_constraintStart_toStartOf="@+id/bunckerWater2"
+                            app:layout_constraintTop_toBottomOf="@+id/titleWater2" />
+
+                        <ImageView
+                            android:id="@+id/valveWater2"
+                            android:layout_width="47dp"
+                            android:layout_height="41dp"
+                            android:layout_marginTop="4dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/doseWater2"
+                            app:layout_constraintStart_toStartOf="@+id/doseWater2"
+                            app:layout_constraintTop_toBottomOf="@+id/doseWater2"
+                            app:srcCompat="@drawable/faucet_close" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/pumpWater2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dispenserWaterCL"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/dispenserWaterLL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/overflowWater"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/shiber_empty" />
+
+                        <ImageView
+                            android:id="@+id/dispenserWaterView"
+                            android:layout_width="160dp"
+                            android:layout_height="90dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/dispenser_water" />
+
+                        <TextView
+                            android:id="@+id/weigthWater"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Весы"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/dispenserWaterView"
+                            app:layout_constraintEnd_toEndOf="@+id/dispenserWaterView"
+                            app:layout_constraintStart_toStartOf="@+id/dispenserWaterView"
+                            app:layout_constraintTop_toTopOf="@+id/dispenserWaterView"
+                            app:layout_constraintVertical_bias="0.507" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserDispenserWater"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/cementLL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cementControl"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/cement1LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/silosSelector1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Выбор"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="947dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cement1CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/silos1View"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/doseSilos1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos1View"
+                            app:layout_constraintStart_toStartOf="@+id/silos1View"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieSilos1" />
+
+                        <TextView
+                            android:id="@+id/recepieSilos1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos1View"
+                            app:layout_constraintStart_toStartOf="@+id/silos1View"
+                            app:layout_constraintTop_toBottomOf="@+id/titleSilos1" />
+
+                        <TextView
+                            android:id="@+id/titleSilos1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 1"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/silos1View"
+                            app:layout_constraintStart_toStartOf="@+id/silos1View"
+                            app:layout_constraintTop_toTopOf="@+id/silos1View" />
+
+                        <ImageView
+                            android:id="@+id/levelUpSilos1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toTopOf="@+id/levelDownSilos1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:srcCompat="@drawable/level_silos_disable" />
+
+                        <ImageView
+                            android:id="@+id/levelDownSilos1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/levelUpSilos1"
+                            app:layout_constraintTop_toBottomOf="@+id/doseSilos1"
+                            app:srcCompat="@drawable/level_silos_disable" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserShnek1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:layout_constraintEnd_toStartOf="@+id/silos2View"
+                        app:layout_constraintStart_toStartOf="@+id/silos1View"
+                        app:layout_constraintTop_toBottomOf="@+id/silos1View"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cement2LL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/silosSelector2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Выбор"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="1022dp" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cement2CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/silos2View"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/recepieSilos2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos2View"
+                            app:layout_constraintStart_toStartOf="@+id/silos2View"
+                            app:layout_constraintTop_toBottomOf="@+id/titleSilos2" />
+
+                        <TextView
+                            android:id="@+id/titleSilos2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 2"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/silos2View"
+                            app:layout_constraintStart_toStartOf="@+id/silos2View"
+                            app:layout_constraintTop_toTopOf="@+id/silos2View" />
+
+                        <TextView
+                            android:id="@+id/doseSilos2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos2View"
+                            app:layout_constraintStart_toStartOf="@+id/silos2View"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieSilos2" />
+
+                        <ImageView
+                            android:id="@+id/levelDownSIlos2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="@+id/levelUpSilos2"
+                            app:layout_constraintStart_toStartOf="@+id/levelUpSilos2"
+                            app:layout_constraintTop_toBottomOf="@+id/levelUpSilos2"
+                            app:srcCompat="@drawable/level_silos_disable" />
+
+                        <ImageView
+                            android:id="@+id/levelUpSilos2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/doseSilos2"
+                            app:layout_constraintStart_toStartOf="@+id/doseSilos2"
+                            app:layout_constraintTop_toBottomOf="@+id/doseSilos2"
+                            app:srcCompat="@drawable/level_silos_disable" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserShnek2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dispenserCementCL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/dispenserCementView"
+                            android:layout_width="160dp"
+                            android:layout_height="90dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/dispenser_cement" />
+
+                        <TextView
+                            android:id="@+id/weigthDC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Весы"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/dispenserCementView"
+                            app:layout_constraintEnd_toEndOf="@+id/dispenserCementView"
+                            app:layout_constraintStart_toStartOf="@+id/dispenserCementView"
+                            app:layout_constraintTop_toTopOf="@+id/dispenserCementView" />
+
+                        <ImageView
+                            android:id="@+id/closeSensorDC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="32dp"
+                            app:layout_constraintBottom_toTopOf="@+id/openSensorDC"
+                            app:layout_constraintEnd_toEndOf="@+id/dispenserCementView"
+                            app:srcCompat="@drawable/shiber_empty" />
+
+                        <ImageView
+                            android:id="@+id/openSensorDC"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="32dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:srcCompat="@drawable/shiber_empty" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserDispenserCement"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintEnd_toEndOf="@+id/dispenserCementView"
+                        app:layout_constraintStart_toStartOf="@+id/dispenserCementView"
+                        app:layout_constraintTop_toBottomOf="@+id/dispenserCementView"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cementControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cementLL"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/performance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/filterSilos"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#FFFFFF"
+                android:text="Фильтр"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:layout_editor_absoluteY="43dp" />
+
+            <Button
+                android:id="@+id/aerationSilos"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#FFFFFF"
+                android:text="Аэрация"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filterSilos" />
+
+            <Button
+                android:id="@+id/vibroSilos"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:backgroundTint="#FFFFFF"
+                android:text="Вибратор"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/aerationSilos" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    <RadioGroup-->
+    <!--        android:id="@+id/manualAutoGroup"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/pauto"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent">-->
+
+    <!--        <RadioButton-->
+    <!--            android:id="@+id/manualMode"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="Ручной режим"-->
+    <!--            android:textColor="@color/white" />-->
+
+    <!--        <RadioButton-->
+    <!--            android:id="@+id/autoMode"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="Авто. режим"-->
+    <!--            android:textColor="@color/white" />-->
+    <!--    </RadioGroup>-->
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/stopCycle"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FF0000"
+            android:text="Стоп"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/runCycle"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#7FFF47"
+            android:text="Запуск"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/manualAutoSwitcher"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Ручной/Автомат"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/halfAutoMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/startSelfDK"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДК"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfChemy"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДХ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfCement"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДЦ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfWater"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДВ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/dk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/hoppers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/hopper1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/buncker1View"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/buncker_inert" />
+
+                    <TextView
+                        android:id="@+id/titleBuncker1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Бункер 1"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintEnd_toEndOf="@+id/buncker1View"
+                        app:layout_constraintStart_toStartOf="@+id/buncker1View"
+                        app:layout_constraintTop_toTopOf="@+id/buncker1View" />
+
+                    <TextView
+                        android:id="@+id/recepieBuncker1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0/0"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/titleBuncker1"
+                        app:layout_constraintStart_toStartOf="@+id/titleBuncker1"
+                        app:layout_constraintTop_toBottomOf="@+id/titleBuncker1" />
+
+                    <TextView
+                        android:id="@+id/doseBuncker1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доза"
+                        android:textAlignment="center"
+                        android:textColor="#7D000000"
+                        app:layout_constraintEnd_toEndOf="@+id/recepieBuncker1"
+                        app:layout_constraintStart_toStartOf="@+id/recepieBuncker1"
+                        app:layout_constraintTop_toBottomOf="@+id/recepieBuncker1" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/doser11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toTopOf="@+id/horLineView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:srcCompat="@drawable/doser_close" />
+
+                    <ImageView
+                        android:id="@+id/doser12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@+id/doser11"
+                        app:layout_constraintTop_toTopOf="@+id/doser11"
+                        app:srcCompat="@drawable/doser_close" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hopper2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/buncker2View"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/buncker_inert" />
+
+                    <TextView
+                        android:id="@+id/recepieBuncker2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0/0"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/titleBuncker2"
+                        app:layout_constraintStart_toStartOf="@+id/titleBuncker2"
+                        app:layout_constraintTop_toBottomOf="@+id/titleBuncker2" />
+
+                    <TextView
+                        android:id="@+id/titleBuncker2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Бункер 2"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/buncker2View"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/doseBuncker2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доза"
+                        android:textAlignment="center"
+                        android:textColor="#7D000000"
+                        app:layout_constraintEnd_toEndOf="@+id/recepieBuncker2"
+                        app:layout_constraintStart_toStartOf="@+id/recepieBuncker2"
+                        app:layout_constraintTop_toBottomOf="@+id/recepieBuncker2" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/doser21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteY="140dp" />
+
+                    <ImageView
+                        android:id="@+id/doser22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@+id/doser21"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteY="140dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hopper3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/buncker3View"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/buncker_inert" />
+
+                    <TextView
+                        android:id="@+id/titleBuncker3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Бункер 3"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintEnd_toEndOf="@+id/buncker3View"
+                        app:layout_constraintStart_toStartOf="@+id/buncker3View"
+                        app:layout_constraintTop_toTopOf="@+id/buncker3View" />
+
+                    <TextView
+                        android:id="@+id/recepieBuncker3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0/0"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/titleBuncker3"
+                        app:layout_constraintStart_toStartOf="@+id/titleBuncker3"
+                        app:layout_constraintTop_toBottomOf="@+id/titleBuncker3" />
+
+                    <TextView
+                        android:id="@+id/doseBuncker3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доза"
+                        android:textAlignment="center"
+                        android:textColor="#7D000000"
+                        app:layout_constraintEnd_toEndOf="@+id/recepieBuncker3"
+                        app:layout_constraintStart_toStartOf="@+id/recepieBuncker3"
+                        app:layout_constraintTop_toBottomOf="@+id/recepieBuncker3" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/doser31"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteX="155dp"
+                        tools:layout_editor_absoluteY="140dp" />
+
+                    <ImageView
+                        android:id="@+id/doser32"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@+id/doser31"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteY="140dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/hopper4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/buncker4View"
+                        android:layout_width="150dp"
+                        android:layout_height="140dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/buncker_inert" />
+
+                    <TextView
+                        android:id="@+id/titleBuncker4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Бункер 4"
+                        android:textAlignment="center"
+                        android:textColor="#FFFFFF"
+                        app:layout_constraintEnd_toEndOf="@+id/buncker4View"
+                        app:layout_constraintStart_toStartOf="@+id/buncker4View"
+                        app:layout_constraintTop_toTopOf="@+id/buncker4View" />
+
+                    <TextView
+                        android:id="@+id/recepieBuncker4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="0/0"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="@+id/titleBuncker4"
+                        app:layout_constraintStart_toStartOf="@+id/titleBuncker4"
+                        app:layout_constraintTop_toBottomOf="@+id/titleBuncker4" />
+
+                    <TextView
+                        android:id="@+id/doseBuncker4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доза"
+                        android:textAlignment="center"
+                        android:textColor="#7D000000"
+                        app:layout_constraintEnd_toEndOf="@+id/recepieBuncker4"
+                        app:layout_constraintStart_toStartOf="@+id/recepieBuncker4"
+                        app:layout_constraintTop_toBottomOf="@+id/recepieBuncker4" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/doser41"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteX="155dp"
+                        tools:layout_editor_absoluteY="140dp" />
+
+                    <ImageView
+                        android:id="@+id/doser42"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/doser_close"
+                        tools:layout_editor_absoluteY="140dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/horizontalConveyer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/horLineStart"
+                android:layout_width="87dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="45dp"
+                android:backgroundTint="#FFFFFF"
+                android:text="Старт"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/horLineView" />
+
+            <ImageView
+                android:id="@+id/horLineView"
+                android:layout_width="590dp"
+                android:layout_height="63dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/horizontal_conveyor"
+                tools:srcCompat="@drawable/horizontal_conveyor" />
+
+            <TextView
+                android:id="@+id/weightDK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Весы"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp"
+                app:layout_constraintBottom_toBottomOf="@+id/horLineView"
+                app:layout_constraintEnd_toEndOf="@+id/horLineView"
+                app:layout_constraintStart_toStartOf="@+id/horLineView"
+                app:layout_constraintTop_toTopOf="@+id/horLineView" />
+
+            <ImageView
+                android:id="@+id/lineArrowIndication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-105dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/horLineView"
+                app:layout_constraintTop_toTopOf="@+id/horLineView"
+                app:layout_constraintVertical_bias="1.0"
+                app:srcCompat="@drawable/arrow_right" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mixer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/halfAutoMode">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/startMixerEngine"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:gravity="center"
+                    android:text="Смеситель"
+                    android:textColor="#000000"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/resetCounterBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Обнулить цикл"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/mixerCL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end">
+
+                    <Button
+                        android:id="@+id/closeMixer"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Закрыть"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/mixerView" />
+
+                    <Button
+                        android:id="@+id/openMixer"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Открыть"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/mixerView"
+                        android:layout_width="206dp"
+                        android:layout_height="180dp"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/mixFully"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/mixer_full"
+                        tools:srcCompat="@drawable/mixer_full" />
+
+                    <TextView
+                        android:id="@+id/amperage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginTop="33dp"
+                        android:text="Сила тока"
+                        android:textAlignment="inherit"
+                        android:textColor="#000000"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/autoDropChecker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Авторазгрузка"
+                    android:textColor="#FFFFFF" />
+
+                <ImageView
+                    android:id="@+id/dropProcessArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/arrow_down" />
+
+                <LinearLayout
+                    android:id="@+id/mixerSensors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/closeSensorMixer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/shiber_lock" />
+
+                    <ImageView
+                        android:id="@+id/middleSensorMixer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/shiber_lock" />
+
+                    <ImageView
+                        android:id="@+id/openSensorMixer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/shiber_lock" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/alarm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoBlock"
+        app:srcCompat="@drawable/warning" />
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/alarmsWarningLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#031F1F1F"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#593D3D3D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/alarmWarningText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="150dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:focusable="false"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:padding="70dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/resetAlarmBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Сбросить"
+                app:layout_constraintBottom_toBottomOf="@+id/alarmWarningText"
+                app:layout_constraintEnd_toStartOf="@+id/closeAlarmLayoutBtn" />
+
+            <Button
+                android:id="@+id/closeAlarmLayoutBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Закрыть"
+                app:layout_constraintBottom_toBottomOf="@+id/alarmWarningText"
+                app:layout_constraintEnd_toEndOf="@+id/alarmWarningText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/mainMenuDL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#031F1F1F"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/bgBlack"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#593D3D3D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/bgBlack"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/touchLockLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#031F1F1F"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#7C3D3D3D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="400dp"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:max="100"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:progressDrawable="@android:color/transparent"
+                    android:thumb="@drawable/lock" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:text="Для разблокировки проведите замок до конца в права и отпустите"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

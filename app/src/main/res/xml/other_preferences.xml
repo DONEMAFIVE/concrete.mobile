@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/other_header">
+
+        <SwitchPreferenceCompat
+            app:key="auto_queue"
+            app:title="Автоматическая очередь"
+            app:useSimpleSummaryProvider="true" />
+
+        <SeekBarPreference
+            app:key="dk"
+            app:dependency="auto_queue"
+            app:title="ДК"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            app:key="water"
+            app:dependency="auto_queue"
+            app:title="Вода"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            app:key="chemy"
+            app:dependency="auto_queue"
+            app:title="Химия"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            app:key="cement"
+            app:dependency="auto_queue"
+            app:title="Цемент"
+            app:seekBarIncrement="1"
+            app:showSeekBarValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:icon="@android:drawable/ic_menu_save"
+            app:key="saveBtn"
+            app:title="Записать в PLC" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

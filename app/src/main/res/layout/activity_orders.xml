@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".gui.ReportsActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/open_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#6F000000"
+            android:padding="5dp"
+            android:text="Показать отчеты"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/open_fab"
+            app:layout_constraintEnd_toStartOf="@+id/open_fab"
+            app:layout_constraintTop_toTopOf="@+id/open_fab" />
+
+        <TextView
+            android:id="@+id/save_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#6F000000"
+            android:padding="5dp"
+            android:text="Сохранить"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/save_fab"
+            app:layout_constraintEnd_toStartOf="@+id/save_fab"
+            app:layout_constraintTop_toTopOf="@+id/save_fab" />
+
+        <TextView
+            android:id="@+id/new_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#6F000000"
+            android:padding="5dp"
+            android:text="Новый"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/new_fab"
+            app:layout_constraintEnd_toStartOf="@+id/new_fab"
+            app:layout_constraintTop_toTopOf="@+id/new_fab" />
+
+        <TextView
+            android:id="@+id/filter_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#6F000000"
+            android:padding="5dp"
+            android:text="Фильтр"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/filter_fab"
+            app:layout_constraintEnd_toStartOf="@+id/filter_fab"
+            app:layout_constraintTop_toTopOf="@+id/filter_fab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/open_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/filter_fab"
+            app:layout_constraintEnd_toEndOf="@+id/filter_fab"
+            app:srcCompat="@drawable/reports"
+            app:tint="@color/blue_zzbo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/menu"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/blue_zzbo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/filter_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/save_fab"
+            app:layout_constraintEnd_toEndOf="@+id/save_fab"
+            app:layout_constraintStart_toStartOf="@+id/save_fab"
+            app:srcCompat="@drawable/filter"
+            app:tint="@color/blue_zzbo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/save_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/new_fab"
+            app:layout_constraintEnd_toEndOf="@+id/new_fab"
+            app:layout_constraintStart_toStartOf="@+id/new_fab"
+            app:srcCompat="@drawable/save"
+            app:tint="@color/blue_zzbo" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/add_fab"
+            app:layout_constraintEnd_toEndOf="@+id/add_fab"
+            app:layout_constraintStart_toStartOf="@+id/add_fab"
+            app:srcCompat="@drawable/plus"
+            app:tint="@color/blue_zzbo" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillViewport="true">
+
+                        <ru.zzbo.concretemobile.utils.TableView
+                            android:id="@+id/listOrdersTableView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:overScrollMode="never"
+                            app:cellBackground="#F5F5F5"
+                            app:cellPadding="11dp"
+                            app:cellSelectedColor="#A3E4DB"
+                            app:cellTextColor="#3e4449"
+                            app:cellTextGravity="start"
+                            app:headerBackground="#D6E5FA"
+                            app:headerPadding="11dp"
+                            app:headerTextColor="#3e4449"
+                            app:headerTextGravity="start"
+                            app:isStretch="true"
+                            app:itemPreviewCount="10"></ru.zzbo.concretemobile.utils.TableView>
+
+                    </androidx.core.widget.NestedScrollView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/progress_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#8C676767"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/text_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Сохранение..."
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

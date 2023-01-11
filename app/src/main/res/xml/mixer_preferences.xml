@@ -1,0 +1,88 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/mixer_header">
+
+        <!--Конвейер выгрузки-->
+        <SwitchPreferenceCompat
+            app:key="discharge_conveyor"
+            app:title="Конвейер выгрузки" />
+
+        <EditTextPreference
+            app:dependency="discharge_conveyor"
+            app:key="time_discharge_conveyor"
+            app:title="Время выгрузки, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <PreferenceCategory/>
+
+        <SwitchPreferenceCompat
+            app:key="impulse_discharge"
+            app:title="Импульсная разгрузка смесителя" />
+
+        <EditTextPreference
+            app:key="open_shiber"
+            app:title="Открытие шибера, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="close_shiber"
+            app:dependency="impulse_discharge"
+            app:title="Закрытие шибера, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="count_open_shiber"
+            app:dependency="impulse_discharge"
+            app:title="Кол-во открытий шибера, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="oper_auto_greaser"
+            app:title="Работа автосмазчика, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="pause_greaser"
+            app:title="Пауза автосмазчика, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="wait_discharge"
+            app:title="Время до аварийного предупреждения ожидания разгрузки, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            app:key="hydro_gate"
+            app:title="2-х катушечный привод" />
+
+        <!--Откр. смесителя до середины-->
+        <PreferenceCategory/>
+
+        <SwitchPreferenceCompat
+            app:key="open_middle_shiber"
+            app:title="Откр. смесителя до середины" />
+
+        <EditTextPreference
+            app:dependency="open_middle_shiber"
+            app:key="time_open_middle_shiber"
+            app:title="Открытие до середины, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:dependency="open_middle_shiber"
+            app:key="time_pause_open_middle_shiber"
+            app:title="Пауза на середине, сек"
+            app:useSimpleSummaryProvider="true" />
+
+        <PreferenceCategory/>
+
+        <!--Сохранить-->
+        <Preference
+            app:icon="@android:drawable/ic_menu_save"
+            app:key="saveBtn"
+            app:title="Записать в PLC" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

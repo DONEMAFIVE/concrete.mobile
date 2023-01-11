@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">УБЗ ZZBO</string>
+    <string name="sortable_indicator_content_description">Sortable Indicator</string>
+    <string name="default_header">Header %1$d</string>
+    <string name="default_cell">Data [%1$d:%2$d]</string>
+
+    <!-- Preference CONFIG Titles -->
+    <string name="system_header">Система</string>
+    <string name="inert_name">Инертные материалы</string>
+    <string name="report_header">Отчеты</string>
+
+    <!-- SYSTEM Preferences -->
+    <string name="plc_ip">IP адрес контроллера</string>
+    <string name="plc_port">PORT контроллера</string>
+    <string name="scada_ip">IP адрес PC</string>
+    <string name="rest_ip">REST IP адрес</string>
+    <string name="server_update">Сервер обновления</string>
+    <string name="hardkey">Лицензионный ключ</string>
+
+    <!-- REPORTS Preferences -->
+    <string name="send_mail_title">Отправка отчетов на почту (Ежедневно)</string>
+    <string name="time_sync_title">Время синхронизации</string>
+    <string name="attachment_summary_on">Отправка активирована</string>
+    <string name="attachment_summary_off">Отправка отключена</string>
+    <string name="title_activity_config">ConfigActivity</string>
+
+    <!-- Preference COMPLECTATION Titles -->
+    <string name="complectation_header">Комплектация</string>
+    <string name="other_header">ОБЩИЕ</string>
+    <string name="dk_header">ДОЗИРУЮЩИЙ КОМПЛЕКС</string>
+    <string name="dc_header">ДОЗАТОР ЦЕМЕНТА</string>
+    <string name="dch_header">ДОЗАТОР ХИМИИ</string>
+    <string name="dw_header">ДОЗАТОР ВОДЫ</string>
+
+    <!-- COMPLECTATION Preferences -->
+    <string name="inert_bunker_counter">Кол-во бункеров ДК</string>
+    <string name="silos_counter">Кол-во силосов</string>
+    <string name="water2">Шлановая вода</string>
+    <string name="humidity_mixer_sensor">Датчик влажности в смесителе</string>
+    <string name="chemy_counter">Кол-во химии</string>
+    <string name="transporter_type">Тип транспортера</string>
+    <string name="fibra_option">Дозатор фибры</string>
+    <string name="drop_conveyor">Конвейер выгрузки</string>
+    <string name="mix_capacity">Объем смесителя</string>
+    <string name="hydro_gate">2 катушки на затворе сброса</string>
+    <string name="combo_bunker_option">На бункерах по одной заслонке</string>
+    <string name="title_activity_config2">Config2Activity</string>
+
+
+    <string name="mixer_header">СМЕСИТЕЛЬ</string>
+    <string name="skipLT_header">СКИП/ЛЕНТА</string>
+    <string name="production_number">Номер производства</string>
+</resources>

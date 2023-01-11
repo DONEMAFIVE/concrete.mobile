@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/skipLT_header">
+        <SwitchPreferenceCompat
+            app:key="no_lift_water"
+            app:title="Не поднимать до набора воды" />
+
+        <SwitchPreferenceCompat
+            app:key="no_lift_cement"
+            app:title="Не поднимать до набора цемента" />
+
+        <ListPreference
+            app:key="lift_after"
+            app:title="Подьем скипа после..."
+            app:entries="@array/lift_skip_after"
+            app:entryValues="@array/lift_skip_after"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_lift"
+            app:title="Задержка подъема, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="discharge_skip"
+            app:title="Выгрузка скипа, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="discharge_lt"
+            app:title="Время выгрузки ЛТ, сек"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="alarm_stop_skip"
+            app:title="Время до аварийной остановки скипа если шибер открыт, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <Preference
+        app:icon="@android:drawable/ic_menu_save"
+        app:key="saveBtn"
+        app:title="Записать в PLC" />
+
+</PreferenceScreen>

@@ -1,0 +1,22 @@
+<resources>
+    <string-array name="connect_type">
+        <item>PLC - прямая связь</item>
+        <item>PC - компьютер</item>
+    </string-array>
+    <string-array name="transporter_type">
+        <item>Лента</item>
+        <item>Лента-Лента</item>
+        <item>Лента-Скип</item>
+    </string-array>
+
+    <string-array name="water_type">
+        <item>Тензометрический</item>
+        <item>Импульсный</item>
+    </string-array>
+
+    <string-array name="lift_skip_after">
+        <item>Завершения разгрузки</item>
+        <item>Начала разгрузки</item>
+    </string-array>
+
+</resources>

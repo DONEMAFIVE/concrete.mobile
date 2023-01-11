@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/drawable/mixer_animation.xml" value="0.3715" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout-land/complecatation_view.xml" value="0.33" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout-land/factory_view.xml" value="0.33" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout-land/mixes_activity.xml" value="0.25" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout-land/options_view.xml" value="0.14547677261613692" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout-land/recepie_activity.xml" value="0.33" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/activity_recepie.xml" value="0.1859375" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/capacity_mix_dialog.xml" value="0.22134387351778656" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/complectation_view.xml" value="0.1859375" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/mnemo_scheme.xml" value="0.2578125" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/operator_view.xml" value="0.5" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/organization_list_dialog.xml" value="0.1234375" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/recepie_activity.xml" value="0.14635416666666667" />
+        <entry key="..\:/Development/ZZBOConcreteMobile/app/src/main/res/layout/reporting_view.xml" value="0.1859375" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

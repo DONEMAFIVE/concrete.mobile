@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".gui.catalogs.EditOrderActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="№ заказа:" />
+
+                    <EditText
+                        android:id="@+id/numberOrderField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:textColor="#757575"
+                        android:focusable="false"
+                        android:layout_marginEnd="50dp"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Дата заказа:" />
+
+                    <EditText
+                        android:id="@+id/dateOrderField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="#757575"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:inputType="date" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/nameOrderTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Название заказа:" />
+
+                    <EditText
+                        android:id="@+id/nameOrderField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="50dp"
+                        android:ems="10"
+                        android:inputType="textPersonName" />
+
+                    <TextView
+                        android:id="@+id/textView21"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Адрес выгрузки:" />
+
+                    <EditText
+                        android:id="@+id/addressUploadField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center"
+                        android:text="Заказчик:" />
+
+                    <Spinner
+                        android:id="@+id/organizationSpinner"
+                        android:layout_width="350dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="50dp"
+                        android:spinnerMode="dialog" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center"
+                        android:text="Водитель:" />
+
+                    <Spinner
+                        android:id="@+id/driverSpinner"
+                        android:layout_width="350dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="50dp"
+                        android:ems="10"
+                        android:spinnerMode="dialog" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left|center"
+                        android:text="Рецепт:" />
+
+                    <Spinner
+                        android:id="@+id/recipeSpinner"
+                        android:layout_width="350dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="50dp"
+                        android:ems="10"
+                        android:spinnerMode="dialog" />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/paymentOption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Вариант оплаты:" />
+
+                    <Spinner
+                        android:id="@+id/paymentSpinner"
+                        android:layout_width="350dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="50dp"
+                        android:ems="10"
+                        android:spinnerMode="dialog" />
+
+                    <TextView
+                        android:id="@+id/amountConcreteTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Сумма за бетон:" />
+
+                    <EditText
+                        android:id="@+id/amountConcreteField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="numberDecimal" />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Объем продукции, м3:" />
+
+                    <EditText
+                        android:id="@+id/partyCapacityField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="50dp"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Объем 1-го замеса, м3:" />
+
+                    <EditText
+                        android:id="@+id/mixCapacityField"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView22"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:text="Комментарий к заказу:" />
+
+                    <EditText
+                        android:id="@+id/commentOrderField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:inputType="textMultiLine" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </TableLayout>
+
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/saveOrder"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="20dp"
+                    android:layout_weight="0.3"
+                    android:text="Сохранить и закрыть" />
+
+                <Button
+                    android:id="@+id/close"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_margin="20dp"
+                    android:layout_weight="0.3"
+                    android:text="Завершить без сохранения" />
+
+            </TableRow>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

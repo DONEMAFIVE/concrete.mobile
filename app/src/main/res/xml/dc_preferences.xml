@@ -1,0 +1,53 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/dc_header">
+        <SwitchPreferenceCompat
+            app:key="auto_reset_dc"
+            app:title="Авто обнуление весов" />
+
+        <EditTextPreference
+            app:key="cement_count"
+            app:title="Кол-во силосов на дозатор"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="min_weight_dc"
+            app:title="Минимальный вес дозации, кг"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="time_discharge_dc"
+            app:title="Время разгрузки, сек"
+            app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:key="time_vibro"
+            app:title="Работа вибраторов, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="pause_vibro"
+            app:title="Пауза вибраторов, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <EditTextPreference
+            app:key="delay_discharge_dc"
+            app:title="Задержка на сброс, сек"
+            app:useSimpleSummaryProvider="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="permission_start_vibro"
+            app:title="Разрешение на запуск вибратора ДЦ(Автоматическое включение)" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            app:icon="@android:drawable/ic_menu_save"
+            app:key="saveBtn"
+            app:title="Записать в PLC" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

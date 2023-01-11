@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TableView">
+        <attr name="defaultEmptyCell" format="string"/>
+        <attr name="isStretch" format="boolean"/>
+        <attr name="headerPadding" format="dimension"/>
+        <attr name="cellPadding" format="dimension"/>
+        <attr name="itemPreviewCount" format="integer"/>
+
+        <attr name="cellBackground" format="reference|color"/>
+        <attr name="cellTextColor" format="reference|color"/>
+        <attr name="cellSelectedColor" format="reference|color"/>
+        <attr name="cellTextGravity">
+            <flag name="start" value="0x00800003" />
+            <flag name="center" value="0x11" />
+            <flag name="end" value="0x00800005" />
+        </attr>
+
+        <attr name="headerBackground" format="reference|color"/>
+        <attr name="headerTextColor" format="reference|color"/>
+        <attr name="headerTextGravity">
+            <flag name="start" value="0x00800003" />
+            <flag name="center" value="0x11" />
+            <flag name="end" value="0x00800005" />
+        </attr>
+    </declare-styleable>
+</resources>

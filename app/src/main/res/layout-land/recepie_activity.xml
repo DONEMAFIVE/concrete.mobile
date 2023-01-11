@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".gui.catalogs.EditRecipeActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="40dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recipeIDTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="ID Рецепта" />
+
+                <EditText
+                    android:id="@+id/recipeIDField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:inputType="numberDecimal"
+                    android:text="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/typeOrganizationTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Дата создания:" />
+
+                <EditText
+                    android:id="@+id/typeOrganizationField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:focusable="false"
+                    android:inputType="date"
+                    android:text="01.01.22" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recipeNameTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Название рецепта:" />
+
+                <EditText
+                    android:id="@+id/recipeNameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textPersonName"
+                    android:text="Новый рецепт" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recepieMarkTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Марка:" />
+
+                <EditText
+                    android:id="@+id/recepieMarkField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textPersonName"
+                    android:text="Новая марка" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/recepieClassTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Класс:" />
+
+                <EditText
+                    android:id="@+id/recepieClassField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textPersonName"
+                    android:text="Новый класс" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/uniNumberTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Уникальный номер" />
+
+                <EditText
+                    android:id="@+id/uniNumberField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textPersonName"
+                    android:text="0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Описание" />
+
+                <EditText
+                    android:id="@+id/descriptionField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textMultiLine"
+                    android:text="Описание" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/mixTimeTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:paddingEnd="20dp"
+                    android:layout_weight="2"
+                    android:text="Время перемешивания" />
+
+                <EditText
+                    android:id="@+id/mixTimeField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:text="0" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/weightsTableTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="25dp"
+                android:text="Расход ингредиентов для замешивания:" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunckersColumnTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер" />
+
+                    <TextView
+                        android:id="@+id/weightColumnTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Вес" />
+
+                    <TextView
+                        android:id="@+id/shortageColumnTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Недосып" />
+
+                    <TextView
+                        android:id="@+id/humidityColumnTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Влажность" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker11RowTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 11:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker12Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 12:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker21Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 21:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker21"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker21"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker21"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker22Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 22:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker22"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker22"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker22"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker31Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 31:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker31"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker31"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker31"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker32Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 32:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker32"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker32"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker32"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker41Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 41:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker41"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker41"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker41"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/bunker42Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Бункер 42:" />
+
+                    <EditText
+                        android:id="@+id/weightBuncker42"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageBuncker42"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/humidityBuncker42"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/chemy1Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Химия 1:" />
+
+                    <EditText
+                        android:id="@+id/weightChemy1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageChemy1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/chemy2Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Химия 2:" />
+
+                    <EditText
+                        android:id="@+id/weightChemy2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageChemy2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/silos1Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Силос 1:" />
+
+                    <EditText
+                        android:id="@+id/weightSilos1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageSilos1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/silos2Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Силос 2:" />
+
+                    <EditText
+                        android:id="@+id/weightSilos2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageSilos2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/waterTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Вода:" />
+
+                    <EditText
+                        android:id="@+id/weightWater"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageWater"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/water2Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Вода Ш:" />
+
+                    <EditText
+                        android:id="@+id/weightWater2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:id="@+id/shortageWater2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/pathToHumidityTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Задание влажн:" />
+
+                    <EditText
+                        android:id="@+id/pathToHumidityField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="0" />
+
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                    <EditText
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/saveOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_margin="20dp"
+                        android:layout_weight="0.3"
+                        android:text="Сохранить и закрыть" />
+
+                    <Button
+                        android:id="@+id/delOrder"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_margin="20dp"
+                        android:layout_weight="0.3"
+                        android:text="Удалить" />
+
+                    <Button
+                        android:id="@+id/close"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_margin="20dp"
+                        android:layout_weight="0.3"
+                        android:text="Завершить без сохранения" />
+
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
