@@ -44,9 +44,6 @@ public class DatesGenerate {
         String monthBegin = String.valueOf(parseDateToday[3]) + String.valueOf(parseDateToday[4]);
         String dayBegint = String.valueOf(parseDateToday[0]) + String.valueOf(parseDateToday[1]);
 
-//        System.out.println(dayEnd + "." + monthEnd + "." + yearEnd);
-//        System.out.println(dayBegint + "." + monthBegin + "." + yearBegin);
-
         int yearLastInt = Integer.valueOf(yearEnd);
         int monthLastInt = Integer.valueOf(monthEnd);
         int dayLastInt = Integer.valueOf(dayEnd);
@@ -67,7 +64,7 @@ public class DatesGenerate {
                     } else {
                         tmpDay = String.valueOf(dayTodayInt);
                     }
-                    lostDates.add(String.valueOf(tmpDay + "." + tmpMonth + "." + yearTodayInt));
+                    lostDates.add(tmpDay + "." + tmpMonth + "." + yearTodayInt);
                 }
 
                 if (monthTodayInt>=10){
@@ -76,7 +73,7 @@ public class DatesGenerate {
                     } else {
                         tmpDay = String.valueOf(dayTodayInt);
                     }
-                    lostDates.add(String.valueOf(tmpDay + "." + monthTodayInt + "." + yearTodayInt));
+                    lostDates.add(tmpDay + "." + monthTodayInt + "." + yearTodayInt);
                 }
 
                 if (monthTodayInt < 7) { //проверка с января по июнь

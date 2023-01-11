@@ -49,7 +49,7 @@ public class ReportsActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private Fragment fragment;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-    private Button loadReportBtn;
+    private Button applyReportBtn;
     private Button closeDialog;
     private Button closeSaveDialog;
     private Button exportExcelBtn;
@@ -75,9 +75,9 @@ public class ReportsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.report_activity);
 
-        initialUI();
+        initUI();
         firstRun();
-        startListeners();
+        initActions();
 
     }
 
@@ -95,7 +95,7 @@ public class ReportsActivity extends AppCompatActivity {
         ft.commit();
     }
 
-    private void startListeners() {
+    private void initActions() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -191,13 +191,15 @@ public class ReportsActivity extends AppCompatActivity {
             exportExcelBtn.setOnClickListener(e -> {
                 try {
                     new Thread(() -> {
-                        runOnUiThread(()-> progressLoading.setVisibility(View.VISIBLE));
+                        runOnUiThread(() -> progressLoading.setVisibility(View.VISIBLE));
 
                         SqliteToExcel sqliteToExcel = new SqliteToExcel(this, startDate, endDate);
 
                         //todo: выбор отчета
-                        if (mixesReportChecker.isChecked()) sqliteToExcel.createSheetMixes(cementLessFilter.isChecked());
-                        if (partyReportChecker.isChecked()) sqliteToExcel.createSheetParty(cementLessFilter.isChecked());
+                        if (mixesReportChecker.isChecked())
+                            sqliteToExcel.createSheetMixes(cementLessFilter.isChecked());
+                        if (partyReportChecker.isChecked())
+                            sqliteToExcel.createSheetParty(cementLessFilter.isChecked());
                         if (marksReportChecker.isChecked()) sqliteToExcel.createSheetMark();
                         if (totalReportChecker.isChecked()) sqliteToExcel.createSheetTotal();
 
@@ -230,7 +232,7 @@ public class ReportsActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Ошибка экспорта", Toast.LENGTH_SHORT).show();
                             });
                         }
-                        runOnUiThread(()-> progressLoading.setVisibility(View.GONE));
+                        runOnUiThread(() -> progressLoading.setVisibility(View.GONE));
 
                     }).start();
 
@@ -256,71 +258,71 @@ public class ReportsActivity extends AppCompatActivity {
         });
 
         // Фильтр
-        mAddFiltersFab.setOnClickListener(view -> {
-            loadReportBtn.setOnClickListener(e -> {
-                fragment = null;
-                startDate = sdf.format(getDateFromDatePicker(dateBeginWidget));
-                endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
+        mAddFiltersFab.setOnClickListener(view -> filterDialog.show());
 
-                if (DateTimeUtils.startLongerEnd(startDate, endDate)) {
-                    runOnUiThread(() -> {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Уведомление").setMessage("Указан неверный диапазон дат!");
-                        builder.setPositiveButton("ОК", (dialog, id) -> {
-                            dialog.dismiss();
-                        });
-                        builder.show();
+        // Применить фильтр
+        applyReportBtn.setOnClickListener(e -> {
+            fragment = null;
+            startDate = sdf.format(getDateFromDatePicker(dateBeginWidget));
+            endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
+
+            if (DateTimeUtils.startLongerEnd(startDate, endDate)) {
+                runOnUiThread(() -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Уведомление").setMessage("Указан неверный диапазон дат!");
+                    builder.setPositiveButton("ОК", (dialog, id) -> {
+                        dialog.dismiss();
                     });
+                    builder.show();
+                });
 
-                    return;
+                return;
+            }
+
+            //todo: прежде чем двигаться дальше поставить проверку на то, что там написал пользователь в полях дат периода
+            switch (tabLayout.getSelectedTabPosition()) {
+                case 0: {
+                    fragment = new ReportForTotalFragment(startDate, endDate);
+                    break;
                 }
-
-                //todo: прежде чем двигаться дальше поставить проверку на то, что там написал пользователь в полях дат периода
-                switch (tabLayout.getSelectedTabPosition()) {
-                    case 0: {
-                        fragment = new ReportForTotalFragment(startDate, endDate);
-                        break;
-                    }
-                    case 1: {
-                        fragment = new ReportForMixesFragment(startDate, endDate, cementLessFilter.isChecked());
-                        break;
-                    }
-                    case 2: {
-                        fragment = new ReportForPartyFragment(startDate, endDate, cementLessFilter.isChecked());
-                        break;
-                    }
-                    case 3: {
-                        fragment = new ReportForMarksFragment(startDate, endDate);
-                        break;
-                    }
+                case 1: {
+                    fragment = new ReportForMixesFragment(startDate, endDate, cementLessFilter.isChecked());
+                    break;
                 }
+                case 2: {
+                    fragment = new ReportForPartyFragment(startDate, endDate, cementLessFilter.isChecked());
+                    break;
+                }
+                case 3: {
+                    fragment = new ReportForMarksFragment(startDate, endDate);
+                    break;
+                }
+            }
 
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.tabReportFrame, fragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                ft.commit();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.tabReportFrame, fragment);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.commit();
 
-                mAddFiltersFab.hide();
-                mAddSaveFab.hide();
-                mAddOpenFab.hide();
-                addSaveActionText.setVisibility(View.GONE);
-                addFilterActionText.setVisibility(View.GONE);
-                addOpenActionText.setVisibility(View.GONE);
+            mAddFiltersFab.hide();
+            mAddSaveFab.hide();
+            mAddOpenFab.hide();
+            addSaveActionText.setVisibility(View.GONE);
+            addFilterActionText.setVisibility(View.GONE);
+            addOpenActionText.setVisibility(View.GONE);
 
-                isAllFabsVisible = false;
+            isAllFabsVisible = false;
 
-                filterDialog.hide();
-            });
-
-            closeDialog.setOnClickListener(e -> filterDialog.hide());
-
-            filterDialog.show();
+            filterDialog.hide();
         });
+
+        // Закрыть фильтр
+        closeDialog.setOnClickListener(e -> filterDialog.hide());
 
     }
 
-    private void initialUI() {
+    private void initUI() {
         mAddFab = findViewById(R.id.add_fab);
         progressLoading = findViewById(R.id.progress_loading);
 
@@ -366,7 +368,7 @@ public class ReportsActivity extends AppCompatActivity {
         mFilterBuilder.setView(mFilterView);
         filterDialog = mFilterBuilder.create();
 
-        loadReportBtn = mFilterView.findViewById(R.id.applyBtn);
+        applyReportBtn = mFilterView.findViewById(R.id.applyBtn);
         closeDialog = mFilterView.findViewById(R.id.closeDialog);
         dateBeginWidget = mFilterView.findViewById(R.id.dateBeginWidget);
         dateEndWidget = mFilterView.findViewById(R.id.dateEndWidget);

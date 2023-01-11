@@ -2,12 +2,7 @@ package ru.zzbo.concretemobile.utils;
 
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
-
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -99,7 +94,6 @@ public class OkHttpUtil {
         }
     }
 
-
     public static String delTransporters(int id) {
         try {
             return sendGet("trans?cmd=delete&transID=" + id);
@@ -120,7 +114,7 @@ public class OkHttpUtil {
 
     public static String getMixes(String startDate, String endDate) {
         try {
-            String res = sendGet("report?dateBegin="+startDate+"&dateEnd="+endDate);
+            String res = sendGet("report?dateBegin=" + startDate + "&dateEnd=" + endDate);
             if (res.equals(null)) return "[{}]";
             else return res;
         } catch (Exception e) {
@@ -153,7 +147,7 @@ public class OkHttpUtil {
         }
     }
 
-    public static void updRecipe(String json){
+    public static void updRecipe(String json) {
         try {
             sendGet("recepie?cmd=update&recepie=" + json);
         } catch (Exception e) {
@@ -163,7 +157,7 @@ public class OkHttpUtil {
 
     public static String getOrders(String startDate, String endDate, boolean state) {
         try {
-            return sendGet("order?cmd=get&dateBegin="+startDate+"&dateEnd="+endDate+"&filter="+state);
+            return sendGet("order?cmd=get&dateBegin=" + startDate + "&dateEnd=" + endDate + "&filter=" + state);
         } catch (Exception e) {
             e.printStackTrace();
             return e.getMessage();
@@ -180,13 +174,13 @@ public class OkHttpUtil {
 
     public static void uplOrder(int id, float capacity) {
         try {
-            sendGet("order?cmd=upload&partyCapacity="+capacity+"&orderID=" + id);
+            sendGet("order?cmd=upload&partyCapacity=" + capacity + "&orderID=" + id);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void updOrder(String json){
+    public static void updOrder(String json) {
         try {
             sendGet("order?cmd=update&order=" + json);
         } catch (Exception e) {
@@ -194,18 +188,17 @@ public class OkHttpUtil {
         }
     }
 
-
     public static String delOrder(int id) {
         try {
-           return sendGet("order?cmd=delete&orderID=" + id);
+            return sendGet("order?cmd=delete&orderID=" + id);
         } catch (Exception e) {
-           return e.getMessage();
+            return e.getMessage();
         }
     }
 
-    public static void rptOrder(int id, float capacity){
+    public static void rptOrder(int id, float capacity) {
         try {
-            sendGet("order?cmd=repeat&orderID="+id+"&partyCapacity=" + capacity);
+            sendGet("order?cmd=repeat&orderID=" + id + "&partyCapacity=" + capacity);
         } catch (Exception e) {
             e.printStackTrace();
         }

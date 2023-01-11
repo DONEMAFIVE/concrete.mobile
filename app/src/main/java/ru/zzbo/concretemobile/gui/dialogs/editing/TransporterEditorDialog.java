@@ -11,15 +11,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+
 import java.util.List;
-import ru.zzbo.concretemobile.db.DBUtilGet;
+
 import ru.zzbo.concretemobile.gui.catalogs.TransporterActivity;
 import ru.zzbo.concretemobile.models.Transporter;
 
 public class TransporterEditorDialog extends DialogFragment {
 
     List<Transporter> transporterList;
-
 
     public TransporterEditorDialog(List<Transporter> transporterList) {
         this.transporterList = transporterList;
@@ -32,7 +32,7 @@ public class TransporterEditorDialog extends DialogFragment {
         String[] showList = new String[transporterList.size() + 1];
         showList[0] = "Создать нового перевозчика";
         int i = 1;
-        for (Transporter trans : transporterList){
+        for (Transporter trans : transporterList) {
             showList[i] = trans.getId() + ":" + trans.getRegNumberAuto();
             i++;
         }
@@ -41,8 +41,8 @@ public class TransporterEditorDialog extends DialogFragment {
         return builder
                 .setTitle("Выберите перевозчика для редактирования")
                 .setItems(showList, (dialogInterface, i1) -> {
-                    if (i1 > 0){
-                        Transporter selectedTrans = transporterList.get(i1 -1);
+                    if (i1 > 0) {
+                        Transporter selectedTrans = transporterList.get(i1 - 1);
                         editedTransporter = selectedTrans;
                         Toast.makeText(getActivity(), selectedTrans.getRegNumberAuto(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), TransporterActivity.class);
@@ -63,7 +63,6 @@ public class TransporterEditorDialog extends DialogFragment {
                         Intent intent = new Intent(getActivity().getApplicationContext(), TransporterActivity.class);
                         startActivity(intent);
                     }
-                })
-                .create();
+                }).create();
     }
 }

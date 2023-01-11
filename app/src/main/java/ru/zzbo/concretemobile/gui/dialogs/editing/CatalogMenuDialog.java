@@ -21,7 +21,7 @@ import java.util.List;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.OrdersActivity;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
@@ -32,21 +32,21 @@ public class CatalogMenuDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
         String[] catalogList = {"Рецепты", "Оганизации", "Грузоперевозчики", "Заказы"}; //"Данные производителя"
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         return builder
                 .setTitle("Выберите каталог")
                 .setItems(catalogList, (dialog, i) -> {
-                    Toast.makeText(getActivity(),"Выбран каталог " + catalogList[i] + " " + i,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Выбран каталог " + catalogList[i] + " " + i, Toast.LENGTH_SHORT).show();
 
-                    switch (i){
+                    switch (i) {
                         case 0: {
                             new Thread(() -> {
-                                List<Recepie> recepieList = new ArrayList<>();
+                                List<Recipe> recipeList = new ArrayList<>();
                                 if (exchangeLevel == 1) {
-                                    recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
-                                } else recepieList = new DBUtilGet(getContext()).getRecepies();
+                                    recipeList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recipe>>() {}.getType()));
+                                } else recipeList = new DBUtilGet(getContext()).getRecepies();
 
-                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recepieList);
+                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recipeList);
                                 recipeEditorDialog.show(getActivity().getSupportFragmentManager(), "custom");
                             }).start();
                             break;
@@ -85,7 +85,6 @@ public class CatalogMenuDialog extends DialogFragment {
                             Toast.makeText(getActivity(), "В разработке", Toast.LENGTH_SHORT).show();
                             break;
                         }
-
                     }
                 }).create();
     }

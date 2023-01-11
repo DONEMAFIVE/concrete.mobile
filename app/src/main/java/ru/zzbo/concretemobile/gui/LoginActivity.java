@@ -15,11 +15,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import ru.zzbo.concretemobile.BuildConfig;
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilCreate;
@@ -32,6 +35,7 @@ import ru.zzbo.concretemobile.utils.CryptoUtil;
 public class LoginActivity extends AppCompatActivity {
     private DBUtilGet dbUtilGet;
     private DBUtilCreate dbUtilCreate;
+    private TextView info;
     private EditText loginField;
     private EditText passwdField;
     private Button okBtn;
@@ -45,9 +49,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         this.settings = getSharedPreferences("setting", MODE_PRIVATE);
 
-        init();
+        initFieldUI();
+        chkRememberLoginPasswd();
         chkFirstRun();
-        actions();
+        initActions();
     }
 
     @Override
@@ -69,29 +74,33 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    public void init() {
+    private void initFieldUI() {
+        info = findViewById(R.id.info);
         loginField = findViewById(R.id.loginField);
         passwdField = findViewById(R.id.passwdField);
         okBtn = findViewById(R.id.okBtn);
         rememberLogin = findViewById(R.id.rememberLogin);
         connection = findViewById(R.id.connectType);
 
-        chkRememberLoginPasswd();
-
         connection.setSelection(getRememberConType());
         dbUtilCreate = new DBUtilCreate(this);
         dbUtilGet = new DBUtilGet(this);
+
+        String versionName = BuildConfig.VERSION_NAME;
+
+        SimpleDateFormat year = new SimpleDateFormat("YYYY");
+        info.setText(versionName + "v. Златоустовский завод бетоносмесительного оборудования. " + year.format(new Date()) + "г."); //2022. Златоустовский завод бетоносмесительного оборудования (1.0v. Златоустовский завод бетоносмесительного оборудования. 2023г)
     }
 
-    public void chkRememberLoginPasswd() {
+    private void chkRememberLoginPasswd() {
         rememberLogin.setChecked(isRememberLogin());
-        if (rememberLogin.isChecked()){
-            loginField.setText(settings.getString("login","operator"));
-            passwdField.setText(settings.getString("passwd",""));
+        if (rememberLogin.isChecked()) {
+            loginField.setText(settings.getString("login", "operator"));
+            passwdField.setText(settings.getString("passwd", ""));
         }
     }
 
-    public void chkFirstRun() {
+    private void chkFirstRun() {
         //Если базы нет, создаем
         if (!dbUtilGet.doesDatabaseExist(this)) {
             dbUtilCreate.createAllTables();
@@ -110,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void actions() {
+    private void initActions() {
         okBtn.setOnClickListener(view -> {
             //Проверки на подключение
             String device = null;
@@ -120,8 +129,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 exchangeLevel = connection.getSelectedItemPosition();
                 switch (exchangeLevel) {
-                    case 0: if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC"; break;
-                    case 1: if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC"; break;
+                    case 0:
+                        if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC";
+                        break;
+                    case 1:
+                        if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC";
+                        break;
                 }
 
             }
@@ -130,8 +143,10 @@ public class LoginActivity extends AppCompatActivity {
                 String finalDevice = device;
                 runOnUiThread(() -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Уведомление").setMessage("Отсутсвует подключение к "+ finalDevice);
-                    builder.setPositiveButton("ОК", (dialog, id) -> {dialog.dismiss();});
+                    builder.setTitle("Уведомление").setMessage("Отсутсвует подключение к " + finalDevice);
+                    builder.setPositiveButton("ОК", (dialog, id) -> {
+                        dialog.dismiss();
+                    });
                     builder.show();
                 });
             } else {
@@ -147,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void login(String login, String pass) {
+    private void login(String login, String pass) {
         if (login.equals("") || pass.equals("")) {
             Toast.makeText(this, "Пожалуйста заполните все поля", Toast.LENGTH_SHORT).show();
             return;
@@ -171,9 +186,6 @@ public class LoginActivity extends AppCompatActivity {
             accessLevel = accessLvl;
             switch (accessLevel) {
                 case 3: {   //уровень доступа оператор
-//                tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");
-//                tagListManual = new DBTags(getApplicationContext()).getTags("tags_manual");
-//                new DataManager(getApplicationContext()).runCollector();
                     Intent intent = new Intent(getApplicationContext(), OperatorViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     finish();
@@ -198,37 +210,37 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void saveLoginPasswd(EditText loginField, EditText passwdField) {
+    private void saveLoginPasswd(EditText loginField, EditText passwdField) {
         SharedPreferences.Editor prefEditor = settings.edit();
         prefEditor.putString("login", String.valueOf(loginField.getText()));
         prefEditor.putString("passwd", String.valueOf(passwdField.getText()));
         prefEditor.apply();
     }
 
-    public void saveRememberLogin(CheckBox rememberLogin) {
+    private void saveRememberLogin(CheckBox rememberLogin) {
         SharedPreferences.Editor prefEditor = settings.edit();
         prefEditor.putString("rememberLogin", String.valueOf(rememberLogin.isChecked()));
         prefEditor.apply();
     }
 
-    public void saveConnectionType() {
+    private void saveConnectionType() {
         SharedPreferences.Editor prefEditor = settings.edit();
         prefEditor.putString("connectionType", String.valueOf(connection.getSelectedItemPosition()));
         prefEditor.apply();
     }
 
-    public boolean isRememberLogin() {
+    private boolean isRememberLogin() {
         try {
-            return Boolean.parseBoolean(settings.getString("rememberLogin","false"));
-        } catch (Exception e){
+            return Boolean.parseBoolean(settings.getString("rememberLogin", "false"));
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public int getRememberConType() {
+    private int getRememberConType() {
         try {
-            return Integer.parseInt(settings.getString("connectionType","0"));
-        } catch (Exception e){
+            return Integer.parseInt(settings.getString("connectionType", "0"));
+        } catch (Exception e) {
             return 0;
         }
     }

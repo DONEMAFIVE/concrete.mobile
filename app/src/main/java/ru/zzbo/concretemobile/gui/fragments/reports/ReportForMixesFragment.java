@@ -1,19 +1,11 @@
 package ru.zzbo.concretemobile.gui.fragments.reports;
 
-import static ru.zzbo.concretemobile.utils.Constants.configList;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
-
-import android.Manifest;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,16 +13,12 @@ import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import ru.zzbo.concretemobile.R;
-import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Configs;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.DatesGenerate;
@@ -106,8 +94,8 @@ public class ReportForMixesFragment extends Fragment {
                                         mix.getOrganizationID() + " | " +
                                         mix.getTransporter() + " | " +
                                         mix.getTransporterID() + " | " +
-                                        mix.getRecepie() + " | " +
-                                        mix.getRecepieID() + " | " +
+                                        mix.getRecipe() + " | " +
+                                        mix.getRecipeID() + " | " +
                                         mix.getMixCounter() + " | " +
                                         mix.getCompleteCapacity() + " | " +
                                         mix.getTotalCapacity() + " | " +

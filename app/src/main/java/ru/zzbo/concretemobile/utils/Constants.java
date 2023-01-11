@@ -6,17 +6,15 @@ import java.util.List;
 import ru.zzbo.concretemobile.models.Configs;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 
 public class Constants {
 
-    private Constants(){};
+    private Constants() {}
 
     public static int exchangeLevel = -1;
-
-    public static final String SOFTWARE_VERSION = "0.1";
 
     //connection options
     public static final int RACK = 0;
@@ -52,7 +50,7 @@ public class Constants {
     public static String selectedOrder = "Не указано";
 
     //для обмена между activity
-    public static Recepie editedRecepie = null;
+    public static Recipe editedRecipe = null;
     public static Organization editedOrganization = null;
     public static Transporter editedTransporter = null;
     public static Order editedOrder = null;

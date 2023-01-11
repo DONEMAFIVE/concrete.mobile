@@ -26,19 +26,23 @@ public class CommissioningActivity extends AppCompatActivity {
         settingsBtn = findViewById(R.id.settingsBtn);
         calibrationBtn = findViewById(R.id.calibrationBtn);
 
-        configBtn.setOnClickListener(e->{
+        initActions();
+    }
+
+    private void initActions() {
+        configBtn.setOnClickListener(e -> {
             Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
             startActivity(intent);
         });
 
-        settingsBtn.setOnClickListener(e->{
+        settingsBtn.setOnClickListener(e -> {
             if (Constants.exchangeLevel != 1) {
                 Intent intent = new Intent(getApplicationContext(), FactoryConfigActivity.class);
                 startActivity(intent);
             }
         });
 
-        calibrationBtn.setOnClickListener(e->{
+        calibrationBtn.setOnClickListener(e -> {
             if (Constants.exchangeLevel != 1) {
                 Intent intent = new Intent(getApplicationContext(), CalibrateWeightsActivity.class);
                 startActivity(intent);

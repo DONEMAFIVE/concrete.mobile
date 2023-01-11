@@ -205,16 +205,15 @@ public class TableView extends HorizontalScrollView {
     }
 
     public void clear() {
-        for(int i = 0; i < tableLayout.getChildCount(); i = 0) {
+        for (int i = 0; i < tableLayout.getChildCount(); i = 0) {
             View child = tableLayout.getChildAt(0);
-            if (child != null && child instanceof TableRow)
-            {
+            if (child != null && child instanceof TableRow) {
                 TableRow row = (TableRow) child;
                 row.removeAllViews();
                 tableLayout.removeViewAt(i);
             }
         }
-        countRows =0;
+        countRows = 0;
     }
 
     /**

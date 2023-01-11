@@ -28,17 +28,19 @@ public class MixCapacityDialog extends DialogFragment {
         EditText mixCapacity = new EditText(getActivity());
         mixCapacity.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         return builder
                 .setTitle("Укажите максимальный объем замеса")
                 .setView(mixCapacity)
                 .setPositiveButton("Принять", (dialogInterface, i) -> {
-                    new Thread(()-> {
+                    new Thread(() -> {
                         tagListManual = new DBTags(getContext()).getTags("tags_manual");
                         try {
                             float singleMixWeight = Float.valueOf(mixCapacity.getText().toString());
-                            if (exchangeLevel == 1){
+
+                            if (exchangeLevel == 1) {
                                 new CommandDispatcher(62).writeValue(String.valueOf(singleMixWeight));
-                            }else {
+                            } else {
                                 Tag weightMixTag = Constants.tagListManual.get(62);
                                 weightMixTag.setRealValueIf(singleMixWeight);
                                 new CommandDispatcher(weightMixTag).writeSingleRegisterWithLock();
@@ -50,11 +52,13 @@ public class MixCapacityDialog extends DialogFragment {
                                 Thread.sleep(100);
                                 new CommandDispatcher(Constants.tagListManual.get(82)).writeSingleRegisterWithValue(false);
                             }
-                        } catch (Exception e) {e.printStackTrace();}
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }).start();
 
-
-                    Toast.makeText(getActivity(), "Замес: " + mixCapacity.getText(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Замес: " + mixCapacity.getText(), Toast.LENGTH_LONG).show();
                 })
                 .setNegativeButton("Отмена", null)
                 .create();

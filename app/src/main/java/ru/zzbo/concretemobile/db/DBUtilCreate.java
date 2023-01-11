@@ -44,7 +44,7 @@ public class DBUtilCreate {
 
         } catch (IOException e) {
             Log.e("EXECUTE SQL-FILE", e.getMessage());
-        }finally {
+        } finally {
             closeSession();
         }
     }

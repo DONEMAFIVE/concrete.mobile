@@ -1,6 +1,5 @@
 package ru.zzbo.concretemobile.reporting;
 
-import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.content.Context;
@@ -20,37 +19,35 @@ import ru.zzbo.concretemobile.utils.Constants;
 
 public class ReportRecordingUtil {
 
-    public void recordWeights(    Context context,
-                                  String nameOrder,
-                                  int numberOrder,
-                                  String uploadingAddress,
-                                  String operatorName,
-                                  String organization,
-                                  int organizationID,
-                                  String numberAuto,
-                                  int transporterID,
-                                  String currentRecepie,
-                                  float capacityMixer,
-                                  int recepieID,
-                                  float totalWeight  ){
+    public void recordWeights(Context context,
+                              String nameOrder,
+                              int numberOrder,
+                              String uploadingAddress,
+                              String operatorName,
+                              String organization,
+                              int organizationID,
+                              String numberAuto,
+                              int transporterID,
+                              String currentRecepie,
+                              float capacityMixer,
+                              int recipeID,
+                              float totalWeight) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        DecimalFormat decFormat = new DecimalFormat( "#.##" );
+        DecimalFormat decFormat = new DecimalFormat("#.##");
 
         ReflectionRetrieval retrieval = new ReflectionRetrieval();
         retrieval.getValues();
 
-
         if (!Constants.globalFactoryState) nameOrder = "Ручной замес";
         String calcTimeMix = "empty";
-
 
         Order selectedOrder = null;
         try {
             Current current = new DBUtilGet(context).getCurrent();
             selectedOrder = new DBUtilGet(context).getOrderForID(current.getOrderID());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -79,25 +76,25 @@ public class ReportRecordingUtil {
                 numberAuto,
                 transporterID,
                 currentRecepie,
-                recepieID,
+                recipeID,
                 retrieval.getMixCounterValue(),
                 capacityMixer,
                 totalWeight,
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper11Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper12Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper21Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper22Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper31Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper32Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper41Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseHopper42Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseSilos1Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseSilos2Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseWaterValue()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseWater2Value()).replaceAll(",",".")),
-                retrieval.getWaterPumpCounterValue()*10,//*10 потому что 1 цикл счетчика - это 10 литров
-                Float.parseFloat(decFormat.format(retrieval.getDoseChemy1Value()).replaceAll(",",".")),
-                Float.parseFloat(decFormat.format(retrieval.getDoseChemy2Value()).replaceAll(",",".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper11Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper12Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper21Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper22Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper31Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper32Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper41Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseHopper42Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseSilos1Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseSilos2Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseWaterValue()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseWater2Value()).replaceAll(",", ".")),
+                retrieval.getWaterPumpCounterValue() * 10,//*10 потому что 1 цикл счетчика - это 10 литров
+                Float.parseFloat(decFormat.format(retrieval.getDoseChemy1Value()).replaceAll(",", ".")),
+                Float.parseFloat(decFormat.format(retrieval.getDoseChemy2Value()).replaceAll(",", ".")),
                 calcTimeMix
         );
 

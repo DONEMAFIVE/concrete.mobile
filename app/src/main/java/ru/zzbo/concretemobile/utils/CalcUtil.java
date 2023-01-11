@@ -17,16 +17,10 @@ public class CalcUtil {
         return cycleSum;
     }
 
-    public void cycleCalcCounter(float totalWeight, float maxMixCapacity){
-        float current = totalWeight/maxMixCapacity;
+    public void cycleCalcCounter(float totalWeight, float maxMixCapacity) {
+        float current = totalWeight / maxMixCapacity;
         this.cycleSum = (int) Math.ceil(current);
         this.capacityMix = totalWeight / this.cycleSum;
-    }
-
-    public float calcCapacityForCube(float value, float capacity){
-        //привести к 1 м3, контроллер пересчитывает переданное число в соотвествии с заданным объемом, передавать нужно посчитанное от 1 м3
-        capacity = 1/capacity;
-        return value * capacity;
     }
 
 }

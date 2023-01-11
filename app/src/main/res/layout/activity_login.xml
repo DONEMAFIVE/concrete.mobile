@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/company"
+        app:layout_constraintBottom_toTopOf="@+id/info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -100,11 +100,10 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/company"
+        android:id="@+id/info"
         android:layout_width="531dp"
         android:layout_height="23dp"
         android:layout_marginBottom="32dp"
-        android:text="2022. Златоустовский завод бетоносмесительного оборудования"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

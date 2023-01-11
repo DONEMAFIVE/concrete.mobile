@@ -4,8 +4,6 @@ import static ru.zzbo.concretemobile.utils.Constants.editedTransporter;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -45,15 +43,19 @@ public class TransporterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.transporters_activity);
-        initialUI();
-        initialFieldsUI();
-        startListeners();
+
+        initUI();
+        initFieldsUI();
+        initActions();
     }
 
-    private void startListeners() {
+    private void initActions() {
         personaChecker.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(), "При активации опции Физическое лицо заполняется только поле - Регистрационный номер авто", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),
+                    "При активации опции Физическое лицо заполняется только поле - Регистрационный номер авто",
+                    Toast.LENGTH_SHORT).show();
         });
+
         saveBtn.setOnClickListener(view -> {
             int persona = 0;
             if (personaChecker.isChecked()) persona = 1;
@@ -155,8 +157,7 @@ public class TransporterActivity extends AppCompatActivity {
         });
     }
 
-    private void initialUI() {
-
+    private void initUI() {
         transporterIDField = findViewById(R.id.transporterIDField);
         personaChecker = findViewById(R.id.personaChecker);
         regNumberAutoField = findViewById(R.id.regNumberAutoField);
@@ -171,11 +172,9 @@ public class TransporterActivity extends AppCompatActivity {
         delBtn = findViewById(R.id.delTrans);
         closeBtn = findViewById(R.id.closeTrans);
         if (editedTransporter.getId() == 0) delBtn.setVisibility(View.INVISIBLE);
-
     }
 
-    private void initialFieldsUI() {
-
+    private void initFieldsUI() {
         transporterIDField.setText(String.valueOf(editedTransporter.getId()));
         regNumberAutoField.setText(String.valueOf(editedTransporter.getRegNumberAuto()));
         orgNameField.setText(String.valueOf(editedTransporter.getOrganizationName()));
@@ -185,9 +184,7 @@ public class TransporterActivity extends AppCompatActivity {
         phoneDriverField.setText(String.valueOf(editedTransporter.getPhone()));
         addressOrgField.setText(String.valueOf(editedTransporter.getAddress()));
         commentField.setText(String.valueOf(editedTransporter.getComment()));
-
         personaChecker.setChecked(editedTransporter.getPersona() == 1);
-
     }
 
 }

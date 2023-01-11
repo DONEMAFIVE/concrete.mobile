@@ -5,7 +5,6 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static ru.zzbo.concretemobile.utils.Constants.animationMixerState;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
-import static ru.zzbo.concretemobile.utils.Constants.editedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.globalFactoryState;
 import static ru.zzbo.concretemobile.utils.Constants.globalModeState;
@@ -17,12 +16,9 @@ import static ru.zzbo.concretemobile.utils.Constants.selectedOrg;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
 import static ru.zzbo.concretemobile.utils.Constants.selectedTrans;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,11 +26,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
-import android.text.InputType;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,7 +67,6 @@ import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
-import ru.zzbo.concretemobile.gui.catalogs.EditOrderActivity;
 import ru.zzbo.concretemobile.gui.dialogs.editing.CatalogMenuDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.MixCapacityDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.OrganizationListDialog;
@@ -85,7 +78,7 @@ import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.DataManager;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
@@ -140,9 +133,9 @@ public class OperatorViewActivity extends AppCompatActivity {
     private LinearLayout chemy3LL;
     private LinearLayout water2LL;
     private LinearLayout cement2LL;
-    private TextView recepieName;
+    private TextView recipeName;
     private TextView doseWater1;
-    private TextView recepieWater1;
+    private TextView recipeWater1;
     private ImageView silos2View;
     private TextView doseSilos1;
     private TextView titleSilos2;
@@ -150,13 +143,13 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView silos1View;
     private ImageView levelDownSIlos2;
     private ImageView levelUpSilos2;
-    private TextView recepieSilos2;
-    private TextView recepieSilos1;
+    private TextView recipeSilos2;
+    private TextView recipeSilos1;
     private TextView titleSilos1;
     private Button aerationSilos;
     private Button vibroSilos;
     private Button filterSilos;
-    private Button recepieOptionBtn;
+    private Button recipeOptionBtn;
     private Button partyOptionBtn;
     private Button mixOptionBtn;
     private Button openMixer;
@@ -172,11 +165,11 @@ public class OperatorViewActivity extends AppCompatActivity {
     private TextView titleChemy1;
     private TextView titleChemy2;
     private TextView titleChemy3;
-    private TextView recepieChemy2;
-    private TextView recepieChemy3;
+    private TextView recipeChemy2;
+    private TextView recipeChemy3;
     private TextView doseChemy2;
     private TextView doseChemy3;
-    private TextView recepieChemy1;
+    private TextView recipeChemy1;
     private TextView doseChemy1;
     private Button startSelfDK, startSelfChemy, startSelfCement, startSelfWater;
     private ImageView mixerView;
@@ -230,7 +223,7 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView openSensorDC;
     private ImageView lineArrowIndication;
     private ImageView verticalConveyorView;
-    private TextView recepieBuncker3;
+    private TextView recipeBuncker3;
     private TextView doseBuncker3;
     private ImageView valveWater;
     private ImageView alarm;
@@ -254,12 +247,6 @@ public class OperatorViewActivity extends AppCompatActivity {
 
         factoryOptionList = new FactoryComplectationBuilder().parseList(new DBUtilGet(getApplicationContext()).getFromParameterTable("factory_complectation"));
         configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(getApplicationContext()).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
-
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        separationHopper1 = settings.getBoolean("hopper1", false);
-        separationHopper2 = settings.getBoolean("hopper2", false);
-        separationHopper3 = settings.getBoolean("hopper3", false);
-        separationHopper4 = settings.getBoolean("hopper4", false);
 
         setsID();
         setComplectation();
@@ -298,6 +285,12 @@ public class OperatorViewActivity extends AppCompatActivity {
      * при создании активити создаются все элементы, читаем конфиг и прячем то, что выключено
      */
     private void setComplectation() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        separationHopper1 = settings.getBoolean("hopper1", false);
+        separationHopper2 = settings.getBoolean("hopper2", false);
+        separationHopper3 = settings.getBoolean("hopper3", false);
+        separationHopper4 = settings.getBoolean("hopper4", false);
+
         //количество бункеров
         switch (factoryOptionList.getInertBunckerCounter()) {
             case 1: {
@@ -423,13 +416,13 @@ public class OperatorViewActivity extends AppCompatActivity {
                         //рецепты на бункерах
                         recepieBuncker1.setText(decFormat.format(retrieval.getHopper11RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper11Value()));
                         recepieBuncker2.setText(decFormat.format(retrieval.getHopper21RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper21Value()));
-                        recepieBuncker3.setText(decFormat.format(retrieval.getHopper31RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper31Value()));
+                        recipeBuncker3.setText(decFormat.format(retrieval.getHopper31RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper31Value()));
                         recepieBuncker4.setText(decFormat.format(retrieval.getHopper41RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper41Value()));
-                        recepieChemy1.setText(decFormat.format(retrieval.getChemy1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageChemy1Value()));
-                        recepieChemy2.setText(decFormat.format(retrieval.getChemy2RecipeValue()));
-                        recepieWater1.setText(decFormat.format(retrieval.getWaterRecipeValue()) + "/" + decFormat.format(retrieval.getShortageWaterValue()));
-                        recepieSilos1.setText(decFormat.format(retrieval.getCement1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos1Value()));
-                        recepieSilos2.setText(decFormat.format(retrieval.getCement2RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos2Value()));
+                        recipeChemy1.setText(decFormat.format(retrieval.getChemy1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageChemy1Value()));
+                        recipeChemy2.setText(decFormat.format(retrieval.getChemy2RecipeValue()));
+                        recipeWater1.setText(decFormat.format(retrieval.getWaterRecipeValue()) + "/" + decFormat.format(retrieval.getShortageWaterValue()));
+                        recipeSilos1.setText(decFormat.format(retrieval.getCement1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos1Value()));
+                        recipeSilos2.setText(decFormat.format(retrieval.getCement2RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos2Value()));
 
                         //набранные дозы
                         doseBuncker1.setText(decFormat.format(retrieval.getDoseHopper11Value()));
@@ -461,7 +454,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                         partyOptionBtn.setText("Партия\n" + retrieval.getBatchVolumeValue());
                         mixOptionBtn.setText("Замес\n" + retrieval.getMixingCapacity());
-                        recepieOptionBtn.setText("Рецепт\n" + selectedRecepie);
+                        recipeOptionBtn.setText("Рецепт\n" + selectedRecepie);
 
                         //сброс с смесителя
                         if (retrieval.isMixerCloseValue() == 1) {
@@ -1115,21 +1108,21 @@ public class OperatorViewActivity extends AppCompatActivity {
             }).start();
         });
 
-        recepieOptionBtn.setOnClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recepieOptionBtn);
+        recipeOptionBtn.setOnClickListener(view -> {
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recipeOptionBtn);
             popupMenu.getMenuInflater().inflate(R.menu.popup_select_rec_ord, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
                     case R.id.recipe: {
                         new Thread(() -> {
-                            List<Recepie> recepieList = new ArrayList<>();
+                            List<Recipe> recipeList = new ArrayList<>();
                             if (exchangeLevel == 1) {
-                                recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {
+                                recipeList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recipe>>() {
                                 }.getType()));
-                            } else recepieList = new DBUtilGet(this).getRecepies();
+                            } else recipeList = new DBUtilGet(this).getRecepies();
 
-                            if (recepieList != null) {
-                                RecipeLoaderDialog recDialog = new RecipeLoaderDialog(recepieList);
+                            if (recipeList != null) {
+                                RecipeLoaderDialog recDialog = new RecipeLoaderDialog(recipeList);
                                 recDialog.show(getSupportFragmentManager(), "custom");
                             } else {
                                 Toast.makeText(this, "Рецепты отсутствуют!", Toast.LENGTH_SHORT).show();
@@ -1191,7 +1184,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     try {
                         if (retrieval.isWeightsReadyReadValue() == 1) {
                             Current current = new DBUtilGet(getApplicationContext()).getCurrent();
-                            Recepie recepie = new DBUtilGet(getApplicationContext()).getRecepieForID(current.getRecepieID());
+                            Recipe recipe = new DBUtilGet(getApplicationContext()).getRecepieForID(current.getRecipeID());
 
                             System.out.println(selectedOrder);
                             //TODO:
@@ -1206,9 +1199,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         0,
                                         selectedTrans,
                                         0,
-                                        recepie.getName(),
+                                        recipe.getName(),
                                         retrieval.getMixingCapacity(),
-                                        recepie.getId(), retrieval.getBatchVolumeValue()
+                                        recipe.getId(), retrieval.getBatchVolumeValue()
                                 );
                             } else {
                                 Order selectedOrder = new DBUtilGet(getApplicationContext()).getOrderForID(current.getOrderID());
@@ -1233,9 +1226,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         selectedOrder.getOrganizationID(),
                                         selectedOrder.getTransporter(),
                                         selectedOrder.getTransporterID(),
-                                        recepie.getName(),
+                                        recipe.getName(),
                                         selectedOrder.getMaxMixCapacity(),
-                                        recepie.getId(),
+                                        recipe.getId(),
                                         selectedOrder.getTotalCapacity()
                                 );
                             }
@@ -1270,7 +1263,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     float finalResult = result;
                     new Handler(Looper.getMainLooper()).post(() -> {
                         dailyCounter.setText("Произведено за сегодня м3: " + finalResult);
-                        recepieName.setText("Рецепт/заказ: " +selectedRecepie +"/"+selectedOrder);
+                        recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+selectedOrder);
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1313,9 +1306,9 @@ public class OperatorViewActivity extends AppCompatActivity {
 
         cement2LL = findViewById(R.id.cement2LL);
 
-        recepieName = findViewById(R.id.recepieName);
+        recipeName = findViewById(R.id.recepieName);
         doseWater1 = findViewById(R.id.doseWater1);
-        recepieWater1 = findViewById(R.id.recepieWater1);
+        recipeWater1 = findViewById(R.id.recepieWater1);
         bunckerChemy2 = findViewById(R.id.bunckerChemy2);
         bunckerChemy3 = findViewById(R.id.bunckerChemy3);
         doseSilos1 = findViewById(R.id.doseSilos1);
@@ -1326,13 +1319,13 @@ public class OperatorViewActivity extends AppCompatActivity {
         silos1View = findViewById(R.id.silos1View);
         levelDownSIlos2 = findViewById(R.id.levelDownSIlos2);
         levelUpSilos2 = findViewById(R.id.levelUpSilos2);
-        recepieSilos2 = findViewById(R.id.recepieSilos2);
-        recepieSilos1 = findViewById(R.id.recepieSilos1);
+        recipeSilos2 = findViewById(R.id.recepieSilos2);
+        recipeSilos1 = findViewById(R.id.recepieSilos1);
         titleSilos1 = findViewById(R.id.titleSilos1);
         aerationSilos = findViewById(R.id.aerationSilos);
         vibroSilos = findViewById(R.id.vibroSilos);
         filterSilos = findViewById(R.id.filterSilos);
-        recepieOptionBtn = findViewById(R.id.recepieOptionBtn);
+        recipeOptionBtn = findViewById(R.id.recepieOptionBtn);
         partyOptionBtn = findViewById(R.id.partyOptionBtn);
         mixOptionBtn = findViewById(R.id.mixOptionBtn);
         openMixer = findViewById(R.id.openMixer);
@@ -1348,11 +1341,11 @@ public class OperatorViewActivity extends AppCompatActivity {
         titleChemy1 = findViewById(R.id.titleChemy1);
         titleChemy2 = findViewById(R.id.titleChemy2);
         titleChemy3 = findViewById(R.id.titleChemy3);
-        recepieChemy2 = findViewById(R.id.recepieChemy2);
-        recepieChemy3 = findViewById(R.id.recepieChemy3);
+        recipeChemy2 = findViewById(R.id.recepieChemy2);
+        recipeChemy3 = findViewById(R.id.recepieChemy3);
         doseChemy2 = findViewById(R.id.doseChemy2);
         doseChemy3 = findViewById(R.id.doseChemy3);
-        recepieChemy1 = findViewById(R.id.recepieChemy1);
+        recipeChemy1 = findViewById(R.id.recepieChemy1);
         doseChemy1 = findViewById(R.id.doseChemy1);
         startSelfDK = findViewById(R.id.startSelfDK);
         startSelfChemy = findViewById(R.id.startSelfChemy);
@@ -1421,7 +1414,7 @@ public class OperatorViewActivity extends AppCompatActivity {
         openSensorDC = findViewById(R.id.openSensorDC);
         lineArrowIndication = findViewById(R.id.lineArrowIndication);
         verticalConveyorView = findViewById(R.id.verticalConveyorView);
-        recepieBuncker3 = findViewById(R.id.recepieBuncker3);
+        recipeBuncker3 = findViewById(R.id.recepieBuncker3);
         doseBuncker3 = findViewById(R.id.doseBuncker3);
         valveWater = findViewById(R.id.valveWater);
         alarm = findViewById(R.id.alarm);
