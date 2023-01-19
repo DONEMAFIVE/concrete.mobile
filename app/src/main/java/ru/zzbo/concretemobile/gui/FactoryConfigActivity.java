@@ -38,6 +38,9 @@ public class FactoryConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factory_config);
 
+
+        new Thread(() -> initAnswer()).start();
+
         tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");
         tagListManual = new DBTags(getApplicationContext()).getTags("tags_manual");
         tagListOptions = new DBTags(getApplicationContext()).getTags("tags_options");
@@ -79,6 +82,25 @@ public class FactoryConfigActivity extends AppCompatActivity {
                 settingTabMenu.selectTab(settingTabMenu.getTabAt(position));
             }
         });
+
+    }
+
+    public void initAnswer() {
+        CommandDispatcher commandDispatcher = new CommandDispatcher();
+
+        List<Tag> getTagListAdditionalOptions = new DBTags(this).getTags("tags_additional_options");
+        DynamicTagBuilder dynamicTagCollector = new DynamicTagBuilder(getTagListAdditionalOptions);
+        dynamicTagCollector.buildSortedTags();
+
+        List<BlockMultiple> tagIntAnswer = dynamicTagCollector.getTagIntAnswer();
+        List<BlockMultiple> tagDIntAnswer = dynamicTagCollector.getTagDIntAnswer();
+        List<BlockMultiple> tagRealAnswer = dynamicTagCollector.getTagRealAnswer();
+
+        answer = new ArrayList<>();
+        answer.addAll(commandDispatcher.readMultipleIntRegister(tagIntAnswer, getTagListAdditionalOptions));
+        answer.addAll(commandDispatcher.readMultipleDIntRegister(tagDIntAnswer, getTagListAdditionalOptions));
+        answer.addAll(commandDispatcher.readMultipleRealRegister(tagRealAnswer, getTagListAdditionalOptions));
+
     }
 
     @Override
