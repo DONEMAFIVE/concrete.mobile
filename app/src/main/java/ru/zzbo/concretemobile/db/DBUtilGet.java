@@ -55,9 +55,9 @@ public class DBUtilGet {
             Cursor cursor = sqLiteDatabase.query(TABLE_NAME_CURRENT, null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 int orderId = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_CURRENT_ORDER_ID));
-                int recepieId = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_CURRENT_RECEPIE_ID));
+                int recipeId = cursor.getInt(cursor.getColumnIndex(COLUMN_NAME_CURRENT_RECEPIE_ID));
                 String state = cursor.getString(cursor.getColumnIndex(COLUMN_NAME_CURRENT_STATE));
-                result = new Current(orderId, recepieId, state);
+                result = new Current(orderId, recipeId, state);
             }
             cursor.close();
             return result;
@@ -123,8 +123,8 @@ public class DBUtilGet {
                 int organizationID = cursor.getInt(cursor.getColumnIndex("organizationID"));
                 String transporter = cursor.getString(cursor.getColumnIndex("transporter"));
                 int transporterID = cursor.getInt(cursor.getColumnIndex("transporterID"));
-                String recepie = cursor.getString(cursor.getColumnIndex("recepie"));
-                int recepieID = cursor.getInt(cursor.getColumnIndex("recepieID"));
+                String recipe = cursor.getString(cursor.getColumnIndex("recepie"));
+                int recipeID = cursor.getInt(cursor.getColumnIndex("recepieID"));
                 int mixCounter = cursor.getInt(cursor.getColumnIndex("mixCounter"));
                 float completeCapacity = cursor.getFloat(cursor.getColumnIndex("completeCapacity"));
                 float totalCapacity = cursor.getFloat(cursor.getColumnIndex("totalCapacity"));
@@ -162,8 +162,8 @@ public class DBUtilGet {
                         organizationID,
                         transporter,
                         transporterID,
-                        recepie,
-                        recepieID,
+                        recipe,
+                        recipeID,
                         mixCounter,
                         completeCapacity,
                         totalCapacity,

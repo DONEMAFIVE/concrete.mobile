@@ -9,6 +9,10 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            android:key="mac_plc"
+            android:title="MAC контроллера"
+            app:useSimpleSummaryProvider="true"/>
+        <EditTextPreference
             app:key="scada_ip"
             app:title="@string/scada_ip"
             app:useSimpleSummaryProvider="true" />

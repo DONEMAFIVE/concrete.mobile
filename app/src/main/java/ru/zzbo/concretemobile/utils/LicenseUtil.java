@@ -68,7 +68,7 @@ public class LicenseUtil {
             }
         }
 
-        return "00:00:00:00";
+        return "00-00-00-00-00-00";
     }
 
     public static String getMacDevice() {
@@ -101,10 +101,16 @@ public class LicenseUtil {
         //TODO:Получить hardkey из БД
         configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(context).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
         //TODO:Расшифровать hardkey из БД
-        String key = new CryptoUtil(configList.getHardkey()).decrypt().trim();
+        String key = "null";
+
+        try {
+            key = new CryptoUtil(configList.getHardKey()).decrypt().trim();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
         //TODO:Получить mac устройства
         String mac = getMacFromIP(configList.getPlcIP());
-        Log.e("LICENCE", key + "=" + mac);
+        Log.e("LICENCE", key + " = " + mac);
         //TODO:Сравнить hardkey = mac
         return mac.equals(key);
     }

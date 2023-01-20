@@ -19,6 +19,7 @@ import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
+import ru.zzbo.concretemobile.utils.LicenseUtil;
 
 public class SystemConfigActivity extends AppCompatActivity {
     @Override
@@ -40,6 +41,7 @@ public class SystemConfigActivity extends AppCompatActivity {
     //Фрагмент настроек
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private EditTextPreference plcIpETP;
+        private EditTextPreference macPlc;
         private EditTextPreference scadaIpETP;
         private EditTextPreference restServerIpETP;
         private EditTextPreference serverUpdateIpETP;
@@ -55,6 +57,7 @@ public class SystemConfigActivity extends AppCompatActivity {
             configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(getContext()).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
 
             plcIpETP = findPreference("plc_ip");
+            macPlc = findPreference("mac_plc");
             scadaIpETP = findPreference("scada_ip");
             restServerIpETP = findPreference("rest_server_ip");
             serverUpdateIpETP = findPreference("server_update");
@@ -65,11 +68,16 @@ public class SystemConfigActivity extends AppCompatActivity {
             saveBtn = findPreference("saveBtn");
 
             plcIpETP.setText(configList.getPlcIP());
+            try {
+                macPlc.setText(LicenseUtil.getMacFromIP(configList.getPlcIP()));
+            }catch (Exception e){
+                macPlc.setText("Нет доступа или отсутсвтует подключение");
+            }
             scadaIpETP.setText(configList.getScadaIP());
             restServerIpETP.setText(configList.getRestServerIP());
             serverUpdateIpETP.setText(configList.getServerUpdate());
             productionNumberETP.setText(configList.getProductionNumber());
-            hardkeyETP.setText(configList.getHardkey());
+            hardkeyETP.setText(configList.getHardKey());
             yandexOptionSPC.setChecked(Boolean.parseBoolean(configList.getYandexOption()));
             timeSyncIpETP.setText(configList.getTimeSync());
 

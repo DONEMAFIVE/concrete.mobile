@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.models.Users;
 import ru.zzbo.concretemobile.utils.ConnectionUtil;
 import ru.zzbo.concretemobile.utils.CryptoUtil;
+import ru.zzbo.concretemobile.utils.LicenseUtil;
 
 public class LoginActivity extends AppCompatActivity {
     private DBUtilGet dbUtilGet;
@@ -153,13 +155,26 @@ public class LoginActivity extends AppCompatActivity {
                 });
             } else {
                 //TODO: Проверка лицензии
-                if (true) {
-                    //если подключаемся к ПК, то отправить запрос на прохождение авторизации
-                    //если подключаемся на прямую, то используем базу sqlite
-                    String user = loginField.getText().toString();
-                    String pass = passwdField.getText().toString();
-                    login(user, pass);
+                //если подключаемся к ПК, то отправить запрос на прохождение авторизации
+                //если подключаемся на прямую, то используем базу sqlite
+
+                if (exchangeLevel == 0 && !LicenseUtil.chkLicense(this)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Лицензия").setMessage("Отсутсвует лицензия");
+                    builder.setPositiveButton("ОК", (dialog, id) -> {
+                        dialog.dismiss();
+                        Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        startActivity(intent);
+                    });
+                    builder.show();
+                    return;
                 }
+
+                String user = loginField.getText().toString();
+                String pass = passwdField.getText().toString();
+                login(user, pass);
+
             }
         });
     }

@@ -20,7 +20,7 @@ public class ConfigBuilder {
             if (current.getParameter().equals("time_sync")) scadaConfigs.setTimeSync(current.getValue());
             if (current.getParameter().equals("server_update")) scadaConfigs.setServerUpdate(current.getValue());
             if (current.getParameter().equals("localization_level")) scadaConfigs.setLocalizationLevel(current.getValue());
-            if (current.getParameter().equals("hardkey")) scadaConfigs.setHardkey(current.getValue());
+            if (current.getParameter().equals("hardkey")) scadaConfigs.setHardKey(current.getValue());
             if (current.getParameter().equals("productionNumber")) scadaConfigs.setProductionNumber(current.getValue());
             if (current.getParameter().equals("exchange_level")) scadaConfigs.setExchangeLevel(current.getValue());
             if (current.getParameter().equals("scada_ip")) scadaConfigs.setScadaIP(current.getValue());

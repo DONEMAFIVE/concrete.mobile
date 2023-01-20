@@ -19,6 +19,7 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.List;
 
+import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.models.Recipe;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
@@ -53,6 +54,7 @@ public class RecipeLoaderDialog extends DialogFragment {
                         Toast.makeText(getActivity(), "Подождите, загружается рецепт - " + recipes.get(i).getMark(), Toast.LENGTH_LONG).show();
                         selectedRecepie = recipes.get(i).getMark();
                         selectedOrder = "Не указано";
+                        new DBUtilUpdate(getContext()).updCurrentTable("recepieId", String.valueOf(recipes.get(i).getId()));
                         new Thread(() -> {
                             if (exchangeLevel == 1) OkHttpUtil.uplRecipe(recipes.get(i).getId());
                             else new SetRecipe().sendRecipeToPLC(recipes.get(i));

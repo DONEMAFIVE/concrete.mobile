@@ -9,7 +9,7 @@ public class Configs {
     private String timeSync;
     private String serverUpdate;
     private String localizationLevel;
-    private String hardkey;
+    private String hardKey;
     private String productionNumber;
     private String exchangeLevel;
     private String scadaIP;
@@ -71,12 +71,12 @@ public class Configs {
         this.localizationLevel = localizationLevel;
     }
 
-    public String getHardkey() {
-        return hardkey;
+    public String getHardKey() {
+        return hardKey;
     }
 
-    public void setHardkey(String hardkey) {
-        this.hardkey = hardkey;
+    public void setHardKey(String hardKey) {
+        this.hardKey = hardKey;
     }
 
     public String getProductionNumber() {

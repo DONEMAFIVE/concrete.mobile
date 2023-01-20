@@ -148,7 +148,8 @@ public class OrdersActivity extends AppCompatActivity {
                                         selectedRecepie = currentOrder.getMarkConcrete();
                                         selectedOrder = currentOrder.getNameOrder();
                                         editedOrder = currentOrder;
-
+                                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("orderId", String.valueOf(currentOrder.getId()));
+                                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("recepieId", String.valueOf(currentOrder.getRecipeID()));
                                         new Thread(() -> {
                                             if (exchangeLevel == 1) {
                                                 OkHttpUtil.uplOrder(currentOrder.getId(), Float.parseFloat(partyCapacity.getText().toString()));

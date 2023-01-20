@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/selected" android:oneshot="false">
 
-    <item android:drawable="@drawable/mixer" android:duration="90"/>
-    <item android:drawable="@drawable/mixer1" android:duration="90"/>
-    <item android:drawable="@drawable/mixer2" android:duration="90"/>
-    <item android:drawable="@drawable/mixer3" android:duration="90"/>
-    <item android:drawable="@drawable/mixer4" android:duration="90"/>
+    <item android:drawable="@drawable/mixer1" android:duration="120"/>
+    <item android:drawable="@drawable/mixer2" android:duration="120"/>
+    <item android:drawable="@drawable/mixer1" android:duration="120"/>
+    <item android:drawable="@drawable/mixer2" android:duration="120"/>
+    <item android:drawable="@drawable/mixer1" android:duration="120"/>
 
 </animation-list>

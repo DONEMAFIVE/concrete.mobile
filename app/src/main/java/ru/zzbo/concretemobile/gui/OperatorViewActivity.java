@@ -255,6 +255,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
         startPolling();
         startThreads();
+        setCurrentOptions();
         initActions();
 
     }
@@ -1263,7 +1264,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     float finalResult = result;
                     new Handler(Looper.getMainLooper()).post(() -> {
                         dailyCounter.setText("Произведено за сегодня м3: " + finalResult);
-                        recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+selectedOrder);
+                        recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+ selectedOrder);
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1441,6 +1442,31 @@ public class OperatorViewActivity extends AppCompatActivity {
             // API < 26
             Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
             vibrator.vibrate(ms);
+        }
+    }
+
+    public void setCurrentOptions() {
+        Current currentOptions = new DBUtilGet(this).getCurrent();
+        if (currentOptions != null) {
+            Order order = new DBUtilGet(this).getOrderForID(currentOptions.getOrderID());
+            Recipe recipe = new DBUtilGet(this).getRecepieForID(currentOptions.getRecipeID());
+
+            System.out.println(recipe.getName());
+
+            if (recipe != null) selectedRecepie = recipe.getMark();
+            if (order != null) selectedOrder = order.getNameOrder();
+
+//            if (currentOptions.getOrderID() > 0) {
+//                if (order != null) recipeName.setText("Рецепт/заказ: " +recipe.getName() +"/"+ order.getNameOrder());
+//            }
+//            if (currentOptions.getRecipeID() != 0) {
+//                if (recipe != null) recipeOptionBtn.setText("Рецепт\n" + recipe.getName());
+//            }
+
+            if (currentOptions.getState() != null) {
+                if (currentOptions.getState().equals("work")) globalFactoryState = true;
+                if (currentOptions.getState().equals("idle")) globalFactoryState = false;
+            }
         }
     }
 }
