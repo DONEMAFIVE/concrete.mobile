@@ -19,13 +19,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.zzbo.concretemobile.db.DBUtilGet;
+import ru.zzbo.concretemobile.gui.OperatorViewActivity;
 import ru.zzbo.concretemobile.gui.OrdersActivity;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class CatalogMenuDialog extends DialogFragment {
+    private OperatorViewActivity operatorViewActivity;
+
+    public CatalogMenuDialog(OperatorViewActivity operatorViewActivity) {
+        this.operatorViewActivity = operatorViewActivity;
+    }
 
     @NonNull
     @Override
@@ -36,18 +42,18 @@ public class CatalogMenuDialog extends DialogFragment {
         return builder
                 .setTitle("Выберите каталог")
                 .setItems(catalogList, (dialog, i) -> {
-                    Toast.makeText(getActivity(), "Выбран каталог " + catalogList[i] + " " + i, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Выбран каталог " + catalogList[i] + " " + i, Toast.LENGTH_SHORT).show();
 
                     switch (i) {
                         case 0: {
                             new Thread(() -> {
-                                List<Recipe> recipeList = new ArrayList<>();
+                                List<Recepie> recepieList = new ArrayList<>();
                                 if (exchangeLevel == 1) {
-                                    recipeList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recipe>>() {}.getType()));
-                                } else recipeList = new DBUtilGet(getContext()).getRecepies();
+                                    recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
+                                } else recepieList = new DBUtilGet(getContext()).getRecipes();
 
-                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recipeList);
-                                recipeEditorDialog.show(getActivity().getSupportFragmentManager(), "custom");
+                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recepieList);
+                                recipeEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
                             }).start();
                             break;
                         }
@@ -59,7 +65,7 @@ public class CatalogMenuDialog extends DialogFragment {
                                 } else organizationList = new DBUtilGet(getContext()).getOrgs();
 
                                 OrganizationEditorDialog organizationEditorDialog = new OrganizationEditorDialog(organizationList);
-                                organizationEditorDialog.show(getActivity().getSupportFragmentManager(), "custom");
+                                organizationEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
                             }).start();
                             break;
                         }
@@ -71,7 +77,7 @@ public class CatalogMenuDialog extends DialogFragment {
                                 } else transporterList = new DBUtilGet(getContext()).getTrans();
 
                                 TransporterEditorDialog transporterEditorDialog = new TransporterEditorDialog(transporterList);
-                                transporterEditorDialog.show(getActivity().getSupportFragmentManager(), "custom");
+                                transporterEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
                             }).start();
                             break;
                         }

@@ -1,8 +1,10 @@
 package ru.zzbo.concretemobile.gui;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.animationMixerState;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
@@ -31,7 +33,6 @@ import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -74,17 +75,19 @@ import ru.zzbo.concretemobile.gui.dialogs.uploaders.PartyCapacityDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.RecipeLoaderDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.TransporterListDialog;
 import ru.zzbo.concretemobile.models.Current;
+import ru.zzbo.concretemobile.models.DispatcherStates;
 import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.DataManager;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 import ru.zzbo.concretemobile.reporting.ReportRecordingUtil;
 import ru.zzbo.concretemobile.utils.AlarmUtil;
+import ru.zzbo.concretemobile.utils.CalcUtil;
 import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
@@ -97,6 +100,8 @@ public class OperatorViewActivity extends AppCompatActivity {
     private DrawerLayout touchLockLayout;
 
     private Button closeAlarmLayoutBtn;
+    private Button reverseConveyor;
+    private Button conveyorUploadDrop;
     private Button resetAlarmBtn;
     private DrawerLayout alarmsWarningLayout;
     private EditText alarmWarningText;
@@ -152,8 +157,8 @@ public class OperatorViewActivity extends AppCompatActivity {
     private Button recipeOptionBtn;
     private Button partyOptionBtn;
     private Button mixOptionBtn;
-    private Button openMixer;
-    private Button closeMixer;
+    private ImageButton openMixer;
+    private ImageButton closeMixer;
     private Button manualAutoSwitcher;
     private Button stopCycle;
     private Button runCycleBtn;
@@ -232,7 +237,9 @@ public class OperatorViewActivity extends AppCompatActivity {
     private Button organizationSelectBtn, transporterSelectBtn, resetCounterBtn;
     private TextView performance;
     private int runClickCount = 0;
+    private DispatcherStates disp = null;
 
+    boolean isReverseConveyor = false;
     boolean separationHopper1 = false;
     boolean separationHopper2 = false;
     boolean separationHopper3 = false;
@@ -250,9 +257,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
         setsID();
         setComplectation();
-
         new DataManager(getApplicationContext()).runCollector();
-
         startPolling();
         startThreads();
         setCurrentOptions();
@@ -264,7 +269,8 @@ public class OperatorViewActivity extends AppCompatActivity {
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Выход");
-        builder.setMessage("Вы действительно хотите завершить работу");
+        builder.setIcon(R.drawable.warning);
+        builder.setMessage("Вы действительно хотите закрыть приложение и завершить работу?");
 
         builder.setPositiveButton("Да", (dialog, id) -> {
             try {
@@ -287,6 +293,7 @@ public class OperatorViewActivity extends AppCompatActivity {
      */
     private void setComplectation() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        isReverseConveyor = settings.getBoolean("reverseConveyor", false);
         separationHopper1 = settings.getBoolean("hopper1", false);
         separationHopper2 = settings.getBoolean("hopper2", false);
         separationHopper3 = settings.getBoolean("hopper3", false);
@@ -320,37 +327,42 @@ public class OperatorViewActivity extends AppCompatActivity {
             doser42.setVisibility(INVISIBLE);
         }
 
-        if (!separationHopper1) doser12.setVisibility(View.GONE);
-        if (!separationHopper2) doser22.setVisibility(View.GONE);
-        if (!separationHopper3) doser32.setVisibility(View.GONE);
-        if (!separationHopper4) doser42.setVisibility(View.GONE);
+        if (!isReverseConveyor) reverseConveyor.setVisibility(GONE);
+
+        if (!separationHopper1) doser12.setVisibility(GONE);
+        if (!separationHopper2) doser22.setVisibility(GONE);
+        if (!separationHopper3) doser32.setVisibility(GONE);
+        if (!separationHopper4) doser42.setVisibility(GONE);
 
         //количество силосов
         switch (factoryOptionList.getSilosCounter()) {
             case 1:
-                cement2LL.setVisibility(View.GONE);
+                cement2LL.setVisibility(GONE);
                 break;
             case 2:
                 cement2LL.setVisibility(VISIBLE);
                 break;
         }
 
-        if (!factoryOptionList.isWater2()) water2LL.setVisibility(View.GONE);
+        if (!factoryOptionList.isWater2()) water2LL.setVisibility(GONE);
 
         //todo: humidityMixerSensor
         switch (factoryOptionList.getChemyCounter()) {
             case 1: {
-                chemy2LL.setVisibility(View.GONE);
-                chemy3LL.setVisibility(View.GONE);
+                chemy2LL.setVisibility(GONE);
+                chemy3LL.setVisibility(GONE);
                 break;
             }
             case 2: {
-                chemy3LL.setVisibility(View.GONE);
+                chemy3LL.setVisibility(GONE);
                 break;
             }
         }
 
         hydroGateOption = factoryOptionList.isHydroGate();
+
+        if (factoryOptionList.isDropConveyor()) conveyorUploadDrop.setVisibility(VISIBLE);
+        else conveyorUploadDrop.setVisibility(INVISIBLE);
 
         //тип транспортера:
         // 0 - лента
@@ -378,7 +390,7 @@ public class OperatorViewActivity extends AppCompatActivity {
             }
             case 12: {
                 verticalConveyorView.setVisibility(VISIBLE);
-                runVerticalConv.setVisibility(VISIBLE);
+                if (accessLevel != 1) runVerticalConv.setVisibility(VISIBLE);
 
                 skipArrowUp.setVisibility(INVISIBLE);
                 skipArrowDown.setVisibility(INVISIBLE);
@@ -396,8 +408,10 @@ public class OperatorViewActivity extends AppCompatActivity {
             case 11: {
                 verticalConveyorView.setVisibility(INVISIBLE);
                 runVerticalConv.setVisibility(INVISIBLE);
-                skipArrowUp.setVisibility(VISIBLE);
-                skipArrowDown.setVisibility(VISIBLE);
+                if (accessLevel != 1) {
+                    skipArrowUp.setVisibility(VISIBLE);
+                    skipArrowDown.setVisibility(VISIBLE);
+                }
                 break;
             }
         }
@@ -409,10 +423,12 @@ public class OperatorViewActivity extends AppCompatActivity {
             ReflectionRetrieval retrieval = new ReflectionRetrieval();
 
             DecimalFormat decFormat = new DecimalFormat("#0.0");
+            CalcUtil calc = new CalcUtil();
             while (true) {
                 //todo: здесь условие для break прерывания работы while(true)
                 retrieval.getValues();
                 try {
+                    if (exchangeLevel == 1) disp = new Gson().fromJson(OkHttpUtil.getDispatcherStates(), DispatcherStates.class);
                     new Handler(Looper.getMainLooper()).post(() -> {
                         //рецепты на бункерах
                         recepieBuncker1.setText(decFormat.format(retrieval.getHopper11RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper11Value()));
@@ -445,17 +461,38 @@ public class OperatorViewActivity extends AppCompatActivity {
                         amperage.setText("Сила тока (А): " + decFormat.format(retrieval.getAmperageMixerValue()));
 
                         //инфо блок слева
-                        operatorName.setText("Оператор смены: " + operatorLogin);
-                        mixCounterCurrent.setText("Текущий замес: " + retrieval.getMixCounterValue());
-                        mixCounterTotal.setText("Всего замесов: " + retrieval.getTotalMixCounterValue());
+                        if (exchangeLevel == 1) {
+                            try {
+                                if (disp != null){
+                                    operatorName.setText("Оператор смены: " + disp.getOperatorName());
+                                    calc.cycleCalcCounter(Float.valueOf(disp.getPartyCapacity()), Float.valueOf(disp.getMixCapacity()));
+                                    mixCounterTotal.setText("Всего замесов: "+ calc.getCycleSum());
+                                    mixCounterCurrent.setText("Текущий замес: " + disp.getMixCounter());
+                                    recipeName.setText("Рецепт/заказ: " + disp.getCurrentRecepie() +"/"+ disp.getCurrentOrder());
+                                    dailyCounter.setText("Произведено за сегодня м3: " + disp.getProductionCapacityDay());
+                                    partyOptionBtn.setText("Партия\n" +  disp.getPartyCapacity());
+                                    mixOptionBtn.setText("Замес\n" + disp.getMixCapacity());
 
-                        if (globalFactoryState)
-                            stateFactory.setText("Статус работы завода: работа");
-                        else stateFactory.setText("Статус работы завода: ожидание");
+                                    selectedOrg = disp.getCurrentOrg();
+                                    selectedTrans = disp.getCurrentTrans();
 
-                        partyOptionBtn.setText("Партия\n" + retrieval.getBatchVolumeValue());
-                        mixOptionBtn.setText("Замес\n" + retrieval.getMixingCapacity());
-                        recipeOptionBtn.setText("Рецепт\n" + selectedRecepie);
+                                    if (disp.getFactoryState() == "1") stateFactory.setText("Статус работы завода: работа");
+                                    else stateFactory.setText("Статус работы завода: ожидание");
+                                }
+                            }catch (Exception exc){
+                                exc.printStackTrace();
+                            }
+                        }else {
+                            operatorName.setText("Оператор смены: " + operatorLogin);
+                            mixCounterCurrent.setText("Текущий замес: " + retrieval.getMixCounterValue());
+                            mixCounterTotal.setText("Всего замесов: " + retrieval.getTotalMixCounterValue());
+                            partyOptionBtn.setText("Партия\n" + retrieval.getBatchVolumeValue());
+                            mixOptionBtn.setText("Замес\n" + retrieval.getMixingCapacity());
+                            recipeOptionBtn.setText("Рецепт\n" + selectedRecepie);
+
+                            if (globalFactoryState) stateFactory.setText("Статус работы завода: работа");
+                            else stateFactory.setText("Статус работы завода: ожидание");
+                        }
 
                         //сброс с смесителя
                         if (retrieval.isMixerCloseValue() == 1) {
@@ -643,6 +680,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                             autoDropChecker.setChecked(true);
                         else autoDropChecker.setChecked(false);
 
+                        if (retrieval.getReverseDKValue() == 1) reverseConveyor.setBackgroundColor(Color.GREEN);
+                        else reverseConveyor.setBackgroundColor(Color.WHITE);
+
+                        if (retrieval.getConveyorDropValue() == 1) conveyorUploadDrop.setBackgroundColor(Color.GREEN);
+                        else conveyorUploadDrop.setBackgroundColor(Color.WHITE);
+
                         //горизонтальный конвейер стрелка
                         if (retrieval.isHorConveyorOnIndValue() == 1) {
                             horLineStart.setBackgroundColor(Color.GREEN);
@@ -658,10 +701,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                         if (retrieval.isVerticalConveyorIndValue() == 1) {
                             verticalConveyorUpArrowIndication.setVisibility(VISIBLE);
                             runVerticalConv.setBackgroundColor(Color.GREEN);
-                            runVerticalConv.setText("Стоп");
+                            runVerticalConv.setText("Стоп Конвейер");
                         } else {
                             runVerticalConv.setBackgroundColor(Color.WHITE);
-                            runVerticalConv.setText("Старт");
+                            runVerticalConv.setText("Старт Конвейер");
                             verticalConveyorUpArrowIndication.setVisibility(INVISIBLE);
                         }
 
@@ -706,25 +749,30 @@ public class OperatorViewActivity extends AppCompatActivity {
                         if (retrieval.isManualAutoModeValue() == 0) {
                             globalModeState = false;
                             //TODO Ручной
-                            resetCounterBtn.setVisibility(VISIBLE);
+
                             manualAutoSwitcher.setBackgroundColor(Color.WHITE);
                             manualAutoSwitcher.setText("Переключить в автомат");
-                            if (factoryOptionList.getTransporterType() != 11)
+                            if (factoryOptionList.getTransporterType() != 11 && accessLevel != 1)
                                 runVerticalConv.setVisibility(VISIBLE);
-                            runCycleBtn.setVisibility(View.GONE);
-                            startSelfChemy.setVisibility(VISIBLE);
-                            startSelfWater.setVisibility(VISIBLE);
-                            startSelfCement.setVisibility(VISIBLE);
-                            startSelfDK.setVisibility(VISIBLE);
-                            horLineStart.setVisibility(VISIBLE);
-                            if (factoryOptionList.getTransporterType() == 11) {
+                            runCycleBtn.setVisibility(GONE);
+                            if (accessLevel != 1) {
+                                startSelfChemy.setVisibility(VISIBLE);
+                                startSelfWater.setVisibility(VISIBLE);
+                                startSelfCement.setVisibility(VISIBLE);
+                                startSelfDK.setVisibility(VISIBLE);
+                                horLineStart.setVisibility(VISIBLE);
+                                if (isReverseConveyor) reverseConveyor.setVisibility(VISIBLE);
+                            }
+
+                            if (factoryOptionList.getTransporterType() == 11 && accessLevel != 1) {
                                 skipArrowUp.setVisibility(VISIBLE);
                                 skipArrowDown.setVisibility(VISIBLE);
+                                resetCounterBtn.setVisibility(VISIBLE);
                             }
                         } else {
                             globalModeState = true;
                             //TODO Автомат
-                            resetCounterBtn.setVisibility(View.GONE);
+                            resetCounterBtn.setVisibility(GONE);
                             manualAutoSwitcher.setBackgroundColor(Color.GRAY);
                             manualAutoSwitcher.setText("Переключить в ручной");
                             runVerticalConv.setVisibility(INVISIBLE);
@@ -734,16 +782,20 @@ public class OperatorViewActivity extends AppCompatActivity {
                             startSelfCement.setVisibility(INVISIBLE);
                             startSelfDK.setVisibility(INVISIBLE);
                             horLineStart.setVisibility(INVISIBLE);
+                            reverseConveyor.setVisibility(INVISIBLE);
 
                             if (factoryOptionList.getTransporterType() == 11) {
                                 skipArrowUp.setVisibility(INVISIBLE);
                                 skipArrowDown.setVisibility(INVISIBLE);
                             }
                         }
-                        organizationSelectBtn.setText("Заказчик\n" + selectedOrg);
-                        transporterSelectBtn.setText("Водитель\n" + selectedTrans);
 
-                        performance.setText(String.valueOf(retrieval.getScadaPerformanceValue()));
+                        runOnUiThread(()->{
+                            organizationSelectBtn.setText("Заказчик\n" + selectedOrg);
+                            transporterSelectBtn.setText("Водитель\n" + selectedTrans);
+                            performance.setText(String.valueOf(retrieval.getScadaPerformanceValue()));
+                        });
+
                     });
                     Thread.sleep(100);
                 } catch (Exception e) {
@@ -756,14 +808,447 @@ public class OperatorViewActivity extends AppCompatActivity {
     //TODO GET
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
     private void initActions() {
+        switch (accessLevel) {
+            case 1: { //Диспетчер
+                stopCycle.setVisibility(INVISIBLE);
+                startMixerEngine.setVisibility(INVISIBLE);
+                reverseConveyor.setVisibility(INVISIBLE);
+                horLineStart.setVisibility(INVISIBLE);
+                runVerticalConv.setVisibility(INVISIBLE);
+                openMixer.setVisibility(INVISIBLE);
+                closeMixer.setVisibility(INVISIBLE);
+                incrementWater.setVisibility(GONE);
+                decrementWater.setVisibility(GONE);
+                resetCounterBtn.setVisibility(INVISIBLE);
+                skipArrowUp.setVisibility(INVISIBLE);
+                skipArrowDown.setVisibility(INVISIBLE);
+                recipeOptionBtn.setVisibility(INVISIBLE);
+
+                startSelfDK.setVisibility(INVISIBLE);
+                startSelfChemy.setVisibility(INVISIBLE);
+                startSelfCement.setVisibility(INVISIBLE);
+                startSelfWater.setVisibility(INVISIBLE);
+                manualAutoSwitcher.setVisibility(INVISIBLE);
+                break;
+            }
+            case 0:
+            case 3: {
+                reverseConveyor.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(137)).writeSingleInvertedBoolRegister();
+                });
+                conveyorUploadDrop.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(77)).writeSingleInvertedBoolRegister();
+                });
+                manualAutoSwitcher.setOnClickListener(view -> {
+//                    new CommandDispatcher(tagListManual.get(0)).writeSingleInvertedBoolRegister();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Режим работы ");
+                    String modeSwitchName = "\"Автоматический\"";
+                    if (globalModeState) modeSwitchName = "\"Ручной\"";
+                    builder.setMessage("Изменить режим работы на " + modeSwitchName + "?");
+                    builder.setPositiveButton("Да", (dialog, id) -> new CommandDispatcher(tagListManual.get(0)).writeSingleInvertedBoolRegister());
+                    builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                });
+
+                doser11.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(2)).writeSingleInvertedBoolRegister();
+                });
+                doser12.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(3)).writeSingleInvertedBoolRegister();
+                });
+                doser21.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(4)).writeSingleInvertedBoolRegister();
+                });
+                doser22.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(5)).writeSingleInvertedBoolRegister();
+                });
+                doser31.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(6)).writeSingleInvertedBoolRegister();
+                });
+                doser32.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(7)).writeSingleInvertedBoolRegister();
+                });
+                doser41.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(8)).writeSingleInvertedBoolRegister();
+                });
+                doser42.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(9)).writeSingleInvertedBoolRegister();
+                });
+
+                doserDispenserWater.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(10)).writeSingleInvertedBoolRegister();
+                });
+                doserDispenserChemy.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(11)).writeSingleInvertedBoolRegister();
+                });
+                doserDispenserCement.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(12)).writeSingleInvertedBoolRegister();
+                });
+                horLineStart.setOnClickListener(view -> {
+                    if (!globalModeState) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Горизонтальный конвейер");
+                        builder.setMessage("Вкл/выкл горизонтальный конвейер?");
+                        builder.setPositiveButton("Да", (dialog, id) -> new CommandDispatcher(tagListManual.get(13)).writeSingleInvertedBoolRegister());
+                        builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+                });
+                pumpWater.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(14)).writeSingleInvertedBoolRegister();
+                });
+                doserChemy1.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(15)).writeSingleInvertedBoolRegister();
+                });
+                doserChemy2.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(16)).writeSingleInvertedBoolRegister();
+                });
+                doserShnek1.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(18)).writeSingleInvertedBoolRegister();
+                });
+                doserShnek2.setOnClickListener(view -> {
+                    if (!globalModeState)
+                        new CommandDispatcher(tagListManual.get(19)).writeSingleInvertedBoolRegister();
+                });
+
+                skipArrowUp.setOnTouchListener((view, motionEvent) -> {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN: { //удержание
+                            skipArrowUp.setImageResource(R.drawable.arrow_up);
+                            new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(true);
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: { // опускание
+                            try {
+                                Thread.sleep(300);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            skipArrowUp.setImageResource(R.drawable.arrow_up_off);
+                            new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(false);
+                            break;
+                        }
+                    }
+                    return false;
+                });
+                skipArrowDown.setOnTouchListener((view, motionEvent) -> {
+                    switch (motionEvent.getAction()) {
+                        case MotionEvent.ACTION_DOWN: { //удержание
+                            skipArrowDown.setImageResource(R.drawable.arrow_down);
+                            new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(true);
+                            break;
+                        }
+                        case MotionEvent.ACTION_UP: { // опускание
+                            try {
+                                Thread.sleep(300);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            skipArrowDown.setImageResource(R.drawable.arrow_down_off);
+                            new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(false);
+                            break;
+                        }
+                    }
+                    return false;
+                });
+                aerationSilos.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(24)).writeSingleInvertedBoolRegister();
+                });
+                startMixerEngine.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(25)).writeSingleInvertedBoolRegister();
+                });
+                vibroSilos.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(80)).writeSingleInvertedBoolRegister();
+                });
+                filterSilos.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(81)).writeSingleInvertedBoolRegister();
+                });
+                openMixer.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(21)).writeSingleInvertedBoolRegister();
+                });
+                closeMixer.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(82)).writeSingleInvertedBoolRegister();
+                });
+                openMixer.setOnTouchListener((view, motionEvent) -> {
+                    new Thread(()->{
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN: { //удержание
+                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
+                                break;
+                            }
+                            case MotionEvent.ACTION_UP: { // опускание
+                                try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
+                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                                break;
+                            }
+                        }
+                    }).start();
+                    return false;
+                });
+                closeMixer.setOnTouchListener((view, motionEvent) -> {
+                    new Thread(()->{
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN: { //удержание
+                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
+                                else new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                                break;
+                            }
+                            case MotionEvent.ACTION_UP: { // опускание
+                                try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
+                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
+                                break;
+                            }
+                        }
+                    }).start();
+                    return false;
+                });
+                valveWater.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(83)).writeSingleInvertedBoolRegister();
+                });
+
+                //TODO: Попытка сделать защиту от случайногог нажатия
+                Handler handlerRunCycle = new Handler();
+                Runnable runCycle = () -> {
+                    try {
+                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                        globalMixStartTime = timeFormat.format(new Date());
+                        if (exchangeLevel == 1) {
+                            new Thread(() -> {
+                                new CommandDispatcher(84).writeValue("true");
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                new CommandDispatcher(84).writeValue("false");
+                                OkHttpUtil.updStateFactory(true);
+                            }).start();
+                        } else new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
+
+                        globalFactoryState = true;
+
+                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "work");   //смена статуса
+                        runClickCount = 0;
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Перемешивание");
+                        builder.setMessage("Автоматический режим запущен!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    } catch (Exception exc) {
+                        exc.printStackTrace();
+                    }
+                };
+
+                runCycleBtn.setOnTouchListener((arg0, arg1) -> {
+                    switch (arg1.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            runClickCount++;
+                            if (runClickCount == 3) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Подсказка");
+                                builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 3-x секунд");
+                                builder.setPositiveButton("OK", (dialog, id) -> {
+                                    runClickCount = 0;
+                                    dialog.dismiss();
+                                });
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.setCancelable(false);
+                                alertDialog.show();
+                            }
+                            handlerRunCycle.postDelayed(runCycle, 3000);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            handlerRunCycle.removeCallbacks(runCycle);
+                            break;
+                    }
+                    return true;
+                });
+                stopCycle.setOnClickListener(view -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Подтвержение");
+                    builder.setMessage("Остановить перемешивание ?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Да", (dialog, id) -> {
+                        new Thread(()->{
+                            new CommandDispatcher(tagListManual.get(84)).writeSingleRegisterWithValue(false);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
+                            new CommandDispatcher(tagListManual.get(85)).writeSingleRegisterWithValue(false);
+                            if (exchangeLevel == 1) {
+                                OkHttpUtil.updStateFactory(false);
+                            }
+                            globalFactoryState = false;
+                            new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "idle");
+                        }).start();
+                    });
+                    builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                });
+
+                startSelfDK.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(110)).writeSingleInvertedBoolRegister();
+                });
+                startSelfCement.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(112)).writeSingleInvertedBoolRegister();
+                });
+                startSelfChemy.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(111)).writeSingleInvertedBoolRegister();
+                });
+                startSelfWater.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(113)).writeSingleInvertedBoolRegister();
+                });
+                runVerticalConv.setOnClickListener(view -> {
+                    if (!animationMixerState) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Уведомление");
+                        builder.setMessage("Смеситель не включен!");
+                        builder.setPositiveButton("Ok", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+                    new CommandDispatcher(tagListManual.get(115)).writeSingleInvertedBoolRegister();
+                });
+                incrementWater.setOnClickListener(view -> {
+                    if (exchangeLevel == 1)
+                        new Thread(() -> new CommandDispatcher(135).writeInverted()).start();
+                    else new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
+                });
+                decrementWater.setOnClickListener(view -> {
+                    if (exchangeLevel == 1)
+                        new Thread(() -> new CommandDispatcher(136).writeInverted()).start();
+                    else new CommandDispatcher(tagListManual.get(136)).writeSingleFrontBoolRegister(200);
+                });
+                autoDropChecker.setOnClickListener(view -> {
+                    new CommandDispatcher(tagListManual.get(156)).writeSingleInvertedBoolRegister();
+                    //todo: тут смена статуса на окончание для индикации "готово к разгрузке"
+                });
+                silosSelector1.setOnClickListener(view -> {
+                    new Thread(()->{
+                        new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(false);
+                    }).start();
+                });
+                silosSelector2.setOnClickListener(view -> {
+                    new Thread(() -> {
+                        new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(true);
+                    }).start();
+                });
+                recipeOptionBtn.setOnClickListener(view -> {
+                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recipeOptionBtn);
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_select_rec_ord, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(menuItem -> {
+                        switch (menuItem.getItemId()) {
+                            case R.id.recepie: {
+                                new Thread(() -> {
+                                    List<Recepie> recepieList = new ArrayList<>();
+                                    if (exchangeLevel == 1) {
+                                        recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {
+                                        }.getType()));
+                                    } else recepieList = new DBUtilGet(this).getRecipes();
+
+                                    if (recepieList != null) {
+                                        RecipeLoaderDialog recDialog = new RecipeLoaderDialog(recepieList);
+                                        recDialog.show(getSupportFragmentManager(), "custom");
+                                    } else {
+                                        Toast.makeText(this, "Рецепты отсутствуют!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).start();
+                                break;
+                            }
+                            case R.id.order: {
+                                Intent intent = new Intent(getApplicationContext(), OrdersActivity.class);
+                                startActivity(intent);
+                                break;
+                            }
+                        }
+                        return true;
+                    });
+                    popupMenu.show();
+
+                });
+                partyOptionBtn.setOnClickListener(view -> {
+                    PartyCapacityDialog dialog = new PartyCapacityDialog();
+                    dialog.show(getSupportFragmentManager(), "custom");
+                });
+                mixOptionBtn.setOnClickListener(view -> {
+                    MixCapacityDialog dialog = new MixCapacityDialog();
+                    dialog.show(getSupportFragmentManager(), "custom");
+                });
+                resetCounterBtn.setOnClickListener(view -> {
+                    if (exchangeLevel == 1) {
+                        new Thread(() -> {
+                            new CommandDispatcher(71).writeInverted();
+                            OkHttpUtil.updStateFactory(false);
+                        }).start();
+                    } else {
+                        new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
+                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "idle");
+                    }
+                });
+                resetAlarmBtn.setOnClickListener(view -> {
+                    alarmsWarningLayout.setVisibility(INVISIBLE);
+                    if (exchangeLevel == 1)
+                        new Thread(() -> new CommandDispatcher(1).writeInverted()).start();
+                    else new CommandDispatcher(tagListManual.get(1)).writeSingleFrontBoolRegister(2000);
+                });
+                organizationSelectBtn.setOnClickListener(view -> {
+                    new Thread(() -> {
+                        List<Organization> orgList = new ArrayList<>();
+                        if (exchangeLevel == 1) {
+                            orgList.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {
+                            }.getType()));
+                        } else {
+                            orgList = new DBUtilGet(this).getOrgs();
+                        }
+                        OrganizationListDialog dialog = new OrganizationListDialog(orgList);
+                        dialog.show(getSupportFragmentManager(), "custom");
+                    }).start();
+                });
+                transporterSelectBtn.setOnClickListener(view -> {
+                    new Thread(() -> {
+                        List<Transporter> transList = new ArrayList<>();
+                        if (exchangeLevel == 1) {
+                            transList.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {
+                            }.getType()));
+                        } else transList = new DBUtilGet(this).getTrans();
+
+                        TransporterListDialog dialog = new TransporterListDialog(transList);
+                        dialog.show(getSupportFragmentManager(), "custom");
+                    }).start();
+                });
+            }
+        }
+
         touchLock.setOnClickListener(view -> {
             touchLockLayout.setVisibility(VISIBLE);
         });
-
         touchUnlock.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                if (seekBar.getProgress() > 95) touchLockLayout.setVisibility(View.GONE);
+                if (seekBar.getProgress() > 95) touchLockLayout.setVisibility(GONE);
                 else seekBar.setThumb(getResources().getDrawable(R.drawable.lock, null));
 
                 seekBar.setProgress(0);
@@ -782,9 +1267,8 @@ public class OperatorViewActivity extends AppCompatActivity {
         });
 
         closeAlarmLayoutBtn.setOnClickListener(view -> {
-            alarmsWarningLayout.setVisibility(View.GONE);
+            alarmsWarningLayout.setVisibility(GONE);
         });
-
         alarm.setOnClickListener(view -> {
             alarmsWarningLayout.setVisibility(VISIBLE);
             try {
@@ -794,378 +1278,9 @@ public class OperatorViewActivity extends AppCompatActivity {
             }
         });
 
-        manualAutoSwitcher.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(0)).writeSingleInvertedBoolRegister();
-        });
-
-        doser11.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(2)).writeSingleInvertedBoolRegister();
-        });
-        doser12.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(3)).writeSingleInvertedBoolRegister();
-        });
-        doser21.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(4)).writeSingleInvertedBoolRegister();
-        });
-        doser22.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(5)).writeSingleInvertedBoolRegister();
-        });
-        doser31.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(6)).writeSingleInvertedBoolRegister();
-        });
-        doser32.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(7)).writeSingleInvertedBoolRegister();
-        });
-        doser41.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(8)).writeSingleInvertedBoolRegister();
-        });
-        doser42.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(9)).writeSingleInvertedBoolRegister();
-        });
-
-        doserDispenserWater.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(10)).writeSingleInvertedBoolRegister();
-        });
-        doserDispenserChemy.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(11)).writeSingleInvertedBoolRegister();
-        });
-        doserDispenserCement.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(12)).writeSingleInvertedBoolRegister();
-        });
-        horLineStart.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(13)).writeSingleInvertedBoolRegister();
-        });
-        pumpWater.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(14)).writeSingleInvertedBoolRegister();
-        });
-        doserChemy1.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(15)).writeSingleInvertedBoolRegister();
-        });
-        doserChemy2.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(16)).writeSingleInvertedBoolRegister();
-        });
-        doserShnek1.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(18)).writeSingleInvertedBoolRegister();
-        });
-        doserShnek2.setOnClickListener(view -> {
-            if (!globalModeState)
-                new CommandDispatcher(tagListManual.get(19)).writeSingleInvertedBoolRegister();
-        });
-        openMixer.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(21)).writeSingleInvertedBoolRegister();
-        });
-        closeMixer.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(82)).writeSingleInvertedBoolRegister();
-        });
-
-        skipArrowUp.setOnTouchListener((view, motionEvent) -> {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN: { //удержание
-                    skipArrowUp.setImageResource(R.drawable.arrow_up);
-                    new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(true);
-                    break;
-                }
-                case MotionEvent.ACTION_UP: { // опускание
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    skipArrowUp.setImageResource(R.drawable.arrow_up_off);
-                    new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(false);
-                    break;
-                }
-            }
-            return false;
-        });
-        skipArrowDown.setOnTouchListener((view, motionEvent) -> {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN: { //удержание
-                    skipArrowDown.setImageResource(R.drawable.arrow_down);
-                    new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(true);
-                    break;
-                }
-                case MotionEvent.ACTION_UP: { // опускание
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    skipArrowDown.setImageResource(R.drawable.arrow_down_off);
-                    new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(false);
-                    break;
-                }
-            }
-            return false;
-        });
-        aerationSilos.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(24)).writeSingleInvertedBoolRegister();
-        });
-        startMixerEngine.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(25)).writeSingleInvertedBoolRegister();
-        });
-        vibroSilos.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(80)).writeSingleInvertedBoolRegister();
-        });
-        filterSilos.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(81)).writeSingleInvertedBoolRegister();
-        });
-        openMixer.setOnTouchListener((view, motionEvent) -> {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN: { //удержание
-                    new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
-                    break;
-                }
-                case MotionEvent.ACTION_UP: { // опускание
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (hydroGateOption)
-                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-                    break;
-                }
-            }
-            return false;
-        });
-        closeMixer.setOnTouchListener((view, motionEvent) -> {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN: { //удержание
-                    if (hydroGateOption)
-                        new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
-                    else
-                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-                    break;
-                }
-                case MotionEvent.ACTION_UP: { // опускание
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (hydroGateOption)
-                        new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
-                    break;
-                }
-            }
-            return false;
-        });
-        valveWater.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(83)).writeSingleInvertedBoolRegister();
-        });
-
-        //TODO: Попытка сделать защиту от случайногог нажатия
-        Handler handlerRunCycle = new Handler();
-        Runnable runCycle = () -> {
-            try {
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-                globalMixStartTime = timeFormat.format(new Date());
-                if (exchangeLevel == 1) {
-                    new Thread(() -> {
-                        new CommandDispatcher(84).writeValue("true");
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        new CommandDispatcher(84).writeValue("false");
-                    }).start();
-                } else
-                    new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
-
-                globalFactoryState = true;
-                new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "work");   //смена статуса
-                runClickCount = 0;
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Перемешивание");
-                builder.setMessage("Автоматический режим запущен!");
-                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } catch (Exception exc) {
-                exc.printStackTrace();
-            }
-        };
-
-        runCycleBtn.setOnTouchListener((arg0, arg1) -> {
-            switch (arg1.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    vibrate(100);
-                    runClickCount++;
-                    if (runClickCount == 3) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Подсказка");
-                        builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 3-x секунд");
-                        builder.setPositiveButton("OK", (dialog, id) -> {
-                            runClickCount = 0;
-                            dialog.dismiss();
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.setCancelable(false);
-                        alertDialog.show();
-                    }
-                    handlerRunCycle.postDelayed(runCycle, 3000);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    handlerRunCycle.removeCallbacks(runCycle);
-                    break;
-            }
-            return true;
-        });
-
-        stopCycle.setOnClickListener(view -> {
-            new Thread(()->{
-                new CommandDispatcher(tagListManual.get(84)).writeSingleRegisterWithValue(false);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-                new CommandDispatcher(tagListManual.get(85)).writeSingleRegisterWithValue(false);
-                globalFactoryState = false;
-                new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "idle");
-            }).start();
-        });
-
-        startSelfDK.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(110)).writeSingleInvertedBoolRegister();
-        });
-        startSelfCement.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(112)).writeSingleInvertedBoolRegister();
-        });
-        startSelfChemy.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(111)).writeSingleInvertedBoolRegister();
-        });
-        startSelfWater.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(113)).writeSingleInvertedBoolRegister();
-        });
-        runVerticalConv.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(115)).writeSingleInvertedBoolRegister();
-        });
-        incrementWater.setOnClickListener(view -> {
-            if (exchangeLevel == 1)
-                new Thread(() -> new CommandDispatcher(135).writeInverted()).start();
-            else new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
-        });
-        decrementWater.setOnClickListener(view -> {
-            if (exchangeLevel == 1)
-                new Thread(() -> new CommandDispatcher(136).writeInverted()).start();
-            else new CommandDispatcher(tagListManual.get(136)).writeSingleFrontBoolRegister(200);
-        });
-        autoDropChecker.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(156)).writeSingleInvertedBoolRegister();
-            //todo: тут смена статуса на окончание для индикации "готово к разгрузке"
-        });
-        silosSelector1.setOnClickListener(view -> {
-            new Thread(()->{
-                new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(false);
-            }).start();
-        });
-        silosSelector2.setOnClickListener(view -> {
-            new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(true);
-        });
-        organizationSelectBtn.setOnClickListener(view -> {
-            new Thread(() -> {
-                List<Organization> orgList = new ArrayList<>();
-                if (exchangeLevel == 1) {
-                    orgList.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {
-                    }.getType()));
-                } else {
-                    orgList = new DBUtilGet(this).getOrgs();
-                }
-                OrganizationListDialog dialog = new OrganizationListDialog(orgList);
-                dialog.show(getSupportFragmentManager(), "custom");
-            }).start();
-        });
-
-        transporterSelectBtn.setOnClickListener(view -> {
-            new Thread(() -> {
-                List<Transporter> transList = new ArrayList<>();
-                if (exchangeLevel == 1) {
-                    transList.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {
-                    }.getType()));
-                } else transList = new DBUtilGet(this).getTrans();
-
-                TransporterListDialog dialog = new TransporterListDialog(transList);
-                dialog.show(getSupportFragmentManager(), "custom");
-            }).start();
-        });
-
-        recipeOptionBtn.setOnClickListener(view -> {
-            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recipeOptionBtn);
-            popupMenu.getMenuInflater().inflate(R.menu.popup_select_rec_ord, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
-                switch (menuItem.getItemId()) {
-                    case R.id.recipe: {
-                        new Thread(() -> {
-                            List<Recipe> recipeList = new ArrayList<>();
-                            if (exchangeLevel == 1) {
-                                recipeList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recipe>>() {
-                                }.getType()));
-                            } else recipeList = new DBUtilGet(this).getRecepies();
-
-                            if (recipeList != null) {
-                                RecipeLoaderDialog recDialog = new RecipeLoaderDialog(recipeList);
-                                recDialog.show(getSupportFragmentManager(), "custom");
-                            } else {
-                                Toast.makeText(this, "Рецепты отсутствуют!", Toast.LENGTH_SHORT).show();
-                            }
-                        }).start();
-                        break;
-                    }
-                    case R.id.order: {
-                        Intent intent = new Intent(getApplicationContext(), OrdersActivity.class);
-                        startActivity(intent);
-                        break;
-                    }
-                }
-                return true;
-            });
-            popupMenu.show();
-
-        });
-
-        partyOptionBtn.setOnClickListener(view -> {
-            PartyCapacityDialog dialog = new PartyCapacityDialog();
-            dialog.show(getSupportFragmentManager(), "custom");
-        });
-        mixOptionBtn.setOnClickListener(view -> {
-            MixCapacityDialog dialog = new MixCapacityDialog();
-            dialog.show(getSupportFragmentManager(), "custom");
-        });
         catalogsBtn.setOnClickListener(view -> {
-            CatalogMenuDialog dialog = new CatalogMenuDialog();
+            CatalogMenuDialog dialog = new CatalogMenuDialog(this);
             dialog.show(getSupportFragmentManager(), "custom");
-        });
-
-        resetCounterBtn.setOnClickListener(view -> {
-            if (exchangeLevel == 1)
-                new Thread(() -> new CommandDispatcher(71).writeInverted()).start();
-            else new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
-        });
-        resetAlarmBtn.setOnClickListener(view -> {
-            alarmsWarningLayout.setVisibility(INVISIBLE);
-            if (exchangeLevel == 1)
-                new Thread(() -> new CommandDispatcher(1).writeInverted()).start();
-            else new CommandDispatcher(tagListManual.get(1)).writeSingleFrontBoolRegister(2000);
         });
         reportsMenu.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
@@ -1185,7 +1300,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     try {
                         if (retrieval.isWeightsReadyReadValue() == 1) {
                             Current current = new DBUtilGet(getApplicationContext()).getCurrent();
-                            Recipe recipe = new DBUtilGet(getApplicationContext()).getRecepieForID(current.getRecipeID());
+                            Recepie recepie = new DBUtilGet(getApplicationContext()).getRecipeForID(current.getRecipeID());
 
                             System.out.println(selectedOrder);
                             //TODO:
@@ -1200,9 +1315,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         0,
                                         selectedTrans,
                                         0,
-                                        recipe.getName(),
+                                        recepie.getName(),
                                         retrieval.getMixingCapacity(),
-                                        recipe.getId(), retrieval.getBatchVolumeValue()
+                                        recepie.getId(), retrieval.getBatchVolumeValue()
                                 );
                             } else {
                                 Order selectedOrder = new DBUtilGet(getApplicationContext()).getOrderForID(current.getOrderID());
@@ -1227,9 +1342,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         selectedOrder.getOrganizationID(),
                                         selectedOrder.getTransporter(),
                                         selectedOrder.getTransporterID(),
-                                        recipe.getName(),
+                                        recepie.getName(),
                                         selectedOrder.getMaxMixCapacity(),
-                                        recipe.getId(),
+                                        recepie.getId(),
                                         selectedOrder.getTotalCapacity()
                                 );
                             }
@@ -1242,15 +1357,17 @@ public class OperatorViewActivity extends AppCompatActivity {
             }).start();
         }
 
+        //Произведено за сегодня
         new Thread(() -> {
+            SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
+            List<Mix> mixList = new ArrayList<>();
             while (true) {
                 try {
                     Thread.sleep(2000);
-                    SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
-                    List<Mix> mixList = new ArrayList<>();
                     if (exchangeLevel == 1) {
                         try {
-                            mixList = new Gson().fromJson(OkHttpUtil.getMixes(date.format(new Date()), date.format(new Date())), new TypeToken<List<Mix>>() {}.getType());
+                            String req = OkHttpUtil.getMixes(date.format(new Date()), date.format(new Date()));
+                            if (req.trim().equals("Empty")) mixList = new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
                         } catch (Exception e) {
 //                            e.printStackTrace();
                         }
@@ -1262,9 +1379,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                         if (mix.getCompleteCapacity() != 0) result += mix.getCompleteCapacity();
                     }
                     float finalResult = result;
+
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        dailyCounter.setText("Произведено за сегодня м3: " + finalResult);
-                        recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+ selectedOrder);
+                        if (exchangeLevel != 1 && accessLevel != 1) {
+                            dailyCounter.setText("Произведено за сегодня м3: " + finalResult);
+                            recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+ selectedOrder);
+                        }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1315,14 +1435,14 @@ public class OperatorViewActivity extends AppCompatActivity {
         doseSilos1 = findViewById(R.id.doseSilos1);
 
         silos2View = findViewById(R.id.silos2View);
-        titleSilos2 = findViewById(R.id.titleSilos2);
+        titleSilos2 = findViewById(R.id.silosSelector2);
         doseSilos2 = findViewById(R.id.doseSilos2);
         silos1View = findViewById(R.id.silos1View);
         levelDownSIlos2 = findViewById(R.id.levelDownSIlos2);
         levelUpSilos2 = findViewById(R.id.levelUpSilos2);
         recipeSilos2 = findViewById(R.id.recepieSilos2);
         recipeSilos1 = findViewById(R.id.recepieSilos1);
-        titleSilos1 = findViewById(R.id.titleSilos1);
+        titleSilos1 = findViewById(R.id.silosSelector1);
         aerationSilos = findViewById(R.id.aerationSilos);
         vibroSilos = findViewById(R.id.vibroSilos);
         filterSilos = findViewById(R.id.filterSilos);
@@ -1357,6 +1477,8 @@ public class OperatorViewActivity extends AppCompatActivity {
         mixerView = findViewById(R.id.mixerView);
         mixerView.setBackgroundResource(R.drawable.mixer_animation);
 
+        reverseConveyor = findViewById(R.id.reverseConveyor);
+        conveyorUploadDrop = findViewById(R.id.conveyorUploadDrop);
         closeAlarmLayoutBtn = findViewById(R.id.closeAlarmLayoutBtn);
         resetAlarmBtn = findViewById(R.id.resetAlarmBtn);
         alarmsWarningLayout = findViewById(R.id.alarmsWarningLayout);
@@ -1449,19 +1571,10 @@ public class OperatorViewActivity extends AppCompatActivity {
         Current currentOptions = new DBUtilGet(this).getCurrent();
         if (currentOptions != null) {
             Order order = new DBUtilGet(this).getOrderForID(currentOptions.getOrderID());
-            Recipe recipe = new DBUtilGet(this).getRecepieForID(currentOptions.getRecipeID());
+            Recepie recepie = new DBUtilGet(this).getRecipeForID(currentOptions.getRecipeID());
 
-            System.out.println(recipe.getName());
-
-            if (recipe != null) selectedRecepie = recipe.getMark();
+            if (recepie != null) selectedRecepie = recepie.getMark();
             if (order != null) selectedOrder = order.getNameOrder();
-
-//            if (currentOptions.getOrderID() > 0) {
-//                if (order != null) recipeName.setText("Рецепт/заказ: " +recipe.getName() +"/"+ order.getNameOrder());
-//            }
-//            if (currentOptions.getRecipeID() != 0) {
-//                if (recipe != null) recipeOptionBtn.setText("Рецепт\n" + recipe.getName());
-//            }
 
             if (currentOptions.getState() != null) {
                 if (currentOptions.getState().equals("work")) globalFactoryState = true;

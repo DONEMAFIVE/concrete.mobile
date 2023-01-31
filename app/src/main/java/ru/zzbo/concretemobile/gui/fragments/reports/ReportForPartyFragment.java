@@ -103,8 +103,8 @@ public class ReportForPartyFragment extends Fragment {
                         mix.getOrganizationID() + " | " +
                         mix.getTransporter() + " | " +
                         mix.getTransporterID() + " | " +
-                        mix.getRecipe() + " | " +
-                        mix.getRecipeID() + " | " +
+                        mix.getRecepie() + " | " +
+                        mix.getRecepieID() + " | " +
                         mix.getMixCounter() + " | " +
                         mix.getCompleteCapacity() + " | " +
                         mix.getTotalCapacity() + " | " +
@@ -229,8 +229,8 @@ public class ReportForPartyFragment extends Fragment {
                     mixList.get(i).getOrganizationID(),
                     mixList.get(i).getTransporter(),
                     mixList.get(i).getTransporterID(),
-                    mixList.get(i).getRecipe(),
-                    mixList.get(i).getRecipeID(),
+                    mixList.get(i).getRecepie(),
+                    mixList.get(i).getRecepieID(),
                     mixList.get(i).getMixCounter() + 1,       //+1 делается потомучто из прошивки замесы начинаются с нуля
                     totalCapacity.floatValue(),
                     mixList.get(i).getTotalCapacity(),
@@ -312,8 +312,8 @@ public class ReportForPartyFragment extends Fragment {
                             mixList.get(i + 1).getOrganizationID(),
                             mixList.get(i + 1).getTransporter(),
                             mixList.get(i + 1).getTransporterID(),
-                            mixList.get(i + 1).getRecipe(),
-                            mixList.get(i + 1).getRecipeID(),
+                            mixList.get(i + 1).getRecepie(),
+                            mixList.get(i + 1).getRecepieID(),
                             mixList.get(i + 1).getMixCounter() + 1,
                             totalCapacity.floatValue(),
                             mixList.get(i + 1).getTotalCapacity(),

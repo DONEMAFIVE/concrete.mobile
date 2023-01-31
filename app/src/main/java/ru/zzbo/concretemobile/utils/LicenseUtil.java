@@ -5,6 +5,7 @@ import static ru.zzbo.concretemobile.utils.Constants.configList;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,6 +21,8 @@ import java.util.List;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
+import ru.zzbo.concretemobile.models.DroidConfig;
+import ru.zzbo.concretemobile.models.ScadaConfig;
 
 public class LicenseUtil {
 
@@ -113,5 +116,24 @@ public class LicenseUtil {
         Log.e("LICENCE", key + " = " + mac);
         //TODO:Сравнить hardkey = mac
         return mac.equals(key);
+    }
+
+    public static boolean chkPCLicense(Context context) {
+        String req = OkHttpUtil.getPCConfig();
+        ScadaConfig cfgPC = new Gson().fromJson(req, ScadaConfig.class);
+        DroidConfig cfgDroid = new ConfigBuilder().buildScadaParameters(new DBUtilGet(context).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
+
+        String droidKey = cfgDroid.getHardKey();
+        String pcKey = cfgPC.getHardKey();
+
+        Log.e("LICENCE", pcKey + " = " + droidKey);
+
+        try {
+            droidKey = new CryptoUtil(droidKey).decrypt().trim();
+            pcKey = new CryptoUtil(pcKey).decrypt().trim();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
+        return pcKey.equals(droidKey);
     }
 }

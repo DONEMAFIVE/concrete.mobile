@@ -11,7 +11,7 @@ import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 
 public class DBUtilInsert {
@@ -74,60 +74,60 @@ public class DBUtilInsert {
         }
     }
 
-    public void insertIntoRecepie(Recipe recipe) {
+    public void insertIntoRecipe(Recepie recepie) {
         openDbConfig();
 
         try {
             ContentValues cv = new ContentValues();
-            cv.put("date", recipe.getDate());
-            cv.put("time", recipe.getTime());
-            cv.put("name", recipe.getName());
-            cv.put("mark", recipe.getMark());
-            cv.put("classPie", recipe.getClassPie());
-            cv.put("description", recipe.getDescription());
-            cv.put("bunckerRecepie11", recipe.getBunckerRecepie11());
-            cv.put("bunckerRecepie12", recipe.getBunckerRecepie12());
-            cv.put("bunckerRecepie21", recipe.getBunckerRecepie21());
-            cv.put("bunckerRecepie22", recipe.getBunckerRecepie22());
-            cv.put("bunckerRecepie31", recipe.getBunckerRecepie31());
-            cv.put("bunckerRecepie32", recipe.getBunckerRecepie32());
-            cv.put("bunckerRecepie41", recipe.getBunckerRecepie41());
-            cv.put("bunckerRecepie42", recipe.getBunckerRecepie42());
-            cv.put("bunckerShortage11", recipe.getBunckerShortage11());
-            cv.put("bunckerShortage12", recipe.getBunckerShortage12());
-            cv.put("bunckerShortage21", recipe.getBunckerShortage21());
-            cv.put("bunckerShortage22", recipe.getBunckerShortage22());
-            cv.put("bunckerShortage31", recipe.getBunckerShortage31());
-            cv.put("bunckerShortage32", recipe.getBunckerShortage32());
-            cv.put("bunckerShortage41", recipe.getBunckerShortage41());
-            cv.put("bunckerShortage42", recipe.getBunckerShortage42());
-            cv.put("chemyRecepie1", recipe.getChemyRecepie1());
-            cv.put("chemyShortage1", recipe.getChemyShortage1());
-            cv.put("chemyShortage2", recipe.getChemyShortage2());
-            cv.put("water1Recepie", recipe.getWater1Recepie());
-            cv.put("water2Recepie", recipe.getWater2Recepie());
-            cv.put("water1Shortage", recipe.getWater1Shortage());
-            cv.put("water2Shortage", recipe.getWater2Shortage());
-            cv.put("silosRecepie1", recipe.getSilosRecepie1());
-            cv.put("silosRecepie2", recipe.getSilosRecepie2());
-            cv.put("silosShortage1", recipe.getSilosShortage1());
-            cv.put("silosShortage2", recipe.getSilosShortage2());
-            cv.put("humidity11", recipe.getHumidity11());
-            cv.put("humidity12", recipe.getHumidity12());
-            cv.put("humidity21", recipe.getHumidity21());
-            cv.put("humidity22", recipe.getHumidity22());
-            cv.put("humidity31", recipe.getHumidity31());
-            cv.put("humidity32", recipe.getHumidity32());
-            cv.put("humidity41", recipe.getHumidity41());
-            cv.put("humidity42", recipe.getHumidity42());
-            cv.put("uniNumber", recipe.getUniNumber());
-            cv.put("timeMix", recipe.getTimeMix());
-            cv.put("chemy2Recepie", recipe.getChemy2Recepie());
-            cv.put("chemy3Recepie", recipe.getChemy3Recepie());
-            cv.put("chemy2Shortage", recipe.getChemy2Shortage());
-            cv.put("chemy3Shortage", recipe.getChemy3Shortage());
-            cv.put("pathToHumidity", recipe.getPathToHumidity());
-            cv.put("preDosingWaterPercent", recipe.getPreDosingWaterPercent());
+            cv.put("date", recepie.getDate());
+            cv.put("time", recepie.getTime());
+            cv.put("name", recepie.getName());
+            cv.put("mark", recepie.getMark());
+            cv.put("classPie", recepie.getClassPie());
+            cv.put("description", recepie.getDescription());
+            cv.put("bunckerRecepie11", recepie.getBunckerRecepie11());
+            cv.put("bunckerRecepie12", recepie.getBunckerRecepie12());
+            cv.put("bunckerRecepie21", recepie.getBunckerRecepie21());
+            cv.put("bunckerRecepie22", recepie.getBunckerRecepie22());
+            cv.put("bunckerRecepie31", recepie.getBunckerRecepie31());
+            cv.put("bunckerRecepie32", recepie.getBunckerRecepie32());
+            cv.put("bunckerRecepie41", recepie.getBunckerRecepie41());
+            cv.put("bunckerRecepie42", recepie.getBunckerRecepie42());
+            cv.put("bunckerShortage11", recepie.getBunckerShortage11());
+            cv.put("bunckerShortage12", recepie.getBunckerShortage12());
+            cv.put("bunckerShortage21", recepie.getBunckerShortage21());
+            cv.put("bunckerShortage22", recepie.getBunckerShortage22());
+            cv.put("bunckerShortage31", recepie.getBunckerShortage31());
+            cv.put("bunckerShortage32", recepie.getBunckerShortage32());
+            cv.put("bunckerShortage41", recepie.getBunckerShortage41());
+            cv.put("bunckerShortage42", recepie.getBunckerShortage42());
+            cv.put("chemyRecepie1", recepie.getChemyRecepie1());
+            cv.put("chemyShortage1", recepie.getChemyShortage1());
+            cv.put("chemyShortage2", recepie.getChemyShortage2());
+            cv.put("water1Recepie", recepie.getWater1Recepie());
+            cv.put("water2Recepie", recepie.getWater2Recepie());
+            cv.put("water1Shortage", recepie.getWater1Shortage());
+            cv.put("water2Shortage", recepie.getWater2Shortage());
+            cv.put("silosRecepie1", recepie.getSilosRecepie1());
+            cv.put("silosRecepie2", recepie.getSilosRecepie2());
+            cv.put("silosShortage1", recepie.getSilosShortage1());
+            cv.put("silosShortage2", recepie.getSilosShortage2());
+            cv.put("humidity11", recepie.getHumidity11());
+            cv.put("humidity12", recepie.getHumidity12());
+            cv.put("humidity21", recepie.getHumidity21());
+            cv.put("humidity22", recepie.getHumidity22());
+            cv.put("humidity31", recepie.getHumidity31());
+            cv.put("humidity32", recepie.getHumidity32());
+            cv.put("humidity41", recepie.getHumidity41());
+            cv.put("humidity42", recepie.getHumidity42());
+            cv.put("uniNumber", recepie.getUniNumber());
+            cv.put("timeMix", recepie.getTimeMix());
+            cv.put("chemy2Recepie", recepie.getChemy2Recepie());
+            cv.put("chemy3Recepie", recepie.getChemy3Recepie());
+            cv.put("chemy2Shortage", recepie.getChemy2Shortage());
+            cv.put("chemy3Shortage", recepie.getChemy3Shortage());
+            cv.put("pathToHumidity", recepie.getPathToHumidity());
+            cv.put("preDosingWaterPercent", recepie.getPreDosingWaterPercent());
 
             sqLiteDatabase.insert("recepies", null, cv);
         } finally {
@@ -148,8 +148,8 @@ public class DBUtilInsert {
             cv.put("organizationID", order.getOrganizationID());
             cv.put("transporter", order.getTransporter());
             cv.put("transporterID", order.getTransporterID());
-            cv.put("recepie", order.getRecipe());
-            cv.put("recepieID", order.getRecipeID());
+            cv.put("recepie", order.getRecepie());
+            cv.put("recepieID", order.getRecepieID());
             cv.put("totalCapacity", order.getTotalCapacity());
             cv.put("maxMixCapacity", order.getMaxMixCapacity());
             cv.put("totalMixCounter", order.getTotalMixCounter());
@@ -302,8 +302,8 @@ public class DBUtilInsert {
             cv.put("organizationID", mix.getOrganizationID());
             cv.put("transporter", mix.getTransporter());
             cv.put("transporterID", mix.getTransporterID());
-            cv.put("recepie", mix.getRecipe());
-            cv.put("recepieID", mix.getRecipeID());
+            cv.put("recepie", mix.getRecepie());
+            cv.put("recepieID", mix.getRecepieID());
             cv.put("mixCounter", mix.getMixCounter());
             cv.put("completeCapacity", mix.getCompleteCapacity());
             cv.put("totalCapacity", mix.getTotalCapacity());

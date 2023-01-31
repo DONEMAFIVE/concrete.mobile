@@ -26,6 +26,7 @@ public class PartyCapacityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         EditText partyCapacity = new EditText(getActivity());
+        partyCapacity.setText("1");
         partyCapacity.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

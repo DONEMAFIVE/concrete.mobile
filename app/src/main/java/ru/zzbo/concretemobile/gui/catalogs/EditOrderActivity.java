@@ -27,7 +27,7 @@ import ru.zzbo.concretemobile.db.DBUtilInsert;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.utils.CalcUtil;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
@@ -51,7 +51,7 @@ public class EditOrderActivity extends AppCompatActivity {
 
     private List<Organization> org = new ArrayList<>();
     private List<Transporter> trans = new ArrayList<>();
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Recepie> recepies = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class EditOrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_order);
 
         initUI();
-        initActions();
+        actions();
     }
 
     public void initUI() {
@@ -80,16 +80,16 @@ public class EditOrderActivity extends AppCompatActivity {
         saveOrder = findViewById(R.id.saveOrder);
         close = findViewById(R.id.close);
 
-        numberOrderField.setText(String.valueOf(editedOrder.getNumberOrder()));
+        numberOrderField.setText(editedOrder.getNumberOrder()+"");
         dateOrderField.setText(editedOrder.getDate());
         nameOrderField.setText(editedOrder.getNameOrder());
         commentOrderField.setText(editedOrder.getComment());
         addressUploadField.setText(editedOrder.getUploadAddress());
         amountConcreteField.setText(editedOrder.getAmountConcrete());
-        partyCapacityField.setText(String.valueOf(editedOrder.getTotalCapacity()));
-        mixCapacityField.setText(String.valueOf(editedOrder.getMaxMixCapacity()));
+        partyCapacityField.setText(editedOrder.getTotalCapacity() +"");
+        mixCapacityField.setText(editedOrder.getMaxMixCapacity() +"");
 
-        new Thread(() -> {
+        new Thread(()->{
             List<String> nameOrg = new ArrayList<>();
             List<String> nameTrans = new ArrayList<>();
             List<String> nameRecipe = new ArrayList<>();
@@ -97,24 +97,19 @@ public class EditOrderActivity extends AppCompatActivity {
             namePayment.add("Счёт");
             namePayment.add("Терминал");
 
-            if (exchangeLevel == 1) {
-                org.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {
-                }.getType()));
-                trans.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {
-                }.getType()));
-                recipes.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recipe>>() {
-                }.getType()));
-            } else {
+            if (exchangeLevel == 1){
+                org.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {}.getType()));
+                trans.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {}.getType()));
+                recepies.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
+            }  else {
                 org.addAll(new DBUtilGet(this).getOrgs());
                 trans.addAll(new DBUtilGet(this).getTrans());
-                recipes.addAll(new DBUtilGet(this).getRecepies());
+                recepies.addAll(new DBUtilGet(this).getRecipes());
             }
 
-            for (Organization organization : org)
-                nameOrg.add(organization.getId() + ":" + organization.getOrganizationName());
-            for (Transporter transporter : trans)
-                nameTrans.add(transporter.getId() + ":" + transporter.getDriverName());
-            for (Recipe recipe : recipes) nameRecipe.add(recipe.getId() + ":" + recipe.getName());
+            for (Organization organization : org) nameOrg.add(organization.getId() +":"+ organization.getOrganizationName());
+            for (Transporter transporter : trans) nameTrans.add(transporter.getId() +":"+ transporter.getDriverName());
+            for (Recepie recepie : recepies) nameRecipe.add(recepie.getId() +":"+ recepie.getName());
 
 
             ArrayAdapter orgAdapter = new ArrayAdapter(this, R.layout.spinner, nameOrg);
@@ -122,13 +117,14 @@ public class EditOrderActivity extends AppCompatActivity {
             ArrayAdapter recipeAdapter = new ArrayAdapter(this, R.layout.spinner, nameRecipe);
             ArrayAdapter paymentAdapter = new ArrayAdapter(this, R.layout.spinner, namePayment);
 
-            runOnUiThread(() -> organizationSpinner.setAdapter(orgAdapter));
-            runOnUiThread(() -> driverSpinner.setAdapter(transAdapter));
-            runOnUiThread(() -> recipeSpinner.setAdapter(recipeAdapter));
-            runOnUiThread(() -> paymentSpinner.setAdapter(paymentAdapter));
-            runOnUiThread(() -> {
+            runOnUiThread(()-> organizationSpinner.setAdapter(orgAdapter));
+            runOnUiThread(()-> driverSpinner.setAdapter(transAdapter));
+            runOnUiThread(()-> recipeSpinner.setAdapter(recipeAdapter));
+            runOnUiThread(()-> paymentSpinner.setAdapter(paymentAdapter));
+
+            runOnUiThread(()->{
                 organizationSpinner.setSelection(getIndex(organizationSpinner, editedOrder.getOrganizationID()));
-                recipeSpinner.setSelection(getIndex(recipeSpinner, editedOrder.getRecipeID()));
+                recipeSpinner.setSelection(getIndex(recipeSpinner, editedOrder.getRecepieID()));
                 driverSpinner.setSelection(getIndex(driverSpinner, editedOrder.getTransporterID()));
             });
 
@@ -144,9 +140,10 @@ public class EditOrderActivity extends AppCompatActivity {
 
     }
 
-    public void initActions() {
+    public void actions() {
         saveOrder.setOnClickListener(view -> {
-            Recipe recipe = recipes.get(recipeSpinner.getSelectedItemPosition());
+
+            Recepie recepie = recepies.get(recipeSpinner.getSelectedItemPosition());
             Organization organization = org.get(organizationSpinner.getSelectedItemPosition());
             Transporter transporter = trans.get(driverSpinner.getSelectedItemPosition());
 
@@ -155,21 +152,21 @@ public class EditOrderActivity extends AppCompatActivity {
             int cycleSum = calc.getCycleSum();
             float capacityMix = calc.getCapacityMix();
 
-            float countBuncker11 = recipe.getBunckerRecepie11() * capacityMix;
-            float countBuncker12 = recipe.getBunckerRecepie12() * capacityMix;
-            float countBuncker21 = recipe.getBunckerRecepie21() * capacityMix;
-            float countBuncker22 = recipe.getBunckerRecepie22() * capacityMix;
-            float countBuncker31 = recipe.getBunckerRecepie31() * capacityMix;
-            float countBuncker32 = recipe.getBunckerRecepie32() * capacityMix;
-            float countBuncker41 = recipe.getBunckerRecepie41() * capacityMix;
-            float countBuncker42 = recipe.getBunckerRecepie42() * capacityMix;
+            float countBuncker11 = recepie.getBunckerRecepie11() * capacityMix;
+            float countBuncker12 = recepie.getBunckerRecepie12() * capacityMix;
+            float countBuncker21 = recepie.getBunckerRecepie21() * capacityMix;
+            float countBuncker22 = recepie.getBunckerRecepie22() * capacityMix;
+            float countBuncker31 = recepie.getBunckerRecepie31() * capacityMix;
+            float countBuncker32 = recepie.getBunckerRecepie32() * capacityMix;
+            float countBuncker41 = recepie.getBunckerRecepie41() * capacityMix;
+            float countBuncker42 = recepie.getBunckerRecepie42() * capacityMix;
 
-            float countChemy1 = recipe.getChemyRecepie1() * capacityMix;
-            float countChemy2 = recipe.getChemy2Recepie() * capacityMix;
-            float countWater1 = recipe.getWater1Recepie() * capacityMix;
-            float countWater2 = recipe.getWater2Recepie() * capacityMix;
-            float countSilos1 = recipe.getSilosRecepie1() * capacityMix;
-            float countSilos2 = recipe.getSilosRecepie2() * capacityMix;
+            float countChemy1 = recepie.getChemyRecepie1() * capacityMix;
+            float countChemy2 = recepie.getChemy2Recepie() * capacityMix;
+            float countWater1 = recepie.getWater1Recepie() * capacityMix;
+            float countWater2 = recepie.getWater2Recepie() * capacityMix;
+            float countSilos1 = recepie.getSilosRecepie1() * capacityMix;
+            float countSilos2 = recepie.getSilosRecepie2() * capacityMix;
 
             float totalCountBuncker11 = countBuncker11 * cycleSum;
             float totalCountBuncker12 = countBuncker12 * cycleSum;
@@ -196,41 +193,41 @@ public class EditOrderActivity extends AppCompatActivity {
                     organization.getId(),
                     transporter.getDriverName(),
                     transporter.getId(),
-                    recipe.getName(),
-                    recipe.getId(),
+                    recepie.getName(),
+                    recepie.getId(),
                     Float.valueOf(partyCapacityField.getText().toString()),
                     Float.valueOf(mixCapacityField.getText().toString()),
                     cycleSum,
-                    recipe.getMark(),
-                    recipe.getClassPie(),
-                    recipe.getBunckerRecepie11(),
-                    recipe.getBunckerRecepie12(),
-                    recipe.getBunckerRecepie21(),
-                    recipe.getBunckerRecepie22(),
-                    recipe.getBunckerRecepie31(),
-                    recipe.getBunckerRecepie32(),
-                    recipe.getBunckerRecepie41(),
-                    recipe.getBunckerRecepie42(),
-                    recipe.getChemyRecepie1(),
-                    recipe.getChemy2Recepie(),
-                    recipe.getWater1Recepie(),
-                    recipe.getWater2Recepie(),
-                    recipe.getSilosRecepie1(),
-                    recipe.getSilosRecepie2(),
-                    recipe.getBunckerShortage11(),
-                    recipe.getBunckerShortage12(),
-                    recipe.getBunckerShortage21(),
-                    recipe.getBunckerShortage22(),
-                    recipe.getBunckerShortage31(),
-                    recipe.getBunckerShortage32(),
-                    recipe.getBunckerShortage41(),
-                    recipe.getBunckerShortage42(),
-                    recipe.getChemyShortage1(),
-                    recipe.getChemyShortage2(),
-                    recipe.getWater1Shortage(),
-                    recipe.getWater2Shortage(),
-                    recipe.getSilosShortage1(),
-                    recipe.getSilosShortage2(),
+                    recepie.getMark(),
+                    recepie.getClassPie(),
+                    recepie.getBunckerRecepie11(),
+                    recepie.getBunckerRecepie12(),
+                    recepie.getBunckerRecepie21(),
+                    recepie.getBunckerRecepie22(),
+                    recepie.getBunckerRecepie31(),
+                    recepie.getBunckerRecepie32(),
+                    recepie.getBunckerRecepie41(),
+                    recepie.getBunckerRecepie42(),
+                    recepie.getChemyRecepie1(),
+                    recepie.getChemy2Recepie(),
+                    recepie.getWater1Recepie(),
+                    recepie.getWater2Recepie(),
+                    recepie.getSilosRecepie1(),
+                    recepie.getSilosRecepie2(),
+                    recepie.getBunckerShortage11(),
+                    recepie.getBunckerShortage12(),
+                    recepie.getBunckerShortage21(),
+                    recepie.getBunckerShortage22(),
+                    recepie.getBunckerShortage31(),
+                    recepie.getBunckerShortage32(),
+                    recepie.getBunckerShortage41(),
+                    recepie.getBunckerShortage42(),
+                    recepie.getChemyShortage1(),
+                    recepie.getChemyShortage2(),
+                    recepie.getWater1Shortage(),
+                    recepie.getWater2Shortage(),
+                    recepie.getSilosShortage1(),
+                    recepie.getSilosShortage2(),
                     totalCountBuncker11,
                     totalCountBuncker12,
                     totalCountBuncker21,
@@ -255,30 +252,35 @@ public class EditOrderActivity extends AppCompatActivity {
             );
 
             new Thread(() -> {
-                if (exchangeLevel == 1) {
+                if (exchangeLevel == 1){
                     Gson gson = new GsonBuilder()
                             .serializeSpecialFloatingPointValues()
                             .setPrettyPrinting()
                             .create();
+                    System.out.println(gson.toJson(order));
                     if (editedOrder.getNumberOrder() != 0) OkHttpUtil.updOrder(gson.toJson(order));
                     else OkHttpUtil.newOrder(gson.toJson(order));
-                } else {
-                    if (editedOrder.getNumberOrder() != 0)
-                        new DBUtilUpdate(getApplicationContext()).updateOrder(order);
+                }else {
+                    if (editedOrder.getNumberOrder() != 0) new DBUtilUpdate(getApplicationContext()).updateOrder(order);
                     else new DBUtilInsert(this).insertIntoOrder(order);
                 }
+
             }).start();
 
             Toast.makeText(getApplicationContext(), "Заявка сохранена", Toast.LENGTH_LONG).show();
             onBackPressed();
         });
+
         close.setOnClickListener(view -> onBackPressed());
+
     }
 
-    private int getIndex(Spinner spinner, int s) {
+    private int getIndex(Spinner spinner, int s){
         for (int i = 0; i < spinner.getCount(); i++) {
             String id = spinner.getItemAtPosition(i).toString().split(":")[0];
-            if (id.equalsIgnoreCase(String.valueOf(s))) return i;
+            if (id.equalsIgnoreCase(String.valueOf(s))) {
+                return i;
+            }
         }
         return 0;
     }

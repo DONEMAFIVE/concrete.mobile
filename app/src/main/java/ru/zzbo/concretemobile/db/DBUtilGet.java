@@ -19,7 +19,7 @@ import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Parameter;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.models.Users;
 
@@ -46,7 +46,7 @@ public class DBUtilGet {
         return dbFile.exists();
     }
 
-    //GETTERS
+    //GETTERS+
     @SuppressLint("Range")
     public Current getCurrent() {
         openDbConfig();
@@ -411,13 +411,13 @@ public class DBUtilGet {
     }
 
     @SuppressLint("Range")
-    public List<Recipe> getRecepies() {
+    public List<Recepie> getRecipes() {
         openDbConfig();
         try {
-            List<Recipe> result = new ArrayList<>();
+            List<Recepie> result = new ArrayList<>();
             Cursor cursor = sqLiteDatabase.query("recepies", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
-                result.add(new Recipe(
+                result.add(new Recepie(
                         cursor.getInt(cursor.getColumnIndex("id")),
                         cursor.getString(cursor.getColumnIndex("date")),
                         cursor.getString(cursor.getColumnIndex("time")),
@@ -471,7 +471,7 @@ public class DBUtilGet {
                 );
             }
             if (result.isEmpty()) {
-                result.add(new Recipe(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0));
+                result.add(new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0));
             }
             return result;
         } finally {
@@ -480,14 +480,14 @@ public class DBUtilGet {
     }
 
     @SuppressLint("Range")
-    public Recipe getRecepieForID(int searchID) {
+    public Recepie getRecipeForID(int searchID) {
         openDbConfig();
         try {
             Cursor cursor = sqLiteDatabase.query("recepies", null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(cursor.getColumnIndex("id"));
                 if (id == searchID) {
-                    return new Recipe(
+                    return new Recepie(
                             id,
                             cursor.getString(cursor.getColumnIndex("date")),
                             cursor.getString(cursor.getColumnIndex("time")),
@@ -544,7 +544,7 @@ public class DBUtilGet {
         } finally {
             closeSession();
         }
-        return new Recipe(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0);
+        return new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0);
     }
 
     @SuppressLint("Range")

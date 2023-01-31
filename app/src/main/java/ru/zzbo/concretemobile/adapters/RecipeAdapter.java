@@ -15,7 +15,7 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.List;
 
 import ru.zzbo.concretemobile.R;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 
 /**
  * Адаптер объекта "рецепт" в списке RecyclerView
@@ -23,15 +23,15 @@ import ru.zzbo.concretemobile.models.Recipe;
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
     public interface DelRecipeClickListener {
-        void onClick(Recipe recipe, int position);
+        void onClick(Recepie recepie, int position);
     }
 
     public interface EditRecipeClickListener {
-        void onClick(Recipe recipe, int position);
+        void onClick(Recepie recepie, int position);
     }
 
     public interface LoadToPlcClickListener {
-        void onClick(Recipe recipe, int position);
+        void onClick(Recepie recepie, int position);
     }
 
     private final DelRecipeClickListener delRecipeClickListener;
@@ -39,14 +39,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     private final LoadToPlcClickListener loadToPlcClickListener;
 
     private final LayoutInflater inflater;
-    private List<Recipe> recipes;
+    private List<Recepie> recepies;
 
-    public RecipeAdapter(Context context, List<Recipe> recipes, EditRecipeClickListener editRecipeClickListener,
+    public RecipeAdapter(Context context, List<Recepie> recepies, EditRecipeClickListener editRecipeClickListener,
                          LoadToPlcClickListener loadToPlcClickListener, DelRecipeClickListener delRecipeClickListener) {
         this.delRecipeClickListener = delRecipeClickListener;
         this.editRecipeClickListener = editRecipeClickListener;
         this.loadToPlcClickListener = loadToPlcClickListener;
-        this.recipes = recipes;
+        this.recepies = recepies;
         this.inflater = LayoutInflater.from(context);
     }
 
@@ -58,22 +58,22 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Recipe recipe = recipes.get(position);
-        holder.id.setText(String.valueOf(recipe.getId()));
-        holder.nameRecipe.setText(recipe.getName());
-        holder.marka.setText(recipe.getMark());
-        holder.description.setText(recipe.getDescription());
+        Recepie recepie = recepies.get(position);
+        holder.id.setText(String.valueOf(recepie.getId()));
+        holder.nameRecipe.setText(recepie.getName());
+        holder.marka.setText(recepie.getMark());
+        holder.description.setText(recepie.getDescription());
 
-        holder.delRecipeBtn.setOnClickListener(v -> delRecipeClickListener.onClick(recipe, position));
+        holder.delRecipeBtn.setOnClickListener(v -> delRecipeClickListener.onClick(recepie, position));
 
-        holder.editRecipeBtn.setOnClickListener(v -> editRecipeClickListener.onClick(recipe, position));
+        holder.editRecipeBtn.setOnClickListener(v -> editRecipeClickListener.onClick(recepie, position));
 
-        holder.loadToPlcBtn.setOnClickListener(v -> loadToPlcClickListener.onClick(recipe, position));
+        holder.loadToPlcBtn.setOnClickListener(v -> loadToPlcClickListener.onClick(recepie, position));
     }
 
     @Override
     public int getItemCount() {
-        return recipes.size();
+        return recepies.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

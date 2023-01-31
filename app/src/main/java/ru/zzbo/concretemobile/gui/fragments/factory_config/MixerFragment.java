@@ -188,6 +188,7 @@ public class MixerFragment extends PreferenceFragmentCompat {
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
                     new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "hydroGate", String.valueOf(hydroGate.isChecked()));
+                    new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "dropConveyor", String.valueOf(dischargeConveyor.isChecked()));
 
                 } catch (Exception ex) {
                     ex.printStackTrace();

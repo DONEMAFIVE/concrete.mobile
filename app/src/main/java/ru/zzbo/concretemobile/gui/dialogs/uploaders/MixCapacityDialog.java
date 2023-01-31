@@ -26,6 +26,7 @@ public class MixCapacityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         EditText mixCapacity = new EditText(getActivity());
+        mixCapacity.setText("1");
         mixCapacity.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

@@ -94,8 +94,8 @@ public class ReportForMixesFragment extends Fragment {
                                         mix.getOrganizationID() + " | " +
                                         mix.getTransporter() + " | " +
                                         mix.getTransporterID() + " | " +
-                                        mix.getRecipe() + " | " +
-                                        mix.getRecipeID() + " | " +
+                                        mix.getRecepie() + " | " +
+                                        mix.getRecepieID() + " | " +
                                         mix.getMixCounter() + " | " +
                                         mix.getCompleteCapacity() + " | " +
                                         mix.getTotalCapacity() + " | " +

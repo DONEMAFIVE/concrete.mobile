@@ -73,7 +73,7 @@ public class ReportForTotalFragment extends Fragment {
                 if (!req.trim().equals("Empty")) {
                     report = new Gson().fromJson(req, new TypeToken<List<Mix>>() {
                     }.getType());
-                    for (Mix mix : report) recipes.add(mix.getRecipe());
+                    for (Mix mix : report) recipes.add(mix.getRecepie());
                     Set<String> set = new HashSet<>(recipes);
                     recipes.clear();
                     recipes.addAll(set);
@@ -101,16 +101,15 @@ public class ReportForTotalFragment extends Fragment {
                         mixes.addAll(new Gson().fromJson(req, new TypeToken<List<Mix>>() {
                         }.getType()));
                     }
-                } else {
-                    mixes.addAll(new DBUtilGet(getContext()).getMixListForDate(dates.get(j)));
-                }
+                } else mixes.addAll(new DBUtilGet(getContext()).getMixListForDate(dates.get(j)));
+
                 List<String> dataForm = new ArrayList<>();
                 dataForm.add(dates.get(j));
 
                 for (int r = 0; r < recipes.size(); r++) {
                     for (int d = 0; d < mixes.size(); d++) {
                         if (mixes.get(d).getDate().equals(dates.get(j))) {
-                            if (mixes.get(d).getRecipe().equals(recipes.get(r))) {
+                            if (mixes.get(d).getRecepie().equals(recipes.get(r))) {
                                 sum += mixes.get(d).getCompleteCapacity();
                             }
                         }
@@ -132,7 +131,6 @@ public class ReportForTotalFragment extends Fragment {
                 dataForm = new ArrayList<>();
                 dataForm.add("Рецепт");
                 dataForm.add("Объем,м3");
-
                 List<String> finalDataForm1 = dataForm;
                 new Handler(Looper.getMainLooper()).post(() -> tableView.addRow(finalDataForm1));
 
@@ -157,7 +155,7 @@ public class ReportForTotalFragment extends Fragment {
 
                             for (int m = 0; m < mixes.size(); m++) {
                                 if (mixes.get(m).getDate().equals(dates.get(d))) {
-                                    if (mixes.get(m).getRecipe().equals(recipes.get(j))) {
+                                    if (mixes.get(m).getRecepie().equals(recipes.get(j))) {
                                         sum += mixes.get(m).getCompleteCapacity();
                                     }
                                 }
@@ -165,7 +163,6 @@ public class ReportForTotalFragment extends Fragment {
                         } catch (Exception exc) {
                             exc.printStackTrace();
                         }
-
                     }
 
                     if (sum != 0.0f) {

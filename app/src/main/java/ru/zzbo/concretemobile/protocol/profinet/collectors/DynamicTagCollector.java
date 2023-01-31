@@ -520,7 +520,7 @@ public class DynamicTagCollector {
         while (true) {
             try {
                 m = System.currentTimeMillis();
-//                Thread.sleep(480);
+                Thread.sleep(10);
                 retrieval = gson.fromJson(OkHttpUtil.getPlcData(), ReflectionRetrieval.class);
                 manualAutoMode = retrieval.isManualAutoModeValue();
                 pendingProductionState = retrieval.isPendingProductionStateValue();

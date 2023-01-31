@@ -1,6 +1,6 @@
 package ru.zzbo.concretemobile.models;
 
-public class Configs {
+public class DroidConfig {
 
     private String plcIP;
     private String plcPort;
@@ -110,4 +110,6 @@ public class Configs {
     public void setRestServerIP(String restServerIP) {
         this.restServerIP = restServerIP;
     }
+
+
 }

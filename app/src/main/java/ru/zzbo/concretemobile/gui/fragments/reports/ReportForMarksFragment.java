@@ -67,7 +67,7 @@ public class ReportForMarksFragment extends Fragment {
                     String req = OkHttpUtil.getMixes(dateFirst, dateEnd);
                     if (!req.trim().equals("Empty")) {
                         report = new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
-                        for (Mix mix: report) recipes.add(mix.getRecipe());
+                        for (Mix mix: report) recipes.add(mix.getRecepie());
                         Set<String> set = new HashSet<>(recipes);
                         recipes.clear();
                         recipes.addAll(set);
@@ -109,7 +109,7 @@ public class ReportForMarksFragment extends Fragment {
                 for (int i = 0; i < recipes.size(); i++) {
                     for (int m = 0; m < mixes.size(); m++) {
                         if (mixes.get(m).getDate().equals(dates.get(j))) {
-                            if (mixes.get(m).getRecipe().equals(recipes.get(i))) {
+                            if (mixes.get(m).getRecepie().equals(recipes.get(i))) {
                                 sum += mixes.get(m).getCompleteCapacity();
                             }
                         }

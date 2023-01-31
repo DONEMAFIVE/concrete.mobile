@@ -3,16 +3,20 @@ package ru.zzbo.concretemobile.gui;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
+import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,12 +44,14 @@ public class LoginActivity extends AppCompatActivity {
     private DBUtilGet dbUtilGet;
     private DBUtilCreate dbUtilCreate;
     private TextView info;
-    private EditText loginField;
+    private Spinner loginSpinner;
     private EditText passwdField;
     private Button okBtn;
     private CheckBox rememberLogin;
     private Spinner connection;
     private SharedPreferences settings;
+    private List<Users> userList;
+    private DrawerLayout progressLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +61,9 @@ public class LoginActivity extends AppCompatActivity {
         this.settings = getSharedPreferences("setting", MODE_PRIVATE);
 
         initFieldUI();
-        chkRememberLoginPasswd();
         chkFirstRun();
+        initLoginList();
+        chkRememberLoginPasswd();
         initActions();
     }
 
@@ -78,9 +86,19 @@ public class LoginActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void initLoginList() {
+        ArrayList<String> login = new ArrayList<>();
+        ArrayAdapter<String> adapter;
+        userList = dbUtilGet.getUsers();
+        for (Users user: userList) login.add(user.getLogin());
+        adapter = new ArrayAdapter<>(this, R.layout.spinner, login);
+        loginSpinner.setAdapter(adapter);
+    }
+
     private void initFieldUI() {
+        progressLoading = findViewById(R.id.progress_loading);
         info = findViewById(R.id.info);
-        loginField = findViewById(R.id.loginField);
+        loginSpinner = findViewById(R.id.loginField);
         passwdField = findViewById(R.id.passwdField);
         okBtn = findViewById(R.id.okBtn);
         rememberLogin = findViewById(R.id.rememberLogin);
@@ -99,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
     private void chkRememberLoginPasswd() {
         rememberLogin.setChecked(isRememberLogin());
         if (rememberLogin.isChecked()) {
-            loginField.setText(settings.getString("login", "operator"));
+            loginSpinner.setSelection(settings.getInt("login", 0));
             passwdField.setText(settings.getString("passwd", ""));
         }
     }
@@ -124,7 +142,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initActions() {
+        okBtn.setOnTouchListener((view, motionEvent) -> {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    runOnUiThread(()->progressLoading.setVisibility(View.VISIBLE));
+                    break;
+                }
+            }
+            return false;
+        });
         okBtn.setOnClickListener(view -> {
+
+
             //Проверки на подключение
             String device = null;
             if (!ConnectionUtil.isWifiConnected(this)) device = "WIFI";
@@ -133,84 +162,118 @@ public class LoginActivity extends AppCompatActivity {
 
                 exchangeLevel = connection.getSelectedItemPosition();
                 switch (exchangeLevel) {
-                    case 0:
-                        if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC";
-                        break;
-                    case 1:
-                        if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC";
-                        break;
+                    case 0: if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC"; break;
+                    case 1: if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC"; break;
                 }
-
             }
 
             if (device != null) {
                 String finalDevice = device;
                 runOnUiThread(() -> {
+                    progressLoading.setVisibility(View.GONE);
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Уведомление").setMessage("Отсутсвует подключение к " + finalDevice);
-                    builder.setPositiveButton("ОК", (dialog, id) -> {
-                        dialog.dismiss();
-                    });
+                    builder.setTitle("Подключение").setMessage("Не удается подключиться к " + finalDevice);
+                    builder.setIcon(R.drawable.warning);
+                    builder.setPositiveButton("ОК", (dialog, id) -> dialog.dismiss());
                     builder.show();
                 });
             } else {
                 //TODO: Проверка лицензии
-                //если подключаемся к ПК, то отправить запрос на прохождение авторизации
-                //если подключаемся на прямую, то используем базу sqlite
+                new Thread(() -> {
+                    if (exchangeLevel == 0) {
+                        if (!LicenseUtil.chkLicense(this)) {
+                            runOnUiThread(() -> {
+                                progressLoading.setVisibility(View.GONE);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Лицензия").setMessage("Отсутсвует лицензия");
+                                builder.setPositiveButton("ОК", (dialog, id) -> {
+                                    dialog.dismiss();
+                                    Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                    startActivity(intent);
+                                });
+                                builder.show();
+                            });
+                            return;
+                        }
+                    }
+                    if (exchangeLevel == 1) {
+                        try {
+                            if (!LicenseUtil.chkPCLicense(this)) {
+                                runOnUiThread(() -> {
+                                    progressLoading.setVisibility(View.GONE);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                    builder.setTitle("Лицензия").setMessage("Отсутсвует лицензия");
+                                    builder.setPositiveButton("ОК", (dialog, id) -> {
+                                        dialog.dismiss();
+                                        Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                                        startActivity(intent);
+                                    });
+                                    builder.show();
+                                });
+                                return;
+                            }
+                        } catch (NullPointerException exc) {
+                            exc.printStackTrace();
+                            runOnUiThread(()->{
+                                progressLoading.setVisibility(View.GONE);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Подключение к устройству").setMessage("Не удается подключиться к ПК");
+                                builder.setIcon(R.drawable.warning);
+                                builder.setPositiveButton("ОК", (dialog, id) -> dialog.dismiss());
+                                builder.show();
+                            });
+                            return;
+                        }
+                    }
 
-                if (exchangeLevel == 0 && !LicenseUtil.chkLicense(this)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Лицензия").setMessage("Отсутсвует лицензия");
-                    builder.setPositiveButton("ОК", (dialog, id) -> {
-                        dialog.dismiss();
-                        Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                        startActivity(intent);
-                    });
-                    builder.show();
-                    return;
-                }
-
-                String user = loginField.getText().toString();
-                String pass = passwdField.getText().toString();
-                login(user, pass);
-
+                    String user = loginSpinner.getSelectedItem().toString().trim();
+                    String pass = passwdField.getText().toString();
+                    login(user, pass);
+                }).start();
             }
         });
     }
 
     private void login(String login, String pass) {
         if (login.equals("") || pass.equals("")) {
-            Toast.makeText(this, "Пожалуйста заполните все поля", Toast.LENGTH_SHORT).show();
+            runOnUiThread(()-> {
+                progressLoading.setVisibility(View.GONE);
+                Toast.makeText(this, "Пожалуйста заполните все поля", Toast.LENGTH_SHORT).show();
+            });
             return;
         }
 
-        List<Users> userList = dbUtilGet.getUsers();
+
         int accessLvl = -1;
         for (Users user : userList) {
             String decryptPass = new CryptoUtil(user.getPassword()).decrypt();
             if ((login.equals(user.getLogin())) && (pass.equals(decryptPass.trim()))) {
                 accessLvl = user.getAccessLevel();
+                operatorLogin = user.getUserName();
             }
         }
 
         if (accessLvl != -1) {
+            runOnUiThread(()-> progressLoading.setVisibility(View.GONE));
             saveRememberLogin(rememberLogin);
             saveConnectionType();
 
-            if (rememberLogin.isChecked()) saveLoginPasswd(loginField, passwdField);
-
+            if (rememberLogin.isChecked()) saveLoginPasswd(loginSpinner, passwdField);
             accessLevel = accessLvl;
             switch (accessLevel) {
-                case 3: {   //уровень доступа оператор
-                    Intent intent = new Intent(getApplicationContext(), OperatorViewActivity.class);
+                case 2: {   //Пуско-наладка
+                    Intent intent = new Intent(getApplicationContext(), CommissioningActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     finish();
                     startActivity(intent);
                     return;
                 }
-                case 4: {
-                    Intent intent = new Intent(getApplicationContext(), CommissioningActivity.class);
+                case 0:     //Оператор
+                case 1:     //Диспетчер
+                case 3: {   //Администратор
+                    Intent intent = new Intent(getApplicationContext(), OperatorViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     finish();
                     startActivity(intent);
@@ -219,17 +282,20 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         } else {
-            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-            builder.setTitle("Уведомление").setMessage("Не корректное имя пользователя или пароль. Проверьте правильность ввода");
-            builder.setPositiveButton("ОК", (dialog, id) -> dialog.dismiss());
-            builder.show();
+            runOnUiThread(()->{
+                progressLoading.setVisibility(View.GONE);
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setTitle("Уведомление").setMessage("Не корректное имя пользователя или пароль. Проверьте правильность ввода");
+                builder.setPositiveButton("ОК", (dialog, id) -> dialog.dismiss());
+                builder.show();
+            });
             return;
         }
     }
 
-    private void saveLoginPasswd(EditText loginField, EditText passwdField) {
+    private void saveLoginPasswd(Spinner loginSpinner, EditText passwdField) {
         SharedPreferences.Editor prefEditor = settings.edit();
-        prefEditor.putString("login", String.valueOf(loginField.getText()));
+        prefEditor.putInt("login", loginSpinner.getSelectedItemPosition());
         prefEditor.putString("passwd", String.valueOf(passwdField.getText()));
         prefEditor.apply();
     }

@@ -44,6 +44,7 @@ public class DKFragment extends PreferenceFragmentCompat {
         EditTextPreference timeVibroPause = findPreference("time_vibro_pause");
         EditTextPreference timeBeltOperDk = findPreference("time_belt_oper_dk");
         EditTextPreference timeBeltPauseDk = findPreference("time_belt_pause_dk");
+        SwitchPreference reverseConveyor = findPreference("reverse_conveyor");
 
         SwitchPreference hopper1 = findPreference("hopper1");
         SwitchPreference hopper2 = findPreference("hopper2");
@@ -220,6 +221,7 @@ public class DKFragment extends PreferenceFragmentCompat {
 
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
             SharedPreferences.Editor prefEditor = settings.edit();
+            prefEditor.putBoolean("reverseConveyor", reverseConveyor.isChecked());
             prefEditor.putBoolean("hopper1", hopper1.isChecked());
             prefEditor.putBoolean("hopper2", hopper2.isChecked());
             prefEditor.putBoolean("hopper3", hopper3.isChecked());

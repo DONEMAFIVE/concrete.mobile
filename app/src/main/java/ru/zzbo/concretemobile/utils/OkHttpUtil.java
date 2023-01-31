@@ -8,6 +8,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * plc_data?retrieval=total
+ * recepie?cmd=get
+ * orgs?cmd=get
+ * trans?cmd=get
+ * config?cmd=get
+ * disp?cmd=get
+ * "report?dateBegin=" + startDate + "&dateEnd=" + endDate
+ * "order?cmd=get&dateBegin=" + startDate + "&dateEnd=" + endDate + "&filter=" + state
+ */
 public class OkHttpUtil {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
@@ -203,5 +213,53 @@ public class OkHttpUtil {
             e.printStackTrace();
         }
     }
+
+    public static String getPCConfig() {
+        try {
+            return sendGet("config?cmd=get");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getDispatcherStates() {
+        try {
+            return sendGet("disp?cmd=get");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getCurrent() {
+        try {
+            return sendGet("current?cmd=get");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String updCurrent(int recipeId, int orderId) {
+        try {
+            return sendGet("current?cmd=updateRO&recepieID="+recipeId+"&orderID="+orderId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String updStateFactory(boolean stateFactory) {
+        try {
+            String state = "idle";
+            if (stateFactory) state = "work";
+            return sendGet("current?cmd=update_state&state=" + state);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 }

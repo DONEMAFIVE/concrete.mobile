@@ -30,11 +30,17 @@ public class DataManager {
         tagListMain = new DBTags(context).getTags("tags_main");
         tagListManual = new DBTags(context).getTags("tags_manual");
 
-        DynamicTagCollector service = DynamicTagCollector.getTagCollector();
-
         switch (exchangeLevel) {
-            case 0: new Thread(() -> service.getValuesFromPLC()).start(); break;  //PLC
-            case 1: new Thread(() -> service.getValuesFromPC(context)).start(); break;   //PC
+            case 0: {   //PLC
+                DynamicTagCollector service = DynamicTagCollector.getTagCollector();
+                new Thread(() -> service.getValuesFromPLC()).start();
+                break;
+            }
+            case 1: {   //PC
+                DynamicTagCollector service = DynamicTagCollector.getTagCollector();
+                new Thread(() -> service.getValuesFromPC(context)).start();
+                break;
+            }
         }
 
     }

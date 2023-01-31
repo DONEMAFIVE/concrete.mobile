@@ -53,7 +53,7 @@ import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.gui.catalogs.EditOrderActivity;
 import ru.zzbo.concretemobile.models.Order;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
@@ -148,14 +148,14 @@ public class OrdersActivity extends AppCompatActivity {
                                         selectedRecepie = currentOrder.getMarkConcrete();
                                         selectedOrder = currentOrder.getNameOrder();
                                         editedOrder = currentOrder;
-                                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("orderId", String.valueOf(currentOrder.getId()));
-                                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("recepieId", String.valueOf(currentOrder.getRecipeID()));
+
                                         new Thread(() -> {
                                             if (exchangeLevel == 1) {
+                                                OkHttpUtil.updCurrent(currentOrder.getRecepieID(), currentOrder.getId());
                                                 OkHttpUtil.uplOrder(currentOrder.getId(), Float.parseFloat(partyCapacity.getText().toString()));
                                             } else {
-                                                Recipe recipe = new DBUtilGet(getApplicationContext()).getRecepieForID(currentOrder.getRecipeID());
-                                                if (new SetRecipe().sendRecipeToPLC(recipe)) {
+                                                Recepie recepie = new DBUtilGet(getApplicationContext()).getRecipeForID(currentOrder.getRecepieID());
+                                                if (new SetRecipe().sendRecipeToPLC(recepie)) {
                                                     Tag weightPartyTag = tagListManual.get(64);
                                                     Tag weightSingleMixTag = tagListManual.get(62);
 
@@ -164,8 +164,9 @@ public class OrdersActivity extends AppCompatActivity {
                                                     new CommandDispatcher(weightSingleMixTag).writeSingleRegisterWithLock();
                                                     new CommandDispatcher(weightPartyTag).writeSingleRegisterWithLock();
                                                 }
-                                                new DBUtilUpdate(getApplicationContext()).updCurrentTable("orderId", String.valueOf(currentOrder.getId()));
                                             }
+                                            new DBUtilUpdate(getApplicationContext()).updCurrentTable("orderId", String.valueOf(currentOrder.getId()));
+                                            new DBUtilUpdate(getApplicationContext()).updCurrentTable("recepieId", String.valueOf(currentOrder.getRecepieID()));
 
                                         }).start();
 
@@ -492,8 +493,7 @@ public class OrdersActivity extends AppCompatActivity {
         new Thread(() -> {
             if (exchangeLevel == 1) {
                 String res = OkHttpUtil.getOrders(startDate, endDate, completeOrders.isChecked());
-                order = new Gson().fromJson(res, new TypeToken<List<Order>>() {
-                }.getType());
+                order = new Gson().fromJson(res, new TypeToken<List<Order>>() {}.getType());
 //                order = Arrays.asList(new Gson().fromJson(res, Order[].class));
             } else {
                 order = new DBUtilGet(getApplicationContext()).getOrdersByRangeDate(dates, completeOrders.isChecked());

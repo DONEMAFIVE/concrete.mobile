@@ -23,7 +23,7 @@ public class DBUtilDelete {
         sqLiteDatabase.close();
     }
 
-    public void deleteRecepie(int id) {
+    public void deleteRecipe(int id) {
         openDbConfig();
         try {
             sqLiteDatabase.delete("recepies","id=?" ,new String[]{String.valueOf(id)});

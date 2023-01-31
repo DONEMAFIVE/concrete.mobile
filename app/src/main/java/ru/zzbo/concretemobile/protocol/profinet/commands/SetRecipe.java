@@ -3,12 +3,12 @@ package ru.zzbo.concretemobile.protocol.profinet.commands;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.lockStateRequests;
 
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 
 public class SetRecipe {
 
-    public boolean sendRecipeToPLC(Recipe recipe) {
+    public boolean sendRecipeToPLC(Recepie recepie) {
         try {
             Tag buncker11Tag = tagListManual.get(35);
             Tag buncker12Tag = tagListManual.get(36);
@@ -54,49 +54,49 @@ public class SetRecipe {
             Tag humidity41Tag = tagListManual.get(129);
             Tag humidity42Tag = tagListManual.get(130);
 
-            buncker11Tag.setRealValueIf(recipe.getBunckerRecepie11());
-            shortageBuncker11Tag.setRealValueIf(recipe.getBunckerShortage11());
-            buncker12Tag.setRealValueIf(recipe.getBunckerRecepie12());
-            shortageBuncker12Tag.setRealValueIf(recipe.getBunckerShortage12());
+            buncker11Tag.setRealValueIf(recepie.getBunckerRecepie11());
+            shortageBuncker11Tag.setRealValueIf(recepie.getBunckerShortage11());
+            buncker12Tag.setRealValueIf(recepie.getBunckerRecepie12());
+            shortageBuncker12Tag.setRealValueIf(recepie.getBunckerShortage12());
 
-            buncker21Tag.setRealValueIf(recipe.getBunckerRecepie21());
-            shortageBuncker21Tag.setRealValueIf(recipe.getBunckerShortage21());
-            buncker22Tag.setRealValueIf(recipe.getBunckerRecepie22());
-            shortageBuncker22Tag.setRealValueIf(recipe.getBunckerShortage22());
+            buncker21Tag.setRealValueIf(recepie.getBunckerRecepie21());
+            shortageBuncker21Tag.setRealValueIf(recepie.getBunckerShortage21());
+            buncker22Tag.setRealValueIf(recepie.getBunckerRecepie22());
+            shortageBuncker22Tag.setRealValueIf(recepie.getBunckerShortage22());
 
-            buncker31Tag.setRealValueIf(recipe.getBunckerRecepie31());
-            shortageBuncker31Tag.setRealValueIf(recipe.getBunckerShortage31());
-            buncker32Tag.setRealValueIf(recipe.getBunckerRecepie32());
-            shortageBuncker32Tag.setRealValueIf(recipe.getBunckerShortage32());
+            buncker31Tag.setRealValueIf(recepie.getBunckerRecepie31());
+            shortageBuncker31Tag.setRealValueIf(recepie.getBunckerShortage31());
+            buncker32Tag.setRealValueIf(recepie.getBunckerRecepie32());
+            shortageBuncker32Tag.setRealValueIf(recepie.getBunckerShortage32());
 
-            buncker41Tag.setRealValueIf(recipe.getBunckerRecepie41());
-            shortageBuncker41Tag.setRealValueIf(recipe.getBunckerShortage41());
-            buncker42Tag.setRealValueIf(recipe.getBunckerRecepie42());
-            shortageBuncker42Tag.setRealValueIf(recipe.getBunckerShortage42());
+            buncker41Tag.setRealValueIf(recepie.getBunckerRecepie41());
+            shortageBuncker41Tag.setRealValueIf(recepie.getBunckerShortage41());
+            buncker42Tag.setRealValueIf(recepie.getBunckerRecepie42());
+            shortageBuncker42Tag.setRealValueIf(recepie.getBunckerShortage42());
 
-            waterTag.setRealValueIf(recipe.getWater1Recepie());
-            water2Tag.setRealValueIf(recipe.getWater2Recepie());
-            chemy1Tag.setRealValueIf(recipe.getChemyRecepie1());
-            chemy2Tag.setRealValueIf(recipe.getChemy2Recepie());
+            waterTag.setRealValueIf(recepie.getWater1Recepie());
+            water2Tag.setRealValueIf(recepie.getWater2Recepie());
+            chemy1Tag.setRealValueIf(recepie.getChemyRecepie1());
+            chemy2Tag.setRealValueIf(recepie.getChemy2Recepie());
 
-            silos1Tag.setRealValueIf(recipe.getSilosRecepie1());
-            silos2Tag.setRealValueIf(recipe.getSilosRecepie2());
+            silos1Tag.setRealValueIf(recepie.getSilosRecepie1());
+            silos2Tag.setRealValueIf(recepie.getSilosRecepie2());
 
-            shortageWater1.setRealValueIf(recipe.getWater1Shortage());
-            shortageWater2.setRealValueIf(recipe.getWater2Shortage());
-            shortageChemy1.setRealValueIf(recipe.getChemyShortage1());
-            shortageChemy2.setRealValueIf(recipe.getChemyShortage2());
-            shortageSilos1.setRealValueIf(recipe.getSilosShortage1());
-            shortageSilos2.setRealValueIf(recipe.getSilosShortage2());
+            shortageWater1.setRealValueIf(recepie.getWater1Shortage());
+            shortageWater2.setRealValueIf(recepie.getWater2Shortage());
+            shortageChemy1.setRealValueIf(recepie.getChemyShortage1());
+            shortageChemy2.setRealValueIf(recepie.getChemyShortage2());
+            shortageSilos1.setRealValueIf(recepie.getSilosShortage1());
+            shortageSilos2.setRealValueIf(recepie.getSilosShortage2());
 
-            humidity11Tag.setRealValueIf(recipe.getHumidity11());
-            humidity12Tag.setRealValueIf(recipe.getHumidity12());
-            humidity21Tag.setRealValueIf(recipe.getHumidity21());
-            humidity22Tag.setRealValueIf(recipe.getHumidity22());
-            humidity31Tag.setRealValueIf(recipe.getHumidity31());
-            humidity32Tag.setRealValueIf(recipe.getHumidity32());
-            humidity41Tag.setRealValueIf(recipe.getHumidity41());
-            humidity42Tag.setRealValueIf(recipe.getHumidity42());
+            humidity11Tag.setRealValueIf(recepie.getHumidity11());
+            humidity12Tag.setRealValueIf(recepie.getHumidity12());
+            humidity21Tag.setRealValueIf(recepie.getHumidity21());
+            humidity22Tag.setRealValueIf(recepie.getHumidity22());
+            humidity31Tag.setRealValueIf(recepie.getHumidity31());
+            humidity32Tag.setRealValueIf(recepie.getHumidity32());
+            humidity41Tag.setRealValueIf(recepie.getHumidity41());
+            humidity42Tag.setRealValueIf(recepie.getHumidity42());
 
             //блокировка
             lockStateRequests = true;
@@ -138,8 +138,8 @@ public class SetRecipe {
             new CommandDispatcher(humidity32Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity41Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity42Tag).writeSingleRegisterWithoutLock();
-            if (recipe.getTimeMix() != 0) {
-                timeMixTag.setDIntValueIf(recipe.getTimeMix() * 1000);
+            if (recepie.getTimeMix() != 0) {
+                timeMixTag.setDIntValueIf(recepie.getTimeMix() * 1000);
                 new CommandDispatcher(timeMixTag).writeSingleRegisterWithoutLock();
             }
             lockStateRequests = false;

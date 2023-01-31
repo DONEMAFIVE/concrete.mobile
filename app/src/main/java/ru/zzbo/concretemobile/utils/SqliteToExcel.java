@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.models.Mix;
 
 public class SqliteToExcel {
@@ -94,8 +93,8 @@ public class SqliteToExcel {
                             dataForm.add(String.valueOf(mix.getOrganizationID()));
                             dataForm.add(mix.getTransporter());
                             dataForm.add(String.valueOf(mix.getTransporterID()));
-                            dataForm.add(mix.getRecipe());
-                            dataForm.add(String.valueOf(mix.getRecipeID()));
+                            dataForm.add(mix.getRecepie());
+                            dataForm.add(String.valueOf(mix.getRecepieID()));
                             dataForm.add(String.valueOf(mix.getMixCounter()));
                             dataForm.add(String.valueOf(mix.getCompleteCapacity()));
                             dataForm.add(String.valueOf(mix.getTotalCapacity()));
@@ -130,21 +129,25 @@ public class SqliteToExcel {
             }
         });
 
+        try {
+            for (int x = 0; x < dataTable.size(); x++) {
+                List<String> arr = dataTable.get(x);
+                XSSFRow row = mixesSheet.createRow(x);
 
-        for (int x = 0; x < dataTable.size(); x++) {
-            List<String> arr = dataTable.get(x);
-            XSSFRow row = mixesSheet.createRow(x);
-
-            for (int i = 0; i < headTable.size(); i++) { //column
-                for (int s = 0; s < arr.size(); s++) {
-                    String[] data = arr.get(s).split(", ");
-                    XSSFCell cell = row.createCell(s);
-                    for (int c = 0; c < data.length; c++) {
-                        cell.setCellValue(data[c]);
+                for (int i = 0; i < headTable.size(); i++) { //column
+                    for (int s = 0; s < arr.size(); s++) {
+                        String[] data = arr.get(s).split(", ");
+                        XSSFCell cell = row.createCell(s);
+                        for (int c = 0; c < data.length; c++) {
+                            cell.setCellValue(data[c]);
+                        }
                     }
                 }
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     //TODO Отчет по партиям [v]
@@ -188,8 +191,8 @@ public class SqliteToExcel {
                     dataForm.add(String.valueOf(mix.getOrganizationID()));
                     dataForm.add(mix.getTransporter());
                     dataForm.add(String.valueOf(mix.getTransporterID()));
-                    dataForm.add(mix.getRecipe());
-                    dataForm.add(String.valueOf(mix.getRecipeID()));
+                    dataForm.add(mix.getRecepie());
+                    dataForm.add(String.valueOf(mix.getRecepieID()));
                     dataForm.add(String.valueOf(mix.getMixCounter()));
                     dataForm.add(String.valueOf(mix.getCompleteCapacity()));
                     dataForm.add(String.valueOf(mix.getTotalCapacity()));
@@ -250,9 +253,8 @@ public class SqliteToExcel {
 
         if (Constants.exchangeLevel == 1) {
             try {
-                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
-                }.getType());
-                for (Mix mix : report) recipes.add(mix.getRecipe());
+                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
+                for (Mix mix : report) recipes.add(mix.getRecepie());
                 Set<String> set = new HashSet<>(recipes);
                 recipes.clear();
                 recipes.addAll(set);
@@ -268,17 +270,18 @@ public class SqliteToExcel {
         headTable.add("Итого");
         dataTable.add(headTable);
 
-        List<Mix> report = new ArrayList<>();
+//        List<Mix> report = new ArrayList<>();
 
         try {
             float totalSum = 0;
             float sum = 0;
 
             for (int j = 0; j < dates.size(); j++) {
-                if (Constants.exchangeLevel == 1) {
-                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
-                    }.getType()));
-                } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
+//                if (Constants.exchangeLevel == 1) {
+//                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {}.getType()));
+//                } else {
+//                    report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
+//                }
 
                 List<String> dataForm = new ArrayList<>();
                 dataForm.add(dates.get(j));
@@ -286,7 +289,7 @@ public class SqliteToExcel {
                 for (int i = 0; i < recipes.size(); i++) {
                     for (int m = 0; m < report.size(); m++) {
                         if (report.get(m).getDate().equals(dates.get(j))) {
-                            if (report.get(m).getRecipe().equals(recipes.get(i))) {
+                            if (report.get(m).getRecepie().equals(recipes.get(i))) {
                                 sum += report.get(m).getCompleteCapacity();
                             }
                         }
@@ -327,55 +330,52 @@ public class SqliteToExcel {
     //TODO Итоговый отчет [v]
     public void createSheetTotal() {
         totalSheet = book.createSheet("Итоговый отчет");
-
         List<List<String>> dataTable = new ArrayList<>();
-        Gson gson = new Gson();
+
         //сборка заголовка
         List<String> headTable = new ArrayList<>();
+        List<String> recipes = new ArrayList<>();
+        Gson gson = new Gson();
+
         headTable.add("Дата");
         headTable.add("[Рецепт]:Объём,м3");
 
         int tableHeadSize = 10;
-        List<String> recipes = new ArrayList<>();
-
         if (Constants.exchangeLevel == 1) {
             try {
-                report = gson.fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {
-                }.getType());
-                for (Mix mix : report) recipes.add(mix.getRecipe());
+                report = new Gson().fromJson(OkHttpUtil.getMixes(dateStart, dateEnd), new TypeToken<List<Mix>>() {}.getType());
+                for (Mix mix: report) recipes.add(mix.getRecepie());
                 Set<String> set = new HashSet<>(recipes);
                 recipes.clear();
                 recipes.addAll(set);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else
-            recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
+        } else recipes = new DBUtilGet(context).getDistinctRecipesMixes(dates).stream().collect(Collectors.toList());
 
         if (recipes.size() > tableHeadSize) tableHeadSize = recipes.size();
         for (int i = 2; i < tableHeadSize; i++) headTable.add("  "); //String.valueOf(i)
         dataTable.add(headTable);
 
-        List<Mix> report = new ArrayList<>();
+        List<Mix> mixes = new ArrayList<>();
 
         try {
             float sum = 0;
 
             for (int j = 0; j < dates.size(); j++) {
                 if (Constants.exchangeLevel == 1) {
-                    report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
-                    }.getType()));
-                } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
+                    String req = OkHttpUtil.getMixes(dates.get(j), dates.get(j));
+                    if (!req.trim().equals("Empty")) mixes.addAll(new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType()));
+                } else mixes.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
 
                 List<String> dataForm = new ArrayList<>();
                 dataForm.add(dates.get(j));
 
                 for (int r = 0; r < recipes.size(); r++) {
-                    for (int d = 0; d < report.size(); d++) {
-                        if (report.get(d).getDate().equals(dates.get(j))) {
-                            if (report.get(d).getRecipe().equals(recipes.get(r))) {
-                                sum += report.get(d).getCompleteCapacity();
+                    for (int d = 0; d < mixes.size(); d++) {
+                        if (mixes.get(d).getDate().equals(dates.get(j))) {
+                            if (mixes.get(d).getRecepie().equals(recipes.get(r))) {
+                                sum += mixes.get(d).getCompleteCapacity();
                             }
                         }
                     }
@@ -386,7 +386,7 @@ public class SqliteToExcel {
                 if (dataForm.size() != 1) dataTable.add(dataForm);
             }
 
-            if (report.size() != 0) {
+            if (mixes.size() != 0) {
                 List<String> dataForm = new ArrayList<>();
                 dataForm.add("  ");
                 dataTable.add(dataForm);
@@ -405,14 +405,14 @@ public class SqliteToExcel {
 
                     for (int d = 0; d < dates.size(); d++) {
                         if (Constants.exchangeLevel == 1) {
-                            report = gson.fromJson(OkHttpUtil.getMixes(dates.get(d), dates.get(d)), new TypeToken<List<Mix>>() {
-                            }.getType());
-                        } else report = new DBUtilGet(context).getMixListForDate(dates.get(d));
+                            String req = OkHttpUtil.getMixes(dates.get(d), dates.get(d));
+                            if (!req.trim().equals("Empty")) mixes = gson.fromJson(req, new TypeToken<List<Mix>>() {}.getType());
+                        } else mixes = new DBUtilGet(context).getMixListForDate(dates.get(d));
 
-                        for (int m = 0; m < report.size(); m++) {
-                            if (report.get(m).getDate().equals(dates.get(d))) {
-                                if (report.get(m).getRecipe().equals(recipes.get(j))) {
-                                    sum += report.get(m).getCompleteCapacity();
+                        for (int m = 0; m < mixes.size(); m++) {
+                            if (mixes.get(m).getDate().equals(dates.get(d))) {
+                                if (mixes.get(m).getRecepie().equals(recipes.get(j))) {
+                                    sum += mixes.get(m).getCompleteCapacity();
                                 }
                             }
                         }
@@ -438,10 +438,9 @@ public class SqliteToExcel {
 
                 for (int j = 0; j < dates.size(); j++) {
                     if (Constants.exchangeLevel == 1) {
-                        report.addAll(gson.fromJson(OkHttpUtil.getMixes(dates.get(j), dates.get(j)), new TypeToken<List<Mix>>() {
-                        }.getType()));
-                    } else report.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
-
+                        String req = OkHttpUtil.getMixes(dates.get(j), dates.get(j));
+                        if (!req.trim().equals("Empty")) mixes.addAll(gson.fromJson(req, new TypeToken<List<Mix>>() {}.getType()));
+                    } else mixes.addAll(new DBUtilGet(context).getMixListForDate(dates.get(j)));
                 }
 
                 /**
@@ -473,17 +472,17 @@ public class SqliteToExcel {
                 BigDecimal chemy2 = new BigDecimal("0");
 
                 //Итоговый отчет, инертные бункера 11 12 ... считаются единым бункером 11 + 12 ...
-                for (int m = 0; m < report.size(); m++) {
-                    bunker11 = bunker11.add(BigDecimal.valueOf(report.get(m).getBuncker11() + report.get(m).getBuncker12()));
-                    bunker21 = bunker21.add(BigDecimal.valueOf(report.get(m).getBuncker21() + report.get(m).getBuncker22()));
-                    bunker31 = bunker31.add(BigDecimal.valueOf(report.get(m).getBuncker31() + report.get(m).getBuncker32()));
-                    bunker41 = bunker41.add(BigDecimal.valueOf(report.get(m).getBuncker41() + report.get(m).getBuncker42()));
-                    silos1 = silos1.add(BigDecimal.valueOf(report.get(m).getSilos1()));
-                    silos2 = silos2.add(BigDecimal.valueOf(report.get(m).getSilos2()));
-                    water1 = water1.add(BigDecimal.valueOf(report.get(m).getWater1()));
-                    water2 = water2.add(BigDecimal.valueOf(report.get(m).getWater2()));
-                    chemy1 = chemy1.add(BigDecimal.valueOf(report.get(m).getChemy1()));
-                    chemy2 = chemy2.add(BigDecimal.valueOf(report.get(m).getChemy2()));
+                for (int m = 0; m < mixes.size(); m++) {
+                    bunker11 = bunker11.add(BigDecimal.valueOf(mixes.get(m).getBuncker11() + mixes.get(m).getBuncker12()));
+                    bunker21 = bunker21.add(BigDecimal.valueOf(mixes.get(m).getBuncker21() + mixes.get(m).getBuncker22()));
+                    bunker31 = bunker31.add(BigDecimal.valueOf(mixes.get(m).getBuncker31() + mixes.get(m).getBuncker32()));
+                    bunker41 = bunker41.add(BigDecimal.valueOf(mixes.get(m).getBuncker41() + mixes.get(m).getBuncker42()));
+                    silos1 = silos1.add(BigDecimal.valueOf(mixes.get(m).getSilos1()));
+                    silos2 = silos2.add(BigDecimal.valueOf(mixes.get(m).getSilos2()));
+                    water1 = water1.add(BigDecimal.valueOf(mixes.get(m).getWater1()));
+                    water2 = water2.add(BigDecimal.valueOf(mixes.get(m).getWater2()));
+                    chemy1 = chemy1.add(BigDecimal.valueOf(mixes.get(m).getChemy1()));
+                    chemy2 = chemy2.add(BigDecimal.valueOf(mixes.get(m).getChemy2()));
                 }
 
                 dataForm = new ArrayList<>();
@@ -625,8 +624,8 @@ public class SqliteToExcel {
                     mixList.get(i).getOrganizationID(),
                     mixList.get(i).getTransporter(),
                     mixList.get(i).getTransporterID(),
-                    mixList.get(i).getRecipe(),
-                    mixList.get(i).getRecipeID(),
+                    mixList.get(i).getRecepie(),
+                    mixList.get(i).getRecepieID(),
                     mixList.get(i).getMixCounter() + 1,       //+1 делается потомучто из прошивки замесы начинаются с нуля
                     totalCapacity.floatValue(),
                     mixList.get(i).getTotalCapacity(),
@@ -708,8 +707,8 @@ public class SqliteToExcel {
                             mixList.get(i + 1).getOrganizationID(),
                             mixList.get(i + 1).getTransporter(),
                             mixList.get(i + 1).getTransporterID(),
-                            mixList.get(i + 1).getRecipe(),
-                            mixList.get(i + 1).getRecipeID(),
+                            mixList.get(i + 1).getRecepie(),
+                            mixList.get(i + 1).getRecepieID(),
                             mixList.get(i + 1).getMixCounter() + 1,
                             totalCapacity.floatValue(),
                             mixList.get(i + 1).getTotalCapacity(),

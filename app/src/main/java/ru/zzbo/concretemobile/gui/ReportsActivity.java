@@ -196,12 +196,11 @@ public class ReportsActivity extends AppCompatActivity {
                         SqliteToExcel sqliteToExcel = new SqliteToExcel(this, startDate, endDate);
 
                         //todo: выбор отчета
-                        if (mixesReportChecker.isChecked())
-                            sqliteToExcel.createSheetMixes(cementLessFilter.isChecked());
-                        if (partyReportChecker.isChecked())
-                            sqliteToExcel.createSheetParty(cementLessFilter.isChecked());
+                        if (mixesReportChecker.isChecked()) sqliteToExcel.createSheetMixes(cementLessFilter.isChecked());
+                        if (partyReportChecker.isChecked()) sqliteToExcel.createSheetParty(cementLessFilter.isChecked());
                         if (marksReportChecker.isChecked()) sqliteToExcel.createSheetMark();
                         if (totalReportChecker.isChecked()) sqliteToExcel.createSheetTotal();
+
 
                         if (sqliteToExcel.exportExcel()) {
                             runOnUiThread(() -> {

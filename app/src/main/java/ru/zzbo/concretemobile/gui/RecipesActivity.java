@@ -1,6 +1,6 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.Constants.editedRecipe;
+import static ru.zzbo.concretemobile.utils.Constants.editedRecepie;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
 
@@ -31,13 +31,13 @@ import ru.zzbo.concretemobile.adapters.RecipeAdapter;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.catalogs.EditRecipeActivity;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 
 public class RecipesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ExtendedFloatingActionButton createRecipeBtn, downloadFromPcBtn;
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Recepie> recepies = new ArrayList<>();
     private ProgressBar loadRecipeToPLC;
     private DrawerLayout blockTouchLayout;
     private ConstraintLayout recipesNotFound;
@@ -57,7 +57,7 @@ public class RecipesActivity extends AppCompatActivity {
         // определяем слушателя нажатия элемента FAB
         createRecipeBtn.setOnClickListener(e -> {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-            editedRecipe = new Recipe(
+            editedRecepie = new Recepie(
                     0,
                     sdf.format(new Date()),
                     "",
@@ -121,8 +121,8 @@ public class RecipesActivity extends AppCompatActivity {
             builder.setMessage("Вы действительно хотите удалить рецепт?");
             builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
             builder.setPositiveButton("Да", (dialog, id) -> {
-                editedRecipe = recipes.get(position);
-                new DBUtilDelete(getApplicationContext()).deleteRecepie(editedRecipe.getId());
+                editedRecepie = recepies.get(position);
+                new DBUtilDelete(getApplicationContext()).deleteRecipe(editedRecepie.getId());
                 Toast.makeText(getApplicationContext(), "Рецепт удален!", Toast.LENGTH_LONG).show();
             });
             AlertDialog alertDialog = builder.create();
@@ -131,7 +131,7 @@ public class RecipesActivity extends AppCompatActivity {
 
         // Редактирование рецепта
         RecipeAdapter.EditRecipeClickListener editRecipeClickListener = (recipe, position) -> {
-            editedRecipe = recipes.get(position);
+            editedRecepie = recepies.get(position);
             Toast.makeText(getApplicationContext(), recipe.getMark(), Toast.LENGTH_SHORT).show();
             finish();
             Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
@@ -175,7 +175,7 @@ public class RecipesActivity extends AppCompatActivity {
         };
 
         // создаем адаптер
-        adapter = new RecipeAdapter(this, recipes, editRecipeClickListener, loadToPlcClickListener, delRecipeClickListener);
+        adapter = new RecipeAdapter(this, recepies, editRecipeClickListener, loadToPlcClickListener, delRecipeClickListener);
 
         // устанавливаем для списка адаптер
         recyclerView.setAdapter(adapter);
@@ -197,10 +197,10 @@ public class RecipesActivity extends AppCompatActivity {
 
     private void initData() {
         new Thread(() -> {
-            recipes.clear();
-            recipes.addAll(new DBUtilGet(this).getRecepies());
+            recepies.clear();
+            recepies.addAll(new DBUtilGet(this).getRecipes());
 
-            if (recipes.size() == 0) recipesNotFound.setVisibility(View.VISIBLE);
+            if (recepies.size() == 0) recipesNotFound.setVisibility(View.VISIBLE);
             else recipesNotFound.setVisibility(View.GONE);
 
         }).start();

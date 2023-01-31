@@ -20,13 +20,10 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
-import ru.zzbo.concretemobile.models.Configs;
 import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class WaterFragment extends PreferenceFragmentCompat {

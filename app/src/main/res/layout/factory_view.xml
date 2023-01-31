@@ -87,106 +87,168 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/reportsMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/accounting" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/catalogsMenu"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/archive" />
+                    <ImageView
+                        android:id="@+id/reportsMenu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/accounting" />
 
-                <ImageView
-                    android:id="@+id/touchLock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/unlock" />
-            </TableRow>
+                    <ImageView
+                        android:id="@+id/catalogsMenu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/archive" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/touchLock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:src="@drawable/unlock" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/mixOptionBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="замес"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                    <Button
+                        android:id="@+id/partyOptionBtn"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="партия"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/driverSelectBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Водитель\nНе выбрано"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                    <Button
+                        android:id="@+id/organizationSelectBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Заказчик\nНе выбрано"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:id="@+id/recepieOptionBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Рецепт/Заказ"
+                        android:textColor="#000000"
+                        android:textSize="10sp" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/halfAutoMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="MissingConstraints">
 
                 <Button
-                    android:id="@+id/mixOptionBtn"
+                    android:id="@+id/startSelfDK"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
                     android:backgroundTint="#FFFFFF"
-                    android:text="замес"
-                    android:textColor="#000000"
+                    android:text="Старт ДК"
+                    android:textColor="@color/black"
                     android:textSize="10sp" />
 
                 <Button
-                    android:id="@+id/partyOptionBtn"
+                    android:id="@+id/startSelfChemy"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
                     android:backgroundTint="#FFFFFF"
-                    android:text="партия"
-                    android:textColor="#000000"
-                    android:textSize="10sp" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <Button
-                    android:id="@+id/driverSelectBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Водитель\nНе выбрано"
-                    android:textColor="#000000"
+                    android:text="Старт ДХ"
+                    android:textColor="@color/black"
                     android:textSize="10sp" />
 
                 <Button
-                    android:id="@+id/organizationSelectBtn"
-                    android:layout_width="match_parent"
+                    android:id="@+id/startSelfCement"
+                    android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
                     android:backgroundTint="#FFFFFF"
-                    android:text="Заказчик\nНе выбрано"
-                    android:textColor="#000000"
+                    android:text="Старт ДЦ"
+                    android:textColor="@color/black"
                     android:textSize="10sp" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/recepieOptionBtn"
-                    android:layout_width="match_parent"
+                    android:id="@+id/startSelfWater"
+                    android:layout_width="100dp"
                     android:layout_height="60dp"
-                    android:layout_weight="1"
                     android:backgroundTint="#FFFFFF"
-                    android:text="Рецепт"
-                    android:textColor="#000000"
+                    android:text="Старт ДВ"
+                    android:textColor="@color/black"
                     android:textSize="10sp" />
+            </LinearLayout>
 
-            </TableRow>
+        </LinearLayout>
 
-        </TableLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -206,15 +268,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:id="@+id/runVerticalConv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:text="Запуск"
-                android:textColor="@color/black"
-                android:layout_gravity="center"
-                android:textSize="10sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/runVerticalConv"
+                    android:layout_weight="2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/white"
+                    android:text="Старт Конвейер"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/conveyorUploadDrop"
+                    android:layout_weight="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="1dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Конвейер выгрузки"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textSize="10sp" />
+
+
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/liftToMixer"
@@ -362,6 +448,7 @@
                     android:id="@+id/chemy1LL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingRight="1dp"
                     android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -409,6 +496,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy1"
@@ -432,6 +520,7 @@
                     android:id="@+id/chemy2LL"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:paddingRight="1dp"
                     android:orientation="vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -479,6 +568,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy2"
@@ -549,6 +639,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy3"
@@ -589,7 +680,6 @@
                     android:id="@+id/dispenserChemyLL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:gravity="center"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -642,7 +732,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/water"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toStartOf="@+id/cement"
@@ -666,8 +756,8 @@
                     android:id="@+id/incrementWater"
                     android:layout_width="65dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/plus"
                     android:backgroundTint="#FFFFFF"
+                    android:src="@drawable/plus"
                     android:text="+"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -676,9 +766,9 @@
                     android:id="@+id/decrementWater"
                     android:layout_width="65dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/minus"
                     android:layout_marginLeft="5dp"
                     android:backgroundTint="#FFFFFF"
+                    android:src="@drawable/minus"
                     android:text="-"
                     android:textColor="#000000"
                     android:textSize="16sp" />
@@ -694,7 +784,8 @@
                     android:id="@+id/water1LL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingRight="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/water1CL"
@@ -739,6 +830,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
@@ -815,6 +907,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
@@ -845,8 +938,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/dispenserWaterCL"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/dispenserWaterLL"
@@ -854,6 +947,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -937,16 +1031,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/silosSelector1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Выбор"
-                        android:textColor="#FFFFFF"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:layout_editor_absoluteX="947dp" />
+                    android:orientation="vertical"
+                    android:paddingRight="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cement1CL"
@@ -957,6 +1043,7 @@
                             android:id="@+id/silos1View"
                             android:layout_width="wrap_content"
                             android:layout_height="100dp"
+                            android:layout_marginTop="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -980,16 +1067,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/silos1View"
                             app:layout_constraintStart_toStartOf="@+id/silos1View"
-                            app:layout_constraintTop_toBottomOf="@+id/titleSilos1" />
+                            app:layout_constraintTop_toBottomOf="@+id/silosSelector1" />
 
-                        <TextView
-                            android:id="@+id/titleSilos1"
+                        <RadioButton
+                            android:id="@+id/silosSelector1"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="-4dp"
                             android:text="Цемент 1"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF"
@@ -1034,15 +1123,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/silosSelector2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Выбор"
-                        android:textColor="#FFFFFF"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:layout_editor_absoluteX="1022dp" />
-
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cement2CL"
                         android:layout_width="wrap_content"
@@ -1052,6 +1132,7 @@
                             android:id="@+id/silos2View"
                             android:layout_width="wrap_content"
                             android:layout_height="100dp"
+                            android:layout_marginTop="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -1064,16 +1145,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
+                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
                             app:layout_constraintEnd_toEndOf="@+id/silos2View"
                             app:layout_constraintStart_toStartOf="@+id/silos2View"
-                            app:layout_constraintTop_toBottomOf="@+id/titleSilos2" />
+                            app:layout_constraintTop_toBottomOf="@+id/silosSelector2" />
 
-                        <TextView
-                            android:id="@+id/titleSilos2"
+                        <RadioButton
+                            android:id="@+id/silosSelector2"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="-4dp"
                             android:text="Цемент 2"
                             android:textAlignment="center"
                             android:textColor="#FFFFFF"
@@ -1316,54 +1399,6 @@
 
 
     <LinearLayout
-        android:id="@+id/halfAutoMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints">
-
-        <Button
-            android:id="@+id/startSelfDK"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="Старт ДК"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
-
-        <Button
-            android:id="@+id/startSelfChemy"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="Старт ДХ"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
-
-        <Button
-            android:id="@+id/startSelfCement"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="Старт ДЦ"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
-
-        <Button
-            android:id="@+id/startSelfWater"
-            android:layout_width="100dp"
-            android:layout_height="60dp"
-            android:backgroundTint="#FFFFFF"
-            android:text="Старт ДВ"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/dk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -1415,6 +1450,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="0/0"
+                        android:textSize="18sp"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         app:layout_constraintEnd_toEndOf="@+id/titleBuncker1"
@@ -1485,6 +1521,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="0/0"
+                        android:textSize="18sp"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         app:layout_constraintEnd_toEndOf="@+id/titleBuncker2"
@@ -1577,6 +1614,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="0/0"
+                        android:textSize="18sp"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         app:layout_constraintEnd_toEndOf="@+id/titleBuncker3"
@@ -1659,6 +1697,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="0/0"
+                        android:textSize="18sp"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         app:layout_constraintEnd_toEndOf="@+id/titleBuncker4"
@@ -1722,6 +1761,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/horLineView" />
 
+            <Button
+                android:id="@+id/reverseConveyor"
+                android:layout_width="87dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="348dp"
+                android:backgroundTint="#FFFFFF"
+                android:text="Реверс"
+                android:textColor="#000000"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/horLineView"
+                app:layout_constraintVertical_bias="0.666" />
+
             <ImageView
                 android:id="@+id/horLineView"
                 android:layout_width="590dp"
@@ -1741,8 +1794,10 @@
                 android:textSize="21sp"
                 app:layout_constraintBottom_toBottomOf="@+id/horLineView"
                 app:layout_constraintEnd_toEndOf="@+id/horLineView"
+                app:layout_constraintHorizontal_bias="0.439"
                 app:layout_constraintStart_toStartOf="@+id/horLineView"
-                app:layout_constraintTop_toTopOf="@+id/horLineView" />
+                app:layout_constraintTop_toTopOf="@+id/horLineView"
+                app:layout_constraintVertical_bias="0.457" />
 
             <ImageView
                 android:id="@+id/lineArrowIndication"
@@ -1765,7 +1820,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/halfAutoMode">
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -1820,28 +1875,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end">
 
-                    <Button
-                        android:id="@+id/closeMixer"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="Закрыть"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/mixerView" />
-
-                    <Button
-                        android:id="@+id/openMixer"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="Открыть"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-
                     <ImageView
                         android:id="@+id/mixerView"
                         android:layout_width="206dp"
@@ -1858,20 +1891,45 @@
                         android:layout_width="206dp"
                         android:layout_height="180dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginBottom="24dp"
+                        android:layout_marginBottom="16dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/mixer_full"
-                        tools:srcCompat="@drawable/mixer_full" />
+                        app:layout_constraintVertical_bias="1.0"
+                        app:srcCompat="@drawable/mixer_full" />
+
+                    <ImageButton
+                        android:id="@+id/openMixer"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:backgroundTint="#FFFFFF"
+                        android:src="@drawable/arrow_down_off"
+                        android:text="Открыть"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/closeMixer"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:backgroundTint="#FFFFFF"
+                        android:src="@drawable/arrow_up_off"
+                        android:text="Закрыть"
+                        android:textColor="@color/black"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/mixerView" />
 
                     <TextView
                         android:id="@+id/amperage"
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:layout_marginStart="2dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="Сила тока"
                         android:textAlignment="inherit"
                         android:textColor="#000000"
@@ -2042,8 +2100,7 @@
         android:id="@+id/touchLockLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#031F1F1F"
-        android:visibility="gone">
+        android:background="#031F1F1F">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -2066,8 +2123,10 @@
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
                 <SeekBar
                     android:id="@+id/seekBar"

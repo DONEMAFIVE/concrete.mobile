@@ -129,11 +129,16 @@ public class OrganizationActivity extends AppCompatActivity {
                             "-",
                             "-"
                     );
-                    if (editedOrganization.getId() != 0) {
-                        new DBUtilUpdate(getApplicationContext()).updateOrganization(org);
-                    } else {
-                        new DBUtilInsert(getApplicationContext()).insertIntoOrgs(org);
-                    }
+                    new Thread(() -> {
+                        if (exchangeLevel == 1) {
+                            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                            if (editedOrganization.getId() != 0) OkHttpUtil.updOrganization(gson.toJson(org));
+                            else OkHttpUtil.newOrganization(gson.toJson(org));
+                        } else {
+                            if (editedOrganization.getId() != 0) new DBUtilUpdate(getApplicationContext()).updateOrganization(org);
+                            else new DBUtilInsert(getApplicationContext()).insertIntoOrgs(org);
+                        }
+                    }).start();
                     super.onBackPressed();
                 } else {
                     Toast.makeText(getApplicationContext(), "Заполните поле Название организации", Toast.LENGTH_SHORT).show();

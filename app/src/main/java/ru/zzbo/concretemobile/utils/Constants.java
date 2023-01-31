@@ -3,10 +3,10 @@ package ru.zzbo.concretemobile.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.zzbo.concretemobile.models.Configs;
+import ru.zzbo.concretemobile.models.DroidConfig;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 
@@ -26,7 +26,7 @@ public class Constants {
     public static boolean globalFactoryState = false;       //для того, всех кому необходимо знать работает сейчас завод или стоит, false стоит, true производит
     public static boolean globalModeState = false;
 
-    public static Configs configList;
+    public static DroidConfig configList;
 
     //анимации
     public static boolean animationMixerState = false;
@@ -50,10 +50,8 @@ public class Constants {
     public static String selectedOrder = "Не указано";
 
     //для обмена между activity
-    public static Recipe editedRecipe = null;
+    public static Recepie editedRecepie = null;
     public static Organization editedOrganization = null;
     public static Transporter editedTransporter = null;
     public static Order editedOrder = null;
-
-
 }

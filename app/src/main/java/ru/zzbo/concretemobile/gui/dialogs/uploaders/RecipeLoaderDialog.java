@@ -20,28 +20,28 @@ import androidx.fragment.app.DialogFragment;
 import java.util.List;
 
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.models.Recipe;
+import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class RecipeLoaderDialog extends DialogFragment {
 
     private ProgressDialog progressDialog;
-    private List<Recipe> recipes;
+    private List<Recepie> recepies;
 
-    public RecipeLoaderDialog(List<Recipe> recipes) {
-        this.recipes = recipes;
+    public RecipeLoaderDialog(List<Recepie> recepies) {
+        this.recepies = recepies;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        String[] recipeList = new String[this.recipes.size()];
+        String[] recipeList = new String[this.recepies.size()];
 
         int i = 0;
-        for (Recipe recipe : this.recipes) {
-            recipeList[i] = recipe.getName() + " [" + recipe.getMark() + "]";
+        for (Recepie recepie : this.recepies) {
+            recipeList[i] = recepie.getName() + " [" + recepie.getMark() + "]";
             i++;
         }
 
@@ -51,13 +51,18 @@ public class RecipeLoaderDialog extends DialogFragment {
                 .setItems(recipeList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getActivity(), "Подождите, загружается рецепт - " + recipes.get(i).getMark(), Toast.LENGTH_LONG).show();
-                        selectedRecepie = recipes.get(i).getMark();
+                        Toast.makeText(getActivity(), "Подождите, загружается рецепт - " + recepies.get(i).getMark(), Toast.LENGTH_LONG).show();
+                        selectedRecepie = recepies.get(i).getMark();
                         selectedOrder = "Не указано";
-                        new DBUtilUpdate(getContext()).updCurrentTable("recepieId", String.valueOf(recipes.get(i).getId()));
+                        new DBUtilUpdate(getContext()).updCurrentTable("recepieId", String.valueOf(recepies.get(i).getId()));
+                        new DBUtilUpdate(getContext()).updCurrentTable("orderId", "0");
+
                         new Thread(() -> {
-                            if (exchangeLevel == 1) OkHttpUtil.uplRecipe(recipes.get(i).getId());
-                            else new SetRecipe().sendRecipeToPLC(recipes.get(i));
+                            if (exchangeLevel == 1) {
+                                OkHttpUtil.uplRecipe(recepies.get(i).getId());
+                                OkHttpUtil.updCurrent(recepies.get(i).getId(), 0);
+                            }
+                            else new SetRecipe().sendRecipeToPLC(recepies.get(i));
                         }).start();
 
                         //пока грузится рецепт в контроллер покажем пользователю симуляцию загрузки
@@ -65,7 +70,7 @@ public class RecipeLoaderDialog extends DialogFragment {
                         progressDialog.setCancelable(false);
                         progressDialog.setMax(100);
                         progressDialog.setMessage("Идет загрузка....");
-                        progressDialog.setTitle("Выбран рецепт " + recipes.get(i).getMark());
+                        progressDialog.setTitle("Выбран рецепт " + recepies.get(i).getMark());
                         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                         progressDialog.show();
 
