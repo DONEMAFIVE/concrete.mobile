@@ -8,12 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import static ru.zzbo.concretemobile.db.DBConstants.*;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
+import ru.zzbo.concretemobile.db.models.ParameterDB;
 import ru.zzbo.concretemobile.models.Current;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
@@ -470,9 +474,9 @@ public class DBUtilGet {
                         cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")))
                 );
             }
-            if (result.isEmpty()) {
-                result.add(new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0));
-            }
+//            if (result.isEmpty()) {
+//                result.add(new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0));
+//            }
             return result;
         } finally {
             closeSession();
@@ -704,5 +708,59 @@ public class DBUtilGet {
             closeSession();
         }
         return null;
+    }
+
+    public List<String> getListTableDB() {
+        openDbConfig();
+        try {
+            List<String> result = new ArrayList<>();
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+            while (cursor.moveToNext()) {
+                result.add(cursor.getString(0));
+            }
+            return result;
+        }finally {
+            closeSession();
+        }
+    }
+
+    public List<String> getListColumnTable(String table) {
+        openDbConfig();
+        try {
+        String sql = "SELECT column_name FROM information_schema.columns WHERE table_schema = 'source'" +
+                "AND table_name = '" + table + "'";
+        List<String> columns = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
+
+
+            while (cursor.moveToNext()) {
+                columns.add(cursor.getString(1));
+            }
+            return columns;
+
+        } finally {
+            closeSession();
+        }
+    }
+
+    public List<ParameterDB> getParametersDB(String tableName) {
+        openDbConfig();
+        try {
+            List<ParameterDB> shortParam = new ArrayList<>();
+
+            Cursor cursor = sqLiteDatabase.query(tableName, null, null, null, null, null, null);
+            while (cursor.moveToNext()) {
+                ParameterDB current = new ParameterDB();
+                current.setId(cursor.getInt(0));
+                current.setParameter(cursor.getString(1));
+                current.setValue(cursor.getString(2));
+                shortParam.add(current);
+            }
+
+            return shortParam;
+
+        } finally {
+            closeSession();
+        }
     }
 }

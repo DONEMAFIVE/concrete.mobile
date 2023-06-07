@@ -6,77 +6,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#3D3D3D"
-
+    tools:viewBindingIgnore="true"
     android:orientation="horizontal"
     tools:context=".gui.OperatorViewActivity"
     tools:ignore="MissingDefaultResource">
 
     <!-- TOUCH LOCK -->
+<!--    <ImageButton-->
+<!--        android:id="@+id/imageButton4"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/vibration_m0l5cr0fwk9n"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageButton3"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <LinearLayout
-        android:id="@+id/infoBlock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/menu">
+<!--    <ImageButton-->
+<!--        android:id="@+id/imageButton2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/air_svgrepo_com"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageButton"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-        <TextView
-            android:id="@+id/operatorName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Оператор смены"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/imageButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/menu"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/reset_svgrepo_com" />-->
 
-        <TextView
-            android:id="@+id/mixCounterTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Всего циклов"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/mixCounterCurrent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Счетчик циклов"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/recepieName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Текущий рецепт/заказ:"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/stateFactory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Статус работы завода"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/dailyCounter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Произведено за сегодня"
-            android:textAlignment="center"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+<!--    <ImageButton-->
+<!--        android:id="@+id/imageButton3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/imageButton2"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/gears_svgrepo_com" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/menu"
@@ -96,160 +62,173 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TableLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/catalogsMenu"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/menu"
+                android:contentDescription="TODO" />
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/touchLock"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/unlock" />
 
-                    <ImageView
-                        android:id="@+id/reportsMenu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/accounting" />
-
-                    <ImageView
-                        android:id="@+id/catalogsMenu"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/archive" />
-
-                    <ImageView
-                        android:id="@+id/touchLock"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:src="@drawable/unlock" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:id="@+id/mixOptionBtn"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="замес"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
-
-                    <Button
-                        android:id="@+id/partyOptionBtn"
-                        android:layout_width="100dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="партия"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:id="@+id/driverSelectBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="Водитель\nНе выбрано"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
-
-                    <Button
-                        android:id="@+id/organizationSelectBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="Заказчик\nНе выбрано"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <Button
-                        android:id="@+id/recepieOptionBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="#FFFFFF"
-                        android:text="Рецепт/Заказ"
-                        android:textColor="#000000"
-                        android:textSize="10sp" />
-
-                </TableRow>
-
-            </TableLayout>
-
-            <LinearLayout
-                android:id="@+id/halfAutoMode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="MissingConstraints">
-
-                <Button
-                    android:id="@+id/startSelfDK"
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Старт ДК"
-                    android:textColor="@color/black"
-                    android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/startSelfChemy"
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Старт ДХ"
-                    android:textColor="@color/black"
-                    android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/startSelfCement"
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Старт ДЦ"
-                    android:textColor="@color/black"
-                    android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/startSelfWater"
-                    android:layout_width="100dp"
-                    android:layout_height="60dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Старт ДВ"
-                    android:textColor="@color/black"
-                    android:textSize="10sp" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/alarm"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:srcCompat="@drawable/warning" />
 
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/halfAutoMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/dk"
+        app:layout_constraintStart_toStartOf="@+id/dk"
+        tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/startSelfDK"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДК"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfChemy"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДХ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfCement"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДЦ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/startSelfWater"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FFFFFF"
+            android:text="Старт ДВ"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/infoBlock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu">
+
+        <TextView
+            android:id="@+id/operatorName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Оператор смены"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mixCounterTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Всего циклов"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mixCounterCurrent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Счетчик циклов"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/recepieName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Текущий рецепт/заказ:"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/orderName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Заказ:"
+            android:textAlignment="viewStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/transporter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Водитель:"
+            android:textAlignment="viewStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Заказчик:"
+            android:textAlignment="viewStart"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/stateFactory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Статус работы завода"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/dailyCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Произведено за сегодня"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/verticalLift"
@@ -276,11 +255,11 @@
 
                 <Button
                     android:id="@+id/runVerticalConv"
-                    android:layout_weight="2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_width="115dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="2"
                     android:backgroundTint="@color/white"
                     android:text="Старт Конвейер"
                     android:textColor="@color/black"
@@ -288,14 +267,14 @@
 
                 <Button
                     android:id="@+id/conveyorUploadDrop"
-                    android:layout_weight="3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="3dp"
+                    android:layout_width="130dp"
+                    android:layout_height="60dp"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="1dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_weight="3"
                     android:backgroundTint="#FFFFFF"
                     android:text="Конвейер выгрузки"
-                    android:layout_gravity="center"
                     android:textColor="@color/black"
                     android:textSize="10sp" />
 
@@ -327,6 +306,7 @@
                     android:id="@+id/verticalConveyorView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:rotation="23"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -410,7 +390,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="3dp"
-                    android:rotation="21"
+                    android:layout_marginBottom="3dp"
+                    android:rotation="46"
                     app:layout_constraintBottom_toBottomOf="@+id/skipMiddle"
                     app:layout_constraintEnd_toEndOf="@+id/verticalConveyorView"
                     app:layout_constraintStart_toStartOf="@+id/verticalConveyorView"
@@ -427,7 +408,7 @@
         android:id="@+id/chemy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toStartOf="@+id/water"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -448,8 +429,8 @@
                     android:id="@+id/chemy1LL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingRight="1dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingRight="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/chemy1CL"
@@ -496,9 +477,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy1"
                             app:layout_constraintStart_toStartOf="@+id/titleChemy1"
                             app:layout_constraintTop_toBottomOf="@+id/titleChemy1" />
@@ -520,8 +501,8 @@
                     android:id="@+id/chemy2LL"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingRight="1dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingRight="1dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/chemy2CL"
@@ -568,9 +549,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy2"
                             app:layout_constraintStart_toStartOf="@+id/titleChemy2"
                             app:layout_constraintTop_toBottomOf="@+id/titleChemy2" />
@@ -592,7 +573,8 @@
                     android:id="@+id/chemy3LL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/chemy3CL"
@@ -639,9 +621,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/titleChemy3"
                             app:layout_constraintStart_toStartOf="@+id/titleChemy3"
                             app:layout_constraintTop_toBottomOf="@+id/titleChemy3" />
@@ -652,6 +634,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:contentDescription="TODO"
                         app:layout_constraintEnd_toEndOf="@+id/bunckerChemy3"
                         app:layout_constraintStart_toEndOf="@+id/bunckerChemy1"
                         app:layout_constraintTop_toBottomOf="@+id/bunckerChemy1"
@@ -674,7 +657,8 @@
                     android:layout_marginTop="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/dispenserChemyLL"
-                    app:srcCompat="@drawable/shiber_empty" />
+                    app:srcCompat="@drawable/shiber_empty"
+                    android:contentDescription="TODO" />
 
                 <LinearLayout
                     android:id="@+id/dispenserChemyLL"
@@ -699,7 +683,19 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/dispenser_chemy" />
+                            app:srcCompat="@drawable/dispenser_chemy"
+                            android:contentDescription="TODO" />
+
+                        <ProgressBar
+                            android:id="@+id/pbChemy"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:progressTint="@color/blue_700"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/dispenserChemyView" />
 
                         <TextView
                             android:id="@+id/weightDCh"
@@ -713,6 +709,7 @@
                             app:layout_constraintEnd_toEndOf="@+id/dispenserChemyView"
                             app:layout_constraintStart_toStartOf="@+id/dispenserChemyView"
                             app:layout_constraintTop_toTopOf="@+id/dispenserChemyView" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <ImageView
@@ -734,7 +731,7 @@
         android:id="@+id/water"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toStartOf="@+id/cement"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -830,9 +827,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater1"
                             app:layout_constraintStart_toStartOf="@+id/bunckerWater1"
                             app:layout_constraintTop_toBottomOf="@+id/titleWater1" />
@@ -907,9 +904,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/bunckerWater2"
                             app:layout_constraintStart_toStartOf="@+id/bunckerWater2"
                             app:layout_constraintTop_toBottomOf="@+id/titleWater2" />
@@ -974,6 +971,17 @@
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/dispenser_water" />
 
+                        <ProgressBar
+                            android:id="@+id/pbWater"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:progressTint="@color/blue_700"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <TextView
                             android:id="@+id/weigthWater"
                             android:layout_width="wrap_content"
@@ -1014,11 +1022,58 @@
             android:id="@+id/cementLL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/cementControl"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/cementControl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="2dp"
+                android:paddingBottom="5dp">
+
+                <ImageButton
+                    android:id="@+id/filterSilos"
+                    android:layout_width="65dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/filter_h4ogu4tnvrqk"
+                    android:text="Фильтр"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:layout_editor_absoluteY="43dp" />
+
+                <ImageButton
+                    android:id="@+id/aerationSilos"
+                    android:layout_width="65dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/air_svgrepo_com"
+                    android:text="Аэрация"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/filterSilos" />
+
+                <ImageButton
+                    android:id="@+id/vibroSilos"
+                    android:layout_width="65dp"
+                    android:layout_height="46dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/vibration_m0l5cr0fwk9n"
+                    android:text="Вибратор"
+                    android:textColor="#000000"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/aerationSilos" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -1067,9 +1122,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/silos1View"
                             app:layout_constraintStart_toStartOf="@+id/silos1View"
                             app:layout_constraintTop_toBottomOf="@+id/silosSelector1" />
@@ -1145,9 +1200,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0/0"
-                            android:textSize="18sp"
                             android:textAlignment="center"
                             android:textColor="#FF000000"
+                            android:textSize="18sp"
                             app:layout_constraintEnd_toEndOf="@+id/silos2View"
                             app:layout_constraintStart_toStartOf="@+id/silos2View"
                             app:layout_constraintTop_toBottomOf="@+id/silosSelector2" />
@@ -1204,6 +1259,182 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/cement3LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cement3CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/silos3View"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/recepieSilos3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            android:textSize="18sp"
+                            app:layout_constraintEnd_toEndOf="@+id/silos3View"
+                            app:layout_constraintStart_toStartOf="@+id/silos3View"
+                            app:layout_constraintTop_toBottomOf="@+id/silosSelector3" />
+
+                        <RadioButton
+                            android:id="@+id/silosSelector3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="-4dp"
+                            android:text="Цемент 3"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/silos3View"
+                            app:layout_constraintStart_toStartOf="@+id/silos3View"
+                            app:layout_constraintTop_toTopOf="@+id/silos3View" />
+
+                        <TextView
+                            android:id="@+id/doseSilos3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#7D000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos3View"
+                            app:layout_constraintStart_toStartOf="@+id/silos3View"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieSilos3" />
+
+                        <ImageView
+                            android:id="@+id/levelDownSIlos3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="@+id/levelUpSilos3"
+                            app:layout_constraintStart_toStartOf="@+id/levelUpSilos3"
+                            app:layout_constraintTop_toBottomOf="@+id/levelUpSilos3"
+                            app:srcCompat="@drawable/level_silos_disable" />
+
+                        <ImageView
+                            android:id="@+id/levelUpSilos3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/doseSilos3"
+                            app:layout_constraintStart_toStartOf="@+id/doseSilos3"
+                            app:layout_constraintTop_toBottomOf="@+id/doseSilos3"
+                            app:srcCompat="@drawable/level_silos_disable" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserShnek3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/cement4LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cement4CL"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/silos4View"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/bunker" />
+
+                        <TextView
+                            android:id="@+id/recepieSilos4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0/0"
+                            android:textAlignment="center"
+                            android:textColor="#FF000000"
+                            android:textSize="18sp"
+                            app:layout_constraintEnd_toEndOf="@+id/silos4View"
+                            app:layout_constraintStart_toStartOf="@+id/silos4View"
+                            app:layout_constraintTop_toBottomOf="@+id/silosSelector4" />
+
+                        <RadioButton
+                            android:id="@+id/silosSelector4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="-4dp"
+                            android:text="Цемент 4"
+                            android:textAlignment="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintEnd_toEndOf="@+id/silos4View"
+                            app:layout_constraintStart_toStartOf="@+id/silos4View"
+                            app:layout_constraintTop_toTopOf="@+id/silos4View" />
+
+                        <TextView
+                            android:id="@+id/doseSilos4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Доза"
+                            android:textAlignment="center"
+                            android:textColor="#7D000000"
+                            app:layout_constraintEnd_toEndOf="@+id/silos4View"
+                            app:layout_constraintStart_toStartOf="@+id/silos4View"
+                            app:layout_constraintTop_toBottomOf="@+id/recepieSilos4" />
+
+                        <ImageView
+                            android:id="@+id/levelDownSIlos4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="@+id/levelUpSilos4"
+                            app:layout_constraintStart_toStartOf="@+id/levelUpSilos4"
+                            app:layout_constraintTop_toBottomOf="@+id/levelUpSilos4"
+                            app:srcCompat="@drawable/level_silos_disable" />
+
+                        <ImageView
+                            android:id="@+id/levelUpSilos4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/doseSilos4"
+                            app:layout_constraintStart_toStartOf="@+id/doseSilos4"
+                            app:layout_constraintTop_toBottomOf="@+id/doseSilos4"
+                            app:srcCompat="@drawable/level_silos_disable" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:id="@+id/doserShnek4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/doser_close" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -1233,6 +1464,17 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:srcCompat="@drawable/dispenser_cement" />
+
+                        <ProgressBar
+                            android:id="@+id/pbSilos"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:layout_width="100dp"
+                            android:layout_height="25dp"
+                            android:progressTint="@color/blue_700"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/weigthDC"
@@ -1282,59 +1524,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/cementControl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/cementLL"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/performance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="textEnd"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-
-            <Button
-                android:id="@+id/filterSilos"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:backgroundTint="#FFFFFF"
-                android:text="Фильтр"
-                android:textColor="#000000"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:layout_editor_absoluteY="43dp" />
-
-            <Button
-                android:id="@+id/aerationSilos"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:backgroundTint="#FFFFFF"
-                android:text="Аэрация"
-                android:textColor="#000000"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filterSilos" />
-
-            <Button
-                android:id="@+id/vibroSilos"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:backgroundTint="#FFFFFF"
-                android:text="Вибратор"
-                android:textColor="#000000"
-                android:textSize="10sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/aerationSilos" />
-        </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    <RadioGroup-->
@@ -1365,36 +1554,66 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
+        <ImageButton
+            android:id="@+id/resetCounterBtn"
+            android:layout_width="65dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:backgroundTint="#FFFFFF"
+            android:src="@drawable/reset_svgrepo_com"
+            android:text="Обнулить цикл"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/correctionBtn"
+            android:layout_width="65dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:backgroundTint="#FFFFFF"
+            android:src="@drawable/correct_ujk4geoz3q3r"
+            android:text="Корректировка"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
             android:id="@+id/stopCycle"
-            android:layout_width="100dp"
+            android:layout_width="65dp"
             android:layout_height="60dp"
             android:backgroundTint="#FF0000"
+            android:src="@drawable/stop"
             android:text="Стоп"
             android:textSize="10sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/runCycle"
-            android:layout_width="100dp"
+            android:layout_width="65dp"
             android:layout_height="60dp"
             android:backgroundTint="#7FFF47"
+            android:src="@drawable/play"
             android:text="Запуск"
             android:textColor="#000000"
             android:textSize="10sp"
             tools:ignore="MissingConstraints" />
 
-        <Button
+        <ImageButton
             android:id="@+id/manualAutoSwitcher"
-            android:layout_width="100dp"
+            android:layout_width="65dp"
             android:layout_height="60dp"
             android:backgroundTint="#FFFFFF"
+            android:src="@drawable/gears_svgrepo_com"
             android:text="Ручной/Автомат"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
+            android:textColor="#000000"
+            android:textSize="10sp"
+            tools:ignore="MissingConstraints" />
     </LinearLayout>
 
 
@@ -1784,6 +2003,18 @@
                 app:srcCompat="@drawable/horizontal_conveyor"
                 tools:srcCompat="@drawable/horizontal_conveyor" />
 
+            <ProgressBar
+                android:id="@+id/pbInert"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="80dp"
+                android:progressTint="@color/blue_700"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/horLineView" />
+
             <TextView
                 android:id="@+id/weightDK"
                 android:layout_width="wrap_content"
@@ -1841,26 +2072,14 @@
 
                 <Button
                     android:id="@+id/startMixerEngine"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="60dp"
                     android:layout_weight="1"
                     android:backgroundTint="#FFFFFF"
                     android:gravity="center"
-                    android:text="Смеситель"
+                    android:text="Старт смеситель"
                     android:textColor="#000000"
                     android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/resetCounterBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="#FFFFFF"
-                    android:text="Обнулить цикл"
-                    android:textColor="#000000"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -1878,20 +2097,45 @@
                     <ImageView
                         android:id="@+id/mixerView"
                         android:layout_width="206dp"
-                        android:layout_height="180dp"
+                        android:layout_height="140dp"
                         android:layout_marginStart="8dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="54dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/empty_mixer" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="@+id/mixerView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:id="@+id/blade1"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            app:srcCompat="@drawable/blade" />
+
+                        <ImageView
+                            android:id="@+id/blade2"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp"
+                            app:srcCompat="@drawable/blade" />
+                    </LinearLayout>
 
                     <ImageView
                         android:id="@+id/mixFully"
                         android:layout_width="206dp"
-                        android:layout_height="180dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="16dp"
+                        android:layout_height="140dp"
+                        android:layout_marginStart="9dp"
+                        android:layout_marginBottom="54dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -1929,13 +2173,28 @@
                         android:layout_width="wrap_content"
                         android:layout_height="18dp"
                         android:layout_marginStart="2dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="22dp"
+                        android:fontFamily="sans-serif-black"
                         android:text="Сила тока"
                         android:textAlignment="inherit"
-                        android:textColor="#000000"
+                        android:textColor="#DE0000"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/timeMix"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Таймер"
+                        android:textColor="#004EDE"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/amperage" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1991,16 +2250,6 @@
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/alarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoBlock"
-        app:srcCompat="@drawable/warning" />
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/alarmsWarningLayout"
@@ -2072,26 +2321,885 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#BD0B0B0B">
 
-            <ImageView
-                android:id="@+id/bgBlack"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#593D3D3D"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+            <TextView
+                android:id="@+id/performance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingEnd="8dp"
+                android:textAlignment="textEnd"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/infoApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingEnd="8dp"
+                android:textAlignment="textEnd"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:layout_width="200dp"
+                android:id="@+id/fillers"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/bgBlack"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/tabMenu"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableLayout
+                    android:id="@+id/runtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:visibility="visible">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Наработка, ч:"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ДК:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtDK"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ЛТ:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtLT"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Скип:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtSkip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Смеситель:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtMixer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Шнек 1:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtShnek1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Шнек 2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtShnek2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Шнек 3:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtShnek3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Шнек 4:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtShnek4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="КВ:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtVW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="НВ:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtPW"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="НХ1:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtChemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="НХ2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtChemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Маслостанция:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/rtOil"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                </TableLayout>
+
+                <TableLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:visibility="visible">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Заполнители, кг:"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Бункер 1:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/buncker1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Бункер 2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/buncker2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Бункер 3:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/buncker3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Бункер 4:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/buncker4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 1:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/chemy1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/chemy2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Химия 3:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/chemy3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Вода:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/water1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Вода 2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/water2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 1:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/cement1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 2:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/cement2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 3:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/cement3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Цемент 4:"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/cement4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+                    </TableRow>
+                </TableLayout>
+
+            </LinearLayout>
+
+            <TableLayout
+                android:id="@+id/tableMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp">
+
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/recipesMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/archives" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Рецепты"
+                            android:textColor="@color/white"></TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/orgsMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/orgs" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Заказчики"
+                            android:textColor="@color/white"></TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/driversMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/concrete_mixer" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Водители"
+                            android:textColor="@color/white"></TextView>
+                    </LinearLayout>
+
+                    <LinearLayout android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/ordersMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/orders" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Заказы"
+                            android:textColor="@color/white"></TextView>
+                    </LinearLayout>
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/reportsMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/report" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Отчеты"
+                            android:textColor="@color/white"></TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/helpMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/help_svgrepo_com" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Помощь"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/learninMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/information_book_learning_svgrepo_com" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Обучение"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/exitMenu"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/button_menu"
+                            android:src="@drawable/exit_svgrepo_com" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:clickable="false"
+                            android:text="Выход"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/partyOptionBtn"
+                        android:layout_width="10dp"
+                        android:layout_height="60dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/blue_700"
+                        android:text="партия м³"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/mixOptionBtn"
+                        android:layout_width="10dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/blue_700"
+                        android:text="замес м³"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <Button
+                        android:id="@+id/timeMixBtn"
+                        android:layout_width="10dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/blue_700"
+                        android:text="Время перемешивания"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                    <Button
+                        android:id="@+id/driverSelectBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/blue_700"
+                        android:text="Водитель\nНе выбрано"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/organizationSelectBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/blue_700"
+                        android:text="Заказчик\nНе выбрано"
+                        android:textColor="#ffffff"
+                        android:textSize="12sp" />
+
+                </TableRow>
+
+            </TableLayout>
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabMenu"
+                android:layout_width="1278dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Меню" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Заполнители" />
+            </com.google.android.material.tabs.TabLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
@@ -2100,7 +3208,8 @@
         android:id="@+id/touchLockLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#031F1F1F">
+        android:background="#031F1F1F"
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -2117,16 +3226,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0">
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toTopOf="@+id/imageView3">
 
                 <SeekBar
                     android:id="@+id/seekBar"
@@ -2145,12 +3253,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:text="Для разблокировки проведите замок до конца в права и отпустите"
+                    android:background="#904D4D4D"
+                    android:text="Чтобы разблокировать, проведите замок до упора вправо и отпустите."
                     android:textColor="@color/white" />
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

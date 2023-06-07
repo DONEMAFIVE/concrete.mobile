@@ -1,18 +1,18 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
+import static ru.zzbo.concretemobile.utils.Constants.androidID;
+import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
+import static ru.zzbo.concretemobile.utils.Constants.plcMac;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.drawerlayout.widget.DrawerLayout;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +24,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,43 +45,107 @@ import ru.zzbo.concretemobile.db.DBUtilCreate;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.models.Users;
+import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
+import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
+import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.ConnectionUtil;
 import ru.zzbo.concretemobile.utils.CryptoUtil;
 import ru.zzbo.concretemobile.utils.LicenseUtil;
+import ru.zzbo.concretemobile.utils.UpdaterUtil;
 
 public class LoginActivity extends AppCompatActivity {
     private DBUtilGet dbUtilGet;
     private DBUtilCreate dbUtilCreate;
     private TextView info;
+    private TextView textInfo;
     private Spinner loginSpinner;
     private EditText passwdField;
-    private Button okBtn;
+    private Button loginBtn;
     private CheckBox rememberLogin;
     private Spinner connection;
     private SharedPreferences settings;
     private List<Users> userList;
     private DrawerLayout progressLoading;
+    private String version = BuildConfig.VERSION_NAME;
+    private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_login);
         this.settings = getSharedPreferences("setting", MODE_PRIVATE);
+        androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        initFieldUI();
-        chkFirstRun();
-        initLoginList();
-        chkRememberLoginPasswd();
-        initActions();
+        initFieldUI();              //  Инициализация полей
+        chkFirstRun();              //  Проверка при первом запуске
+        initLoginList();            //  Инициализация списка логинов
+        chkRememberLoginPasswd();   //  Сохранение логина и пароля
+        getMacPlc();
+
+        initActions();              //  Инициализация событий
+        chkUpdate();                //TODO  Проверка обновления
+
+    }
+    /**
+     * проверить если есть новая версия, то отобразить информацию
+     */
+    private void chkUpdate() {
+        new Thread(() -> {
+            if (!ConnectionUtil.isIpConnected("188.225.42.106")) return;
+
+            try {
+                URL url = new URL("http://188.225.42.106/boilershop/android/version");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(60000); // timing out in a minute
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                version = in.readLine();
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (!version.equals(BuildConfig.VERSION_NAME)) {
+                //Todo: отобразить уведомление
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Доступно новое обновление! Версия: " + version, Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("Рекомендуем установить последнюю версию приложения.\nОбновить приложение?");
+                    builder.setTitle("Доступно новое обновление! Версия: " + version);
+                    builder.setCancelable(false);
+                    builder.setIcon(R.drawable.arrow_down);
+                    builder.setPositiveButton("Обновить", (dialog, which) -> {
+                        textInfo.setText("Загрузка обновления. Пожалуйста подождите...");
+                        progressLoading.setVisibility(View.VISIBLE);
+                        new Thread(() -> {
+                            UpdaterUtil.downloadInstall("http://188.225.42.106/boilershop/android/app.apk", this);
+                            runOnUiThread(() -> progressLoading.setVisibility(View.GONE));
+                            //todo загрузить и проверить наличие новых таблиц и полей.
+                        }).start();
+                    });
+                    builder.setNegativeButton("Отмена", (dialog, which) -> dialog.cancel());
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                });
+            }
+
+        }).start();
     }
 
+    private void getMacPlc() {
+        new Thread(() -> {
+            Tag current = new Tag(S7.S7AreaDB, 76, 0, 0, "String", false, 0, 0, 0, "", "", 0);
+            plcMac = new CommandDispatcher(current).readSingleRegister();
+        }).start();
+    }
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Выход");
         builder.setMessage("Вы действительно хотите завершить работу");
-
         builder.setPositiveButton("Да", (dialog, id) -> {
             try {
                 finishAffinity();
@@ -81,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
-
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -90,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
         ArrayList<String> login = new ArrayList<>();
         ArrayAdapter<String> adapter;
         userList = dbUtilGet.getUsers();
-        for (Users user: userList) login.add(user.getLogin());
+        for (Users user : userList) login.add(user.getLogin());
         adapter = new ArrayAdapter<>(this, R.layout.spinner, login);
         loginSpinner.setAdapter(adapter);
     }
@@ -98,9 +170,10 @@ public class LoginActivity extends AppCompatActivity {
     private void initFieldUI() {
         progressLoading = findViewById(R.id.progress_loading);
         info = findViewById(R.id.info);
+        textInfo = findViewById(R.id.text_info);
         loginSpinner = findViewById(R.id.loginField);
         passwdField = findViewById(R.id.passwdField);
-        okBtn = findViewById(R.id.okBtn);
+        loginBtn = findViewById(R.id.okBtn);
         rememberLogin = findViewById(R.id.rememberLogin);
         connection = findViewById(R.id.connectType);
 
@@ -111,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
         String versionName = BuildConfig.VERSION_NAME;
 
         SimpleDateFormat year = new SimpleDateFormat("YYYY");
-        info.setText(versionName + "v. Златоустовский завод бетоносмесительного оборудования. " + year.format(new Date()) + "г."); //2022. Златоустовский завод бетоносмесительного оборудования (1.0v. Златоустовский завод бетоносмесительного оборудования. 2023г)
+        info.setText(versionName + " ver. Златоустовский завод бетоносмесительного оборудования. " + year.format(new Date()) + "г."); //2022. Златоустовский завод бетоносмесительного оборудования (1.1 ver. Златоустовский завод бетоносмесительного оборудования. 2023г)
     }
 
     private void chkRememberLoginPasswd() {
@@ -125,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
     private void chkFirstRun() {
         //Если базы нет, создаем
         if (!dbUtilGet.doesDatabaseExist(this)) {
-            dbUtilCreate.createAllTables();
+            dbUtilCreate.executeSqlFile("db_init.sql");
             Toast.makeText(getApplicationContext(), "БД создана", Toast.LENGTH_SHORT).show();
         }
 
@@ -141,18 +214,24 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initActions() {
-        okBtn.setOnTouchListener((view, motionEvent) -> {
+        loginBtn.setOnTouchListener((view, motionEvent) -> {
             switch (motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
-                    runOnUiThread(()->progressLoading.setVisibility(View.VISIBLE));
+                    getMacPlc();
+                    runOnUiThread(() -> {
+                        textInfo.setText("Подключение...");
+                        progressLoading.setVisibility(View.VISIBLE);
+                    });
                     break;
                 }
             }
             return false;
         });
-        okBtn.setOnClickListener(view -> {
-
+        loginBtn.setOnClickListener(view -> {
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) return;
+            mLastClickTime = SystemClock.elapsedRealtime();
 
             //Проверки на подключение
             String device = null;
@@ -162,8 +241,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 exchangeLevel = connection.getSelectedItemPosition();
                 switch (exchangeLevel) {
-                    case 0: if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC"; break;
-                    case 1: if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC"; break;
+                    case 0:
+                        if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) device = "PLC";
+                        break;
+                    case 1:
+                        if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) device = "PC";
+                        break;
                 }
             }
 
@@ -180,6 +263,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 //TODO: Проверка лицензии
                 new Thread(() -> {
+                    //PLC
                     if (exchangeLevel == 0) {
                         if (!LicenseUtil.chkLicense(this)) {
                             runOnUiThread(() -> {
@@ -197,6 +281,7 @@ public class LoginActivity extends AppCompatActivity {
                             return;
                         }
                     }
+                    //PC
                     if (exchangeLevel == 1) {
                         try {
                             if (!LicenseUtil.chkPCLicense(this)) {
@@ -216,7 +301,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (NullPointerException exc) {
                             exc.printStackTrace();
-                            runOnUiThread(()->{
+                            runOnUiThread(() -> {
                                 progressLoading.setVisibility(View.GONE);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setTitle("Подключение к устройству").setMessage("Не удается подключиться к ПК");
@@ -238,7 +323,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login(String login, String pass) {
         if (login.equals("") || pass.equals("")) {
-            runOnUiThread(()-> {
+            runOnUiThread(() -> {
                 progressLoading.setVisibility(View.GONE);
                 Toast.makeText(this, "Пожалуйста заполните все поля", Toast.LENGTH_SHORT).show();
             });
@@ -256,7 +341,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         if (accessLvl != -1) {
-            runOnUiThread(()-> progressLoading.setVisibility(View.GONE));
+            runOnUiThread(() -> progressLoading.setVisibility(View.GONE));
             saveRememberLogin(rememberLogin);
             saveConnectionType();
 
@@ -282,7 +367,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         } else {
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 progressLoading.setVisibility(View.GONE);
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                 builder.setTitle("Уведомление").setMessage("Не корректное имя пользователя или пароль. Проверьте правильность ввода");

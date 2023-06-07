@@ -21,8 +21,7 @@ public class S7Szl {
     {
         Data = new byte[BufferSize];
     }
-    protected void Copy(byte[] Src, int SrcPos, int DestPos, int Size)
-    {
+    protected void Copy(byte[] Src, int SrcPos, int DestPos, int Size) {
         System.arraycopy(Src, SrcPos, Data, DestPos, Size);
     }   
 }

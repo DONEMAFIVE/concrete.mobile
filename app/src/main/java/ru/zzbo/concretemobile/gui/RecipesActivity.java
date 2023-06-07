@@ -15,14 +15,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +39,7 @@ import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.catalogs.EditRecipeActivity;
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
+import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class RecipesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -42,6 +49,7 @@ public class RecipesActivity extends AppCompatActivity {
     private DrawerLayout blockTouchLayout;
     private ConstraintLayout recipesNotFound;
     private RecipeAdapter adapter;
+    private EditText searchField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +61,37 @@ public class RecipesActivity extends AppCompatActivity {
         initActions();
     }
 
+    private void filter(String text){
+        List<Recepie> filteredList = new ArrayList<>();
+
+        for (Recepie recepie : recepies){
+            if (
+                    String.valueOf(recepie.getId()).toLowerCase().contains(text.toLowerCase()) ||
+                    recepie.getName().toLowerCase().contains(text.toLowerCase()) ||
+                    recepie.getMark().toLowerCase().contains(text.toLowerCase()) ||
+                    recepie.getClassPie().toLowerCase().contains(text.toLowerCase())
+            ) filteredList.add(recepie);
+        }
+        adapter.filterList(filteredList);
+    }
     private void initActions() {
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+        });
+
         // определяем слушателя нажатия элемента FAB
         createRecipeBtn.setOnClickListener(e -> {
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -61,10 +99,10 @@ public class RecipesActivity extends AppCompatActivity {
                     0,
                     sdf.format(new Date()),
                     "",
-                    "",
-                    "",
-                    "",
-                    "Локальный",
+                    "Новый рецепт",
+                    "Марка",
+                    "Класс",
+                    "Описание",
                     0,
                     0,
                     0,
@@ -146,7 +184,8 @@ public class RecipesActivity extends AppCompatActivity {
             loadRecipeToPLC.setVisibility(View.VISIBLE);
 
             selectedRecepie = recipe.getName(); //Уст. тек. рецепт
-            new SetRecipe().sendRecipeToPLC(recipe);
+            new Thread(()-> new SetRecipe().sendRecipeToPLC(recipe)).start();
+
 
             Handler handle = new Handler() {
                 @Override
@@ -182,23 +221,26 @@ public class RecipesActivity extends AppCompatActivity {
     }
 
     private void initFieldUI() {
+        searchField = findViewById(R.id.searchField);
         recyclerView = findViewById(R.id.recyclerView);
         createRecipeBtn = findViewById(R.id.createBtn);
-        downloadFromPcBtn = findViewById(R.id.loadBtn);
+        downloadFromPcBtn = findViewById(R.id.setBtn);
         loadRecipeToPLC = findViewById(R.id.load_to_plc);
         blockTouchLayout = findViewById(R.id.touchlock);
-        recipesNotFound = findViewById(R.id.recipes_not_found);
+        recipesNotFound = findViewById(R.id.not_found);
 
         if (exchangeLevel != 0) {
             downloadFromPcBtn.setVisibility(View.GONE);
-            createRecipeBtn.setVisibility(View.GONE);
+//            createRecipeBtn.setVisibility(View.GONE);
         }
     }
 
     private void initData() {
         new Thread(() -> {
             recepies.clear();
-            recepies.addAll(new DBUtilGet(this).getRecipes());
+            if (exchangeLevel == 1) {
+                recepies.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
+            } else recepies.addAll(new DBUtilGet(this).getRecipes());
 
             if (recepies.size() == 0) recipesNotFound.setVisibility(View.VISIBLE);
             else recipesNotFound.setVisibility(View.GONE);

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Concretemobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.ConcreteMobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimaryVariant">@color/purple_500</item>
         <item name="colorPrimary">@color/blue_zzbo_700</item>
@@ -16,6 +16,16 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
 
-        <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.ConcreteMobile.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ConcreteMobile.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.ConcreteMobile.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
 </resources>

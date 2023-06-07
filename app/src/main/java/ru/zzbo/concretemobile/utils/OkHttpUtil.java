@@ -232,6 +232,22 @@ public class OkHttpUtil {
         }
     }
 
+    public static void updOrgDispatcherStates(String code) {
+        try {
+            sendGet("disp?cmd=updateOrg&org=" + code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updTransDispatcherStates(String code) {
+        try {
+            sendGet("disp?cmd=updateTrans&trans=" + code);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String getCurrent() {
         try {
             return sendGet("current?cmd=get");

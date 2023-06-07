@@ -66,6 +66,7 @@ public class CommandDispatcher {
 
     public void writeInverted() {
         try {
+            //query = "cmd?tag=" + tag.getId();
             sendGet(query);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +104,6 @@ public class CommandDispatcher {
     //для работы только с логическими и только когда нужно инвертировать состояние
     public void writeSingleInvertedBoolRegister() {
         if (chkZeroZone(tag)) return;
-
         new Thread(()->{
             if (exchangeLevel == 1) writeInverted();
             else {
@@ -170,26 +170,28 @@ public class CommandDispatcher {
     public void writeSingleRegisterWithValue(boolean value) {
         if (chkZeroZone(tag)) return;
 
-        if (exchangeLevel == 1) writeValue(String.valueOf(value));
-        else {
-            try {
-                Constants.lockStateRequests = true;
-                Thread.sleep(REQUEST_TAG_SLEEP);
-                createConnection();
-                checkConnection();
-                if (connectionState == 0) {
-                    byte[] buffer = new byte[1];    //для логических достаточно буфера размером в 1 байт
-                    plcConnector.ReadArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 1, buffer);
-                    S7.SetBitAt(buffer, 0, tag.getBit(), value);
-                    plcConnector.WriteArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 1, buffer);
+        new Thread(()->{
+            if (exchangeLevel == 1) writeValue(String.valueOf(value));
+            else {
+                try {
+                    Constants.lockStateRequests = true;
+                    Thread.sleep(REQUEST_TAG_SLEEP);
+                    createConnection();
+                    checkConnection();
+                    if (connectionState == 0) {
+                        byte[] buffer = new byte[1];    //для логических достаточно буфера размером в 1 байт
+                        plcConnector.ReadArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 1, buffer);
+                        S7.SetBitAt(buffer, 0, tag.getBit(), value);
+                        plcConnector.WriteArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 1, buffer);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    closeConnection();
+                    Constants.lockStateRequests = false;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                closeConnection();
-                Constants.lockStateRequests = false;
             }
-        }
+        }).start();
     }
 
     /**
@@ -268,6 +270,11 @@ public class CommandDispatcher {
                 buffer = new byte[4];
                 S7.SetDIntAt(buffer, 0, (int) tag.getDIntValueIf());
                 plcConnector.WriteArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 4, buffer);
+            }
+            if (tag.getTypeTag().equals("String")) {
+                buffer = new byte[100];
+                S7.setS7StringAt(buffer, 0, 100, tag.getStringValueIf());
+                plcConnector.WriteArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 100, buffer);
             }
             Thread.sleep(10);
         } catch (Exception e) {
@@ -369,7 +376,13 @@ public class CommandDispatcher {
             closeConnection();
             return tag;
         }
-
+        if (tag.getTypeTag().equals("String")) {
+            buffer = new byte[100];
+            plcConnector.ReadArea(tag.getArea(), tag.getDbNumber(), tag.getStart(), 98, buffer);
+            tag.setStringValueIf(S7.GetStringAt(buffer, 2,98));
+            closeConnection();
+            return tag;
+        }
         closeConnection();
         return null;
     }
@@ -391,13 +404,12 @@ public class CommandDispatcher {
         List<Tag> resultList = new ArrayList<>();
 
         createConnection();
-
+        byte[] singleRegisterBuffer;
+        boolean[] readedSection;
         for (BlockBool tag : boolList) {
-
-            byte[] singleRegisterBuffer = new byte[tag.getLength()];
-
+            singleRegisterBuffer = new byte[tag.getLength()];
             plcConnector.ReadArea(tag.getDbArea(), tag.getNumber(), tag.getStart(), tag.getLength(), singleRegisterBuffer);
-            boolean[] readedSection = S7.GetBitAtValues(singleRegisterBuffer, 0, tag.getStartBit(), tag.getLength());
+            readedSection = S7.GetBitAtValues(singleRegisterBuffer, 0, tag.getStartBit(), tag.getLength());
 
             for (int i = tag.getStartBit(), boolIndex = 0; i < tag.getStartBit() + tag.getLength(); i++, boolIndex++) {
                 resultList.add(new Tag(
@@ -411,6 +423,7 @@ public class CommandDispatcher {
                         0,
                         0,
                         "",
+                        "",
                         0
                 ));
             }
@@ -418,17 +431,15 @@ public class CommandDispatcher {
 
         List<Tag> tableTags = tagListMain;
 
-        for (int i = 0; i < resultList.size(); i++) {
-
+        for (Tag tag : resultList) {
             for (Tag tableTag : tableTags) {
-
-                if ((tableTag.getArea() == resultList.get(i).getArea()) &&
-                        (tableTag.getDbNumber() == resultList.get(i).getDbNumber()) &&
-                        (tableTag.getStart() == resultList.get(i).getStart()) &&
-                        (tableTag.getBit() == resultList.get(i).getBit())
+                if ((tableTag.getArea() == tag.getArea()) &&
+                        (tableTag.getDbNumber() == tag.getDbNumber()) &&
+                        (tableTag.getStart() == tag.getStart()) &&
+                        (tableTag.getBit() == tag.getBit())
                 ) {
-                    resultList.get(i).setId(tableTag.getId());
-                    resultList.get(i).setDescription(tableTag.getDescription());
+                    tag.setId(tableTag.getId());
+                    tag.setDescription(tableTag.getDescription());
                 }
             }
         }
@@ -444,19 +455,19 @@ public class CommandDispatcher {
      * @param tags
      * @return
      */
-    public List<Tag> readMultipleRealRegister(List<BlockMultiple> tags, List<Tag> tagTable) {
+    public List<Tag> readMultipleRealRegister(List<BlockMultiple> tags, List<Tag> tableTags) {
 
         checkStateWrite("readMultipleRealRegister");
 
         List<Tag> resultList = new ArrayList<>();
         createConnection();
 
+        byte[] singleRegisterBuffer;
+        float[] answerArray;
         for (BlockMultiple tag : tags) {
-
-            byte[] singleRegisterBuffer = new byte[tag.getLength() * 4];
-
+            singleRegisterBuffer = new byte[tag.getLength() * 4];
             plcConnector.ReadArea(tag.getDbArea(), tag.getNumber(), tag.getStartValue(), tag.getLength() * 4, singleRegisterBuffer);
-            float[] answerArray = S7.GetFloatAtValues(singleRegisterBuffer, 0, tag.getLength());
+            answerArray = S7.GetFloatAtValues(singleRegisterBuffer, 0, tag.getLength());
 
             int lengthAnswer = tag.getLength() * 4;
             lengthAnswer += tag.getStartValue();
@@ -473,23 +484,20 @@ public class CommandDispatcher {
                         0,
                         answerArray[realIndex],
                         "",
+                        "",
                         0
                 ));
             }
         }
 
-        List<Tag> tableTags = tagTable;
-
-        for (int i = 0; i < resultList.size(); i++) {
-
+        for (Tag tag : resultList) {
             for (Tag tableTag : tableTags) {
-
-                if ((tableTag.getArea() == resultList.get(i).getArea()) &&
-                        (tableTag.getDbNumber() == resultList.get(i).getDbNumber()) &&
-                        (tableTag.getStart() == resultList.get(i).getStart())
+                if ((tableTag.getArea() == tag.getArea()) &&
+                        (tableTag.getDbNumber() == tag.getDbNumber()) &&
+                        (tableTag.getStart() == tag.getStart())
                 ) {
-                    resultList.get(i).setId(tableTag.getId());
-                    resultList.get(i).setDescription(tableTag.getDescription());
+                    tag.setId(tableTag.getId());
+                    tag.setDescription(tableTag.getDescription());
                 }
             }
         }
@@ -498,19 +506,19 @@ public class CommandDispatcher {
         return resultList;
     }
 
-    public List<Tag> readMultipleIntRegister(List<BlockMultiple> tags, List<Tag> tagTable) {
+    public List<Tag> readMultipleIntRegister(List<BlockMultiple> tags, List<Tag> tableTags) {
         checkStateWrite("readMultipleIntRegister");
 
         List<Tag> resultList = new ArrayList<>();
 
         createConnection();
 
+        byte[] singleRegisterBuffer;
+        int[] answerArray;
         for (BlockMultiple tag : tags) {
-
-            byte[] singleRegisterBuffer = new byte[tag.getLength() * 2];
-
+            singleRegisterBuffer = new byte[tag.getLength() * 2];
             plcConnector.ReadArea(tag.getDbArea(), tag.getNumber(), tag.getStartValue(), tag.getLength() * 2, singleRegisterBuffer);
-            int[] answerArray = S7.GetIntMultipleRegister(singleRegisterBuffer, 0, tag.getLength());
+            answerArray = S7.GetIntMultipleRegister(singleRegisterBuffer, 0, tag.getLength());
 
             int lengthAnswer = tag.getLength() * 2;
             lengthAnswer += tag.getStartValue();
@@ -527,22 +535,20 @@ public class CommandDispatcher {
                         0,
                         0,
                         "",
+                        "",
                         0
                 ));
             }
         }
 
-        List<Tag> tableTags = tagTable;
-        for (int i = 0; i < resultList.size(); i++) {
-
+        for (Tag tag : resultList) {
             for (Tag tableTag : tableTags) {
-
-                if ((tableTag.getArea() == resultList.get(i).getArea()) &&
-                        (tableTag.getDbNumber() == resultList.get(i).getDbNumber()) &&
-                        (tableTag.getStart() == resultList.get(i).getStart())
+                if ((tableTag.getArea() == tag.getArea()) &&
+                        (tableTag.getDbNumber() == tag.getDbNumber()) &&
+                        (tableTag.getStart() == tag.getStart())
                 ) {
-                    resultList.get(i).setId(tableTag.getId());
-                    resultList.get(i).setDescription(tableTag.getDescription());
+                    tag.setId(tableTag.getId());
+                    tag.setDescription(tableTag.getDescription());
                 }
             }
         }
@@ -552,17 +558,17 @@ public class CommandDispatcher {
         return resultList;
     }
 
-    public List<Tag> readMultipleDIntRegister(List<BlockMultiple> tags, List<Tag> tagTable) {
+    public List<Tag> readMultipleDIntRegister(List<BlockMultiple> tags, List<Tag> tableTags) {
         checkStateWrite("readMultipleDIntRegister");
         List<Tag> resultList = new ArrayList<>();
         createConnection();
 
+        byte[] singleRegisterBuffer;
+        int[] answerArray;
         for (BlockMultiple tag : tags) {
-
-            byte[] singleRegisterBuffer = new byte[tag.getLength() * 4];
-
+            singleRegisterBuffer = new byte[tag.getLength() * 4];
             plcConnector.ReadArea(tag.getDbArea(), tag.getNumber(), tag.getStartValue(), tag.getLength() * 4, singleRegisterBuffer);
-            int[] answerArray = S7.get4bitMultipleRegister(singleRegisterBuffer, 0, tag.getLength());
+            answerArray = S7.get4bitMultipleRegister(singleRegisterBuffer, 0, tag.getLength());
 
             int lengthAnswer = tag.getLength() * 4;
             lengthAnswer += tag.getStartValue();
@@ -579,23 +585,20 @@ public class CommandDispatcher {
                         answerArray[dIntIndex],
                         0,
                         "",
+                        "",
                         0
                 ));
             }
         }
 
-        List<Tag> tableTags = tagTable;
-
-        for (int i = 0; i < resultList.size(); i++) {
-
+        for (Tag tag : resultList) {
             for (Tag tableTag : tableTags) {
-
-                if ((tableTag.getArea() == resultList.get(i).getArea()) &&
-                        (tableTag.getDbNumber() == resultList.get(i).getDbNumber()) &&
-                        (tableTag.getStart() == resultList.get(i).getStart())
+                if ((tableTag.getArea() == tag.getArea()) &&
+                        (tableTag.getDbNumber() == tag.getDbNumber()) &&
+                        (tableTag.getStart() == tag.getStart())
                 ) {
-                    resultList.get(i).setId(tableTag.getId());
-                    resultList.get(i).setDescription(tableTag.getDescription());
+                    tag.setId(tableTag.getId());
+                    tag.setDescription(tableTag.getDescription());
                 }
             }
         }

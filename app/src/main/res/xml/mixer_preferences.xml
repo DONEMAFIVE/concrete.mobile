@@ -3,7 +3,14 @@
 
     <PreferenceCategory app:title="@string/mixer_header">
 
-        <!--Конвейер выгрузки-->
+<!--        <EditTextPreference-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:dependency="discharge_conveyor"-->
+<!--            app:key="mixer_capacity"-->
+<!--            app:title="Объем смесителя"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
+
         <SwitchPreferenceCompat
             app:key="discharge_conveyor"
             app:title="Конвейер выгрузки" />

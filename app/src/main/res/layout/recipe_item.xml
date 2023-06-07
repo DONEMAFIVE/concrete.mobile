@@ -58,7 +58,7 @@
                     android:layout_width="155dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="@color/yellow_zzbo"
+                    android:backgroundTint="@color/blue_200"
                     android:clickable="true"
                     android:elevation="0dp"
                     android:stateListAnimator="@null"
@@ -71,12 +71,12 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="@color/yellow_zzbo"
+                    android:backgroundTint="@color/green"
                     android:clickable="true"
+                    android:stateListAnimator="@null"
                     android:text="В работу"
                     android:textAlignment="center"
                     app:elevation="0dp"
-                    android:stateListAnimator="@null"
                     app:icon="@drawable/upload" />
 
             </LinearLayout>

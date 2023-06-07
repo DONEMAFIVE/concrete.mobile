@@ -29,6 +29,7 @@ public class MixerFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.mixer_preferences, rootKey);
 
+//        EditTextPreference mixerCapacity = findPreference("mixer_capacity");   //
         SwitchPreferenceCompat dischargeConveyor = findPreference("discharge_conveyor");        //Конвейер выгрузки
         EditTextPreference timeDischargeConveyor = findPreference("time_discharge_conveyor");   //Время выгрузки к.
 
@@ -56,6 +57,8 @@ public class MixerFragment extends PreferenceFragmentCompat {
         new Thread(() -> {
             try {
                 new Handler(Looper.getMainLooper()).post(() -> {
+
+//                    mixerCapacity.setText(String.valueOf(answer.get(113).getRealValueIf()));
 
                     if (answer.get(9).getIntValueIf() == 1) dischargeConveyor.setChecked(true);
                     float current = answer.get(100).getDIntValueIf();
@@ -105,6 +108,11 @@ public class MixerFragment extends PreferenceFragmentCompat {
                 try {
                     ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
                     findPreference("saveCategory").setVisible(false);
+
+//                    Tag tag = tagListOptions.get(0);
+//                    tag.setRealValueIf(Float.parseFloat(mixerCapacity.getText()));
+//                    new CommandDispatcher(tag).writeSingleRegisterWithLock();
+
                     //Импульсная разгрузка смесителя
                     new CommandDispatcher(tagListMain.get(135)).writeSingleRegisterWithValue(impulseDischarge.isChecked());
 

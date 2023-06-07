@@ -38,7 +38,6 @@ public class FactoryConfigActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factory_config);
 
-
         new Thread(() -> initAnswer()).start();
 
         tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");

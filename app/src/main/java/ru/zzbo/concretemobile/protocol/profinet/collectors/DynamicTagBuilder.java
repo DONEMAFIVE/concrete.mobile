@@ -32,7 +32,6 @@ public class DynamicTagBuilder {
             if (tag.getTypeTag().equals("Int")) intTags.add(tag);
             if (tag.getTypeTag().equals("DInt")) dIntTags.add(tag);
         }
-        System.out.println(dIntTags.size());
 
         //сортирую
         //bool
@@ -60,11 +59,8 @@ public class DynamicTagBuilder {
         List<TagBoolShorts> boolSortedTags = new ArrayList<>();
 
         for (int dbArea : dbBoolAreas) {
-
             for (int number : boolNumbers) {
-
                 if (number == 0) continue;  //не может быть 0, такие тэги сразу нужно отбрасывать
-
                 for (int start : boolStarts) {
 
                     List<Integer> bits = new ArrayList<>();
@@ -204,8 +200,7 @@ public class DynamicTagBuilder {
 
                 for (int i = 0; i < tags.size(); i++) {
                     if ((tags.get(i).getArea() == dbArea) && (tags.get(i).getDbNumber() == number)) {
-                        if (!startsSorted.contains(tags.get(i).getStart()))
-                            startsSorted.add(tags.get(i).getStart());
+                        if (!startsSorted.contains(tags.get(i).getStart())) startsSorted.add(tags.get(i).getStart());
                     }
                 }
 

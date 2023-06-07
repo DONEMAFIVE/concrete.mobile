@@ -47,20 +47,17 @@ public class OtherFragment extends PreferenceFragmentCompat {
         chemy.setValue(0);
         cement.setValue(0);
 
-        new Thread(() -> {
-            new Handler(Looper.getMainLooper()).post(() -> {
-                try {
-                    if (answer.get(66).getIntValueIf() == 1) autoQueue.setChecked(true);
-                    dk.setValue(answer.get(39).getIntValueIf());
-                    chemy.setValue(answer.get(40).getIntValueIf());
-                    water.setValue(answer.get(41).getIntValueIf());
-                    cement.setValue(answer.get(42).getIntValueIf());
-
-                } catch (NullPointerException ex) {
-                    Toast.makeText(getContext(), "Ошибка загрузки", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }).start();
+        new Thread(() -> new Handler(Looper.getMainLooper()).post(() -> {
+            try {
+                if (answer.get(66).getIntValueIf() == 1) autoQueue.setChecked(true);
+                dk.setValue(answer.get(39).getIntValueIf());
+                chemy.setValue(answer.get(40).getIntValueIf());
+                water.setValue(answer.get(41).getIntValueIf());
+                cement.setValue(answer.get(42).getIntValueIf());
+            } catch (NullPointerException ex) {
+                Toast.makeText(getActivity(), "Ошибка загрузки, попробуйте снова.", Toast.LENGTH_SHORT).show();
+            }
+        })).start();
 
         saveBtn.setOnPreferenceClickListener(e-> {
             new Thread(() -> {

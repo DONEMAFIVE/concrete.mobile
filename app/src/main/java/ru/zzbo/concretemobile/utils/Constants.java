@@ -1,5 +1,8 @@
 package ru.zzbo.concretemobile.utils;
 
+import android.Manifest;
+import android.content.SharedPreferences;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +12,23 @@ import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
+import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 
 public class Constants {
 
     private Constants() {}
+
+    // Static CONSTANT VALUE
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final String[] PERMISSION_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    };
+
+    // имя файла настройки
+    public static final String APP_PREFERENCES = "settings";
+    public static final String APP_PREFERENCES_TAP_TARGET = "tap_target";
+    public static SharedPreferences mSettings;
 
     public static int exchangeLevel = -1;
 
@@ -54,4 +70,9 @@ public class Constants {
     public static Organization editedOrganization = null;
     public static Transporter editedTransporter = null;
     public static Order editedOrder = null;
+
+    public static ReflectionRetrieval retrieval;
+    public static String androidID;
+    public static Tag plcMac;
+
 }

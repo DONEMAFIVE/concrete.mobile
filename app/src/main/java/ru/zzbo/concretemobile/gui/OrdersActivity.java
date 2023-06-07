@@ -6,7 +6,7 @@ import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
-import static ru.zzbo.concretemobile.utils.DateTimeUtils.getDateFromDatePicker;
+import static ru.zzbo.concretemobile.utils.DateTimeUtil.getDateFromDatePicker;
 
 import android.Manifest;
 import android.app.Activity;
@@ -57,7 +57,7 @@ import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
-import ru.zzbo.concretemobile.utils.DateTimeUtils;
+import ru.zzbo.concretemobile.utils.DateTimeUtil;
 import ru.zzbo.concretemobile.utils.DatesGenerate;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 import ru.zzbo.concretemobile.utils.TableView;
@@ -412,7 +412,7 @@ public class OrdersActivity extends AppCompatActivity {
                 endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
                 dates = new DatesGenerate(startDate, endDate).getLostDates();
 
-                if (DateTimeUtils.startLongerEnd(startDate, endDate)) {
+                if (DateTimeUtil.startLongerEnd(startDate, endDate)) {
                     runOnUiThread(() -> {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Уведомление").setMessage("Указан неверный диапазон дат!");

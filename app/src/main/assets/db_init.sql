@@ -159,7 +159,6 @@ CREATE TABLE IF NOT EXISTS "users" (
 "accessLevel" INTEGER NOT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS "tags_additional_options" (
 "id" INTEGER PRIMARY KEY,
 "tagName" TEXT NOT NULL,
@@ -312,23 +311,6 @@ INSERT INTO "organizations" ("id", "name", "fullname", "persona", "inn", "kpp","
 INSERT INTO "transporters" ("id", "regNumberAuto", "organizationName", "persona", "inn", "driverName","markAuto","phone","address","comment") VALUES
 (1, "123тест", "Перевозки Тест", 0, "1234567890", "Тест водитель ФИО", "Тест марка авто", "+79090909090", "тест адрес компании","тест комментарий");
 
-INSERT INTO "recepies" ("id","date","time","name","mark","classPie","description","bunckerRecepie11","bunckerRecepie12","bunckerRecepie21","bunckerRecepie22","bunckerRecepie31","bunckerRecepie32","bunckerRecepie41","bunckerRecepie42","bunckerShortage11","bunckerShortage12","bunckerShortage21","bunckerShortage22","bunckerShortage31","bunckerShortage32","bunckerShortage41","bunckerShortage42","chemyRecepie1","chemyShortage1","chemyShortage2","water1Recepie","water2Recepie","water1Shortage","water2Shortage","silosRecepie1","silosRecepie2","silosShortage1","silosShortage2","humidity11","humidity12","humidity21","humidity22","humidity31","humidity32","humidity41","humidity42","uniNumber","timeMix","chemy2Recepie","chemy3Recepie","chemy2Shortage","chemy3Shortage","pathToHumidity","preDosingWaterPercent") VALUES
-(1,"01.01.2022","00:00:00","M100","тестовая марка","тестовый класс","тестовое описание",95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,150,0,0,0,98,0,6,0,0,0,0,0,0,0,0,0,"-",20,"0","0","0","0",0,100),
-(2,"01.01.2022","00:00:00","M100XIM","тестовая марка","тестовый класс","тестовое описание",95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,150,0,0,0,98,0,6,0,0,0,0,0,0,0,0,0,"-",20,"0","0","0","0",0,100),
-(3,"01.01.2022","00:00:00","M200XIM","тестовая марка","тестовый класс","тестовое описание",95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,150,0,0,0,98,0,6,0,0,0,0,0,0,0,0,0,"-",20,"0","0","0","0",0,100),
-(4,"01.01.2022","00:00:00","Новая марка","тестовая марка","тестовый класс","тестовое описание",95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,150,0,0,0,98,0,6,0,0,0,0,0,0,0,0,0,"-",20,"0","0","0","0",0,100);
-
-INSERT INTO "mixes" ("id","nameOrder","numberOrder","date","time","organization","organizationID","transporter","transporterID","recepie","recepieID","mixCounter","completeCapacity","totalCapacity","silos1","silos2","bunker11","bunker12","bunker21","bunker22","bunker31","bunker32","bunker41","bunker42","water1","water2","dwpl","chemy1","chemy2","uploadAddress","amountConcrete","paymentOption","operator","loadingTime") VALUES
-("1" ,"0" ,0 ,"14.12.2022" ,"09:10:00" ,"0" ,0 ,"0" ,0 ,"Рец1" ,1 ,0 ,1 ,1 ,900 ,0 ,700 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,300 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Оператор по умолчанию" ,"00:10:00"),
-("2" ,"0" ,0 ,"14.12.2022" ,"09:20:00" ,"0" ,0 ,"0" ,0 ,"Рец3" ,3 ,1 ,1 ,1 ,0 ,0 ,680 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Грач Петр" ,"00:10:00"),
-("3" ,"0" ,0 ,"14.12.2022" ,"09:30:00" ,"0" ,0 ,"0" ,0 ,"Рец3" ,3 ,0 ,1 ,1 ,777.87 ,0 ,705 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,297 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00"),
-("4" ,"0" ,0 ,"24.11.2022" ,"09:40:00" ,"0" ,0 ,"0" ,0 ,"Рец1" ,1 ,1 ,1 ,1 ,115 ,0 ,670 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00"),
-("5" ,"0" ,0 ,"24.11.2022" ,"10:10:00" ,"0" ,0 ,"0" ,0 ,"Рец2" ,2 ,0 ,1 ,1 ,10 ,0 ,645 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,295 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Грач Петр" ,"00:10:00"),
-("6" ,"0" ,0 ,"24.11.2022" ,"10:20:00" ,"0" ,0 ,"0" ,0 ,"Рец3" ,3 ,1 ,1 ,1 ,880 ,0 ,685 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,298 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00"),
-("7" ,"0" ,0 ,"25.11.2022" ,"10:30:00" ,"0" ,0 ,"0" ,0 ,"Рец1" ,1 ,2 ,1 ,1 ,0 ,0 ,690 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,299 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00"),
-("8" ,"0" ,0 ,"25.11.2022" ,"10:40:00" ,"0" ,0 ,"0" ,0 ,"Рец2" ,2 ,3 ,1 ,1 ,130 ,0 ,675 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00"),
-("9" ,"0" ,0 ,"25.11.2022" ,"10:40:00" ,"0" ,0 ,"0" ,0 ,"Рец3" ,3 ,4 ,1 ,1 ,130 ,0 ,675 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,"0" ,0 ,"10" ,"Забржевский Анатолий" ,"00:10:00");
-
 INSERT OR IGNORE INTO  "factory_complectation"("id", "parameter", "value") VALUES
 (1, "inertBunckerCounter", "2"),
 (2, "comboBunckerOption", "false"),
@@ -340,7 +322,9 @@ INSERT OR IGNORE INTO  "factory_complectation"("id", "parameter", "value") VALUE
 (8, "fibraOption", "false"),
 (9, "dropConveyor", "false"),
 (10, "mixCapacity", "1.0"),
-(11, "hydroGate", "false");
+(11, "hydroGate", "false"),
+(12, "amperageSensor", "false"),
+(13, "dwpl", "false");
 
 INSERT OR IGNORE INTO "config" ("id", "parameter", "value") VALUES
 (1, "first_run", "true"),
@@ -367,16 +351,19 @@ INSERT OR IGNORE INTO "inert_balance" ("id", "parameter", "value") VALUES
 (5, "water_millage", "0.0"),
 (6, "chemy1_millage", "0.0"),
 (7, "chemy2_millage", "0.0"),
-(8, "silos1_millage", "0.0"),
-(9, "silos2_millage", "0.0"),
-(10,"inert_storage1", "0.0"),
-(11, "inert_storage2", "0.0"),
-(12, "inert_storage3", "0.0"),
-(13, "inert_storage4", "0.0"),
-(14, "set_storage_buncker1", "0"),
-(15, "set_storage_buncker2", "1"),
-(16, "set_storage_buncker3", "2"),
-(17, "set_storage_buncker4", "4");
+(8, "chemy3_millage", "0.0"),
+(9, "silos1_millage", "0.0"),
+(10, "silos2_millage", "0.0"),
+(11, "silos3_millage", "0.0"),
+(12, "silos4_millage", "0.0"),
+(13, "inert_storage1", "0.0"),
+(14, "inert_storage2", "0.0"),
+(15, "inert_storage3", "0.0"),
+(16, "inert_storage4", "0.0"),
+(17, "set_storage_buncker1", "4"),
+(18, "set_storage_buncker2", "4"),
+(19, "set_storage_buncker3", "4"),
+(20, "set_storage_buncker4", "4");
 
 INSERT OR IGNORE INTO "tags_additional_options" ("id", "tagName", "number", "start", "bit", "dbArea", "type", "value", "isAlarm") VALUES
 (1, "Объем смесителя", 72, 0, 0, "DB", "Real", "1.0", 0),
@@ -727,7 +714,8 @@ INSERT OR IGNORE INTO "tags_main" ("id", "tagName", "number", "start", "bit", "d
 (216, "[Внимание] - ДК Готов к разгрузке, скип не внизу", 53, 294, 0, "DB", "Int", "0", 1),
 (217, "[Авария] - Смеситель не закрылся скип остановлен", 53, 296, 0, "DB", "Int", "0", 1),
 (218, "[Предупреждение] - Дозатор цемента не закрыт", 53, 298, 0, "DB", "Int", "0", 1),
-(219, "[Авария] - Одновременно сработали верхние и нижние концевые скипа", 53, 300, 0, "DB", "Int", "0", 1);
+(219, "[Авария] - Одновременно сработали верхние и нижние концевые скипа", 53, 300, 0, "DB", "Int", "0", 1),
+(220, "Галочка - включить автокорректировку недосыпа шнека", 53, 304, 0, "DB", "Int", "0", 0);
 
 INSERT OR IGNORE INTO "tags_manual" ("id", "tagName", "number", "start", "bit", "dbArea", "type", "value", "isAlarm") VALUES
 (0, "Переключение Ручной/автоматический режим", 15, 0, 2, "DB", "Bool", "false", 0),
@@ -896,7 +884,8 @@ INSERT OR IGNORE INTO "tags_manual" ("id", "tagName", "number", "start", "bit", 
 (163, "Галочка активации вибратора бункера 31", 34, 90, 0, "DB", "Int", "0", 0),
 (164, "Галочка активации вибратора бункера 32", 34, 92, 0, "DB", "Int", "0", 0),
 (165, "Галочка активации вибратора бункера 41", 34, 94, 0, "DB", "Int", "0", 0),
-(166, "Галочка активации вибратора бункера 42", 34, 96, 0, "DB", "Int", "0", 0);
+(166, "Галочка активации вибратора бункера 42", 34, 96, 0, "DB", "Int", "0", 0),
+(167, "Галочка - включена корректировка недосыпа на инертных", 15, 18, 6, "DB", "Bool", "false", 0);
 
 INSERT OR IGNORE INTO "tags_options" ("id", "tagName", "number", "start", "bit", "dbArea", "type", "value", "isAlarm") VALUES
 (1, "Объем смесителя", 10, 226, 0, "DB", "Real", "1.0", 0),
@@ -1054,4 +1043,7 @@ INSERT OR IGNORE INTO "tags_options" ("id", "tagName", "number", "start", "bit",
 (154, "Активация датчиков уровня цемента в силосе", 15, 11, 6, "DB", "Bool", "true", 0),
 (155, "Скада и панель x2 учет", 15, 16, 1, "DB", "Bool", "true", 0),
 (156, "[Авария] нет ответа Веса сохранены от панели", 20, 4, 3, "DB", "Bool", "true", 1),
-(157, "Тест шибера (кнопка)", 15, 13, 5, "DB", "Bool", "true", 0);
+(157, "Тест шибера (кнопка)", 15, 13, 5, "DB", "Bool", "true", 0),
+(158, "Опция - включить вибратор воронки", 15, 16, 3, "DB", "Bool", "false", 0),
+(159, "Время работы вибратор воронки в миллисекундах", 10, 478, 0, "DB", "DInt", "0", 0),
+(160, "Время паузы вибратор воронки в миллисекундах", 10, 482, 0, "DB", "DInt", "0", 0);

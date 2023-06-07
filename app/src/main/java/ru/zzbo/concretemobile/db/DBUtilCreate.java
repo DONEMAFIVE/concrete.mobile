@@ -29,9 +29,9 @@ public class DBUtilCreate {
         sqLiteDatabase.close();
     }
 
-    public void createAllTables() {
+    public void executeSqlFile(String sql) {
         try {
-            String file = "db_init.sql";
+            String file = sql;
             InputStream is = context.getAssets().open(file);
             int size = is.available();
             byte[] buffer = new byte[size];

@@ -267,7 +267,8 @@ public class DynamicTagCollector {
     private int alarmMixerCloseErrorStopSkip;       //  217;[Авария] - Смеситель не закрылся скип остановлен;53;296;0;DB;Int;0;0
     private int alarmDCShiberError;                 //  218;[Предупреждение] - Дозатор цемента не закрыт;53;298;0;DB;Int;0;0
     private int alarmSkipDoubleSensorCrash;         //  219;[Авария] - Одновременно сработали верхние и нижние концевые скипа ;53;298;0;DB;Int;0;0
-
+    private int recepieCorrectOption;               //галочка на экране - корректировка рецепта
+    private int autoCorrectShnekOption;             //галочка на экране - активация автоматической корректировки шнека
     private double scadaPerformance = 0;
 
     public void getValuesFromPLC() {
@@ -464,8 +465,8 @@ public class DynamicTagCollector {
                 waterPumpCounter = answer.get(181).getIntValueIf();
                 waterPumpHumCorrectionControl = answer.get(182).getIntValueIf();
 
-//                alarmMixerShiberOpenned = answer.get(183).getIntValueIf(); //"Галочка Корректировка рецепта"
-//                alarmMixerThermalProtection = answer.get(184).getIntValueIf(); //"Галочка Автокорректировка недосыпа шнека"
+                recepieCorrectOption = answer.get(183).getIntValueIf();
+                autoCorrectShnekOption = answer.get(184).getIntValueIf();
 
                 //АВАРИИ И ПРЕДУПРЕЖДЕНИЯ
                 alarmMixerShiberOpenned = answer.get(185).getIntValueIf();
@@ -764,7 +765,7 @@ public class DynamicTagCollector {
                 }
             }
             if (chk == 0) { //чтобы не выполнять проверку на null, если вдруг ответ таки придет в null заполняю пустые тэги
-                result.put(i, new Tag(0, 0, 0, 0, "", false, -1, -1, -1, "", 0));
+                result.put(i, new Tag(0, 0, 0, 0, "", false, -1, -1, -1, "","", 0));
             }
             if (chk == 1) chk = 0;
         }

@@ -62,11 +62,13 @@ public class DBTags {
                 int intValueIf = 0;
                 long DIntValueIf = 0;
                 float realValueIf = 0;
+                String stringValueIf = "0";
 
                 if (typeGet.equals("Bool")) {
                     if (valueGet.equals("true")) boolValueIf = true;
                     else boolValueIf = false;
                 }
+                if (typeGet.equals("String")) stringValueIf = valueGet;
                 if (typeGet.equals("Real")) realValueIf = Float.valueOf(valueGet);
                 if (typeGet.equals("DInt")) DIntValueIf = Long.valueOf(valueGet);
                 if (typeGet.equals("Int")) intValueIf = Integer.parseInt(valueGet);
@@ -82,6 +84,7 @@ public class DBTags {
                         intValueIf,
                         DIntValueIf,
                         realValueIf,
+                        stringValueIf,
                         tagName,
                         isAlarm
                 );
@@ -125,6 +128,7 @@ public class DBTags {
                 int intValueIf = 0;
                 long DIntValueIf = 0;
                 float realValueIf = 0;
+                String stringValueIf = "0";
 
                 current = new Tag(
                         id,
@@ -137,6 +141,7 @@ public class DBTags {
                         intValueIf,
                         DIntValueIf,
                         realValueIf,
+                        stringValueIf,
                         tagName,
                         isAlarm
                 );

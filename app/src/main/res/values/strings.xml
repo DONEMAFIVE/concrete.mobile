@@ -10,6 +10,8 @@
     <string name="report_header">Отчеты</string>
 
     <!-- SYSTEM Preferences -->
+    <string name="android_id">ID устройства</string>
+    <string name="plc_mac">Mac контроллера</string>
     <string name="plc_ip">IP адрес контроллера</string>
     <string name="plc_port">PORT контроллера</string>
     <string name="scada_ip">IP адрес PC</string>
@@ -50,4 +52,7 @@
     <string name="mixer_header">СМЕСИТЕЛЬ</string>
     <string name="skipLT_header">СКИП/ЛЕНТА</string>
     <string name="production_number">Номер производства</string>
+    <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

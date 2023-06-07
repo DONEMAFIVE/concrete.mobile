@@ -58,6 +58,7 @@ public class PartyCapacityDialog extends DialogFragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
                     }).start();
 
                     Toast.makeText(getActivity(), "Партия: " + partyCapacity.getText(), Toast.LENGTH_LONG).show();

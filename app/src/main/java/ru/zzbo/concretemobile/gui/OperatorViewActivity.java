@@ -1,18 +1,28 @@
 package ru.zzbo.concretemobile.gui;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.app.NotificationManager.IMPORTANCE_MAX;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+import static android.os.Build.VERSION.SDK_INT;
+import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES;
+import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES_TAP_TARGET;
+import static ru.zzbo.concretemobile.utils.Constants.PERMISSION_STORAGE;
+import static ru.zzbo.concretemobile.utils.Constants.REQUEST_EXTERNAL_STORAGE;
 import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.animationMixerState;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.globalFactoryState;
+import static ru.zzbo.concretemobile.utils.Constants.globalMixStartTime;
 import static ru.zzbo.concretemobile.utils.Constants.globalModeState;
 import static ru.zzbo.concretemobile.utils.Constants.hydroGateOption;
-import static ru.zzbo.concretemobile.utils.Constants.globalMixStartTime;
+import static ru.zzbo.concretemobile.utils.Constants.mSettings;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrg;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
@@ -20,12 +30,28 @@ import static ru.zzbo.concretemobile.utils.Constants.selectedTrans;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
@@ -33,46 +59,63 @@ import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.preference.PreferenceManager;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tomergoldst.tooltips.ToolTipsManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ru.zzbo.concretemobile.BuildConfig;
 import ru.zzbo.concretemobile.R;
-
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
-import ru.zzbo.concretemobile.gui.dialogs.editing.CatalogMenuDialog;
+import ru.zzbo.concretemobile.db.builders.StorageMillageBuilder;
+import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.MixCapacityDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.OrganizationListDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.PartyCapacityDialog;
-import ru.zzbo.concretemobile.gui.dialogs.uploaders.RecipeLoaderDialog;
+import ru.zzbo.concretemobile.gui.dialogs.uploaders.TimeMixingDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.TransporterListDialog;
 import ru.zzbo.concretemobile.models.Current;
 import ru.zzbo.concretemobile.models.DispatcherStates;
@@ -88,17 +131,31 @@ import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 import ru.zzbo.concretemobile.reporting.ReportRecordingUtil;
 import ru.zzbo.concretemobile.utils.AlarmUtil;
 import ru.zzbo.concretemobile.utils.CalcUtil;
+import ru.zzbo.concretemobile.utils.ConnectionUtil;
 import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class OperatorViewActivity extends AppCompatActivity {
+    private ToolTipsManager toolTipsManager;
     private RadioButton silosSelector1;
     private RadioButton silosSelector2;
-    private ImageView horLineView;
+    //    private ImageView horLineView;
     private SeekBar touchUnlock;
+    private TabLayout tabMenu;
+    private LinearLayout fillers;
+    private TableLayout tableMenu;
     private ImageView touchLock;
     private DrawerLayout touchLockLayout;
+    private DrawerLayout mainMenuDL;
+    private ImageButton recipesMenu;
+    private ImageButton ordersMenu;
+    private ImageButton orgsMenu;
+    private ImageButton driversMenu;
+    private ImageButton helpMenu;
+    private ImageButton exitMenu;
+    private ImageButton learningMenu;
 
+    private ImageButton correctionBtn;
     private Button closeAlarmLayoutBtn;
     private Button reverseConveyor;
     private Button conveyorUploadDrop;
@@ -106,7 +163,6 @@ public class OperatorViewActivity extends AppCompatActivity {
     private DrawerLayout alarmsWarningLayout;
     private EditText alarmWarningText;
 
-    private LinearLayout hopper1;
     private LinearLayout hopper2;
     private LinearLayout hopper3;
     private LinearLayout hopper4;
@@ -120,25 +176,31 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView doser41;
     private ImageView doser42;
     private ImageView pumpWater;
-    private ImageView pumpWater2;
+    //    private ImageView pumpWater2;
     private ImageView doserShnek1;
     private ImageView doserShnek2;
     private ImageView doserDispenserCement;
     private ImageView doserDispenserWater;
     private ImageView doserDispenserChemy;
     private ImageView skipUp;
-    private ImageView reportsMenu;
+    private ImageButton reportsMenu;
     private ImageView catalogsBtn;
     private ImageView buncker2View;
-    private ImageView bunckerChemy1;
-    private ImageView bunckerChemy2;
-    private ImageView bunckerChemy3;
+//    private ImageView bunckerChemy1;
+//    private ImageView bunckerChemy2;
+//    private ImageView bunckerChemy3;
 
     private LinearLayout chemy2LL;
     private LinearLayout chemy3LL;
     private LinearLayout water2LL;
     private LinearLayout cement2LL;
+    private TextView timeMix;
+    private TextView rtDK, rtLT, rtVW, rtPW, rtOil, rtShnek1, rtShnek2, rtShnek3, rtShnek4, rtMixer, rtChemy1, rtChemy2, rtSkip;
+    private TextView buncker1, buncker2, buncker3, buncker4, chemy1, chemy2, chemy3, water1, water2, cement1, cement2, cement3, cement4;
     private TextView recipeName;
+    private TextView orderName;
+    private TextView transporter;
+    private TextView organization;
     private TextView doseWater1;
     private TextView recipeWater1;
     private ImageView silos2View;
@@ -150,33 +212,35 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView levelUpSilos2;
     private TextView recipeSilos2;
     private TextView recipeSilos1;
-    private TextView titleSilos1;
-    private Button aerationSilos;
-    private Button vibroSilos;
-    private Button filterSilos;
-    private Button recipeOptionBtn;
+    //    private TextView titleSilos1;
+    private ImageButton aerationSilos;
+    private ImageButton vibroSilos;
+    private ImageButton filterSilos;
+    //    private Button recipeOptionBtn;
     private Button partyOptionBtn;
+    private Button timeMixBtn;
     private Button mixOptionBtn;
     private ImageButton openMixer;
     private ImageButton closeMixer;
-    private Button manualAutoSwitcher;
-    private Button stopCycle;
-    private Button runCycleBtn;
+    private ImageButton manualAutoSwitcher;
+    private ImageButton stopCycle;
+    private ImageButton runCycleBtn;
     private TextView operatorName;
     private TextView mixCounterTotal;
     private TextView mixCounterCurrent;
     private TextView stateFactory;
     private TextView dailyCounter;
-    private TextView titleChemy1;
-    private TextView titleChemy2;
-    private TextView titleChemy3;
+    //    private TextView titleChemy1;
+//    private TextView titleChemy2;
+//    private TextView titleChemy3;
     private TextView recipeChemy2;
-    private TextView recipeChemy3;
+    //    private TextView recipeChemy3;
     private TextView doseChemy2;
-    private TextView doseChemy3;
+    //    private TextView doseChemy3;
     private TextView recipeChemy1;
     private TextView doseChemy1;
     private Button startSelfDK, startSelfChemy, startSelfCement, startSelfWater;
+    private LinearLayout halfAutoMode;
     private ImageView mixerView;
     private TextView amperage;
     private ImageView mixFully;
@@ -186,22 +250,22 @@ public class OperatorViewActivity extends AppCompatActivity {
     private CheckBox autoDropChecker;
     private ImageView skipDown;
     private ImageView skipMiddle;
-    private TextView titleBuncker1;
-    private TextView titleBuncker4;
+    //    private TextView titleBuncker1;
+    //    private TextView titleBuncker2;
+    //    private TextView titleBuncker3;
+    //    private TextView titleBuncker4;
+    private TextView recepieBuncker1;
     private TextView recepieBuncker4;
     private TextView doseBuncker4;
-    private TextView titleBuncker3;
-    private TextView titleBuncker2;
-    private TextView recepieBuncker1;
     private TextView recepieBuncker2;
     private TextView doseBuncker1;
     private TextView doseBuncker2;
-    private ImageView dispenserChemyView;
-    private ImageView dispenserWaterView;
-    private ImageView dispenserCementView;
+    //    private ImageView dispenserChemyView;
+//    private ImageView dispenserWaterView;
+//    private ImageView dispenserCementView;
     private ImageView doserChemy1;
     private ImageView doserChemy2;
-    private ImageView doserChemy3;
+    //    private ImageView doserChemy3;
     private TextView weigthDC;
     private TextView weigthWater;
     private TextView weightDCh;
@@ -215,8 +279,8 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView dropProcessArrow;
     private ImageView overflowChemy;
     private ImageView overflowWater;
-    private ImageView levelDownSilos1;
-    private ImageView levelUpSilos1;
+    //    private ImageView levelDownSilos1;
+//    private ImageView levelUpSilos1;
     private ImageView closeSensorMixer;
     private ImageView middleSensorMixer;
     private ImageView openSensorMixer;
@@ -232,19 +296,43 @@ public class OperatorViewActivity extends AppCompatActivity {
     private TextView doseBuncker3;
     private ImageView valveWater;
     private ImageView alarm;
+    private ImageView blade1;
+    private ImageView blade2;
     private Button runVerticalConv, horLineStart;
     private MasterFactoryComplectation factoryOptionList;
-    private Button organizationSelectBtn, transporterSelectBtn, resetCounterBtn;
-    private TextView performance;
+    private Button organizationSelectBtn, transporterSelectBtn;
+    private ImageButton resetBtn;
+    private TextView performance, infoApp;
     private int runClickCount = 0;
     private DispatcherStates disp = null;
+    private Current current = null;
 
-    boolean isReverseConveyor = false;
-    boolean separationHopper1 = false;
-    boolean separationHopper2 = false;
-    boolean separationHopper3 = false;
-    boolean separationHopper4 = false;
+    private boolean isReverseConveyor = false;
+    private boolean separationHopper1 = false;
+    private boolean separationHopper2 = false;
+    private boolean separationHopper3 = false;
+    private boolean separationHopper4 = false;
 
+    private DBUtilGet dbUtilGet;
+    private DBUtilUpdate dbUtilUpdate;
+
+    private boolean isBeepWork = false;
+    private boolean isBeepIdle = false;
+    private ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+    private AlertDialog.Builder mCorrectionBuilder;
+    private AlertDialog correctionDialog;
+    private View mCorrectionView;
+    private Button closeDialog;
+    private CheckBox autoCorrectionShnekSelector;
+    private CheckBox recepieCorrectionOption;
+
+    private ProgressBar pbChemy;
+    private ProgressBar pbSilos;
+    private ProgressBar pbWater;
+    private ProgressBar pbInert;
+    private boolean skipSendUp = false;
+    private boolean skipSendDown = false;
+    private boolean tapTarget;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -252,10 +340,16 @@ public class OperatorViewActivity extends AppCompatActivity {
         setContentView(R.layout.factory_view);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        factoryOptionList = new FactoryComplectationBuilder().parseList(new DBUtilGet(getApplicationContext()).getFromParameterTable("factory_complectation"));
-        configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(getApplicationContext()).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        dbUtilGet = new DBUtilGet(this);
+        dbUtilUpdate = new DBUtilUpdate(this);
+
+        factoryOptionList = new FactoryComplectationBuilder().parseList(dbUtilGet.getFromParameterTable("factory_complectation"));
+        configList = new ConfigBuilder().buildScadaParameters(dbUtilGet.getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
 
         setsID();
+
         setComplectation();
         new DataManager(getApplicationContext()).runCollector();
         startPolling();
@@ -263,10 +357,231 @@ public class OperatorViewActivity extends AppCompatActivity {
         setCurrentOptions();
         initActions();
 
-    }
+        verifyStoragePermission(this);
+        
+        tapTarget = mSettings.getBoolean(APP_PREFERENCES_TAP_TARGET, true);
+        if (tapTarget) helpTapTarget();
 
+    }
+    public void verifyStoragePermission(Activity activity) {
+        int permission = ActivityCompat.checkSelfPermission(activity, WRITE_EXTERNAL_STORAGE);
+
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager() && permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        activity,
+                        PERMISSION_STORAGE,
+                        REQUEST_EXTERNAL_STORAGE);
+
+                Intent intent = new Intent();
+                intent.setAction(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        }
+    }
+    private void helpTapTarget() {
+        new TapTargetSequence(this).targets(
+                TapTarget.forView(catalogsBtn, "Меню", "Запустить обучение Вы сможете в любое время из меню. Для продолжения коснитесь подсвеченной области.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(touchLock, "Блокировка экрана", "Блокировка экрана защитит, предотвратит ошибки и аварии из-за неосторожных движений и случайных нажатий.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(filterSilos, "Фильтр", "Предназначен для очистки и выброса в атмосферу избытка воздуха, улавливания пыли в запыленном воздухе.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(aerationSilos, "Аэрация", "Воздух, проходящий через слой сыпучего материала «разъединяет» частицы и уменьшает трение между ними, тем самым придавая материалу свойства жидкости.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(vibroSilos, "Вибратор", "Благодаря направленной вибрации гарантирует равномерную подачу материала из силоса.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(resetBtn, "Сброс циклов", "Выполняется для обнуления счетчика циклов, перед началом запуска следующей партии.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(correctionBtn, "Корректировка", "Автоматическая корректировка недосыпа шнека. Корректировка рецепта (только для одного замеса).")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(stopCycle, "Стоп перемашивание", "Оставновка перемешивания в автоматическом режиме.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(runCycleBtn, "Старт перемешивание", "Запуск перемешивания в автоматическом режиме, для старта необходимо переключиться в автоматический режим и зажать кнопку в течении 2 секунд.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(manualAutoSwitcher, "Режим работы", "Кнопка переключения режима работы Автоматический/Ручной. Вы можете переключаться между режимами работы, менять настройки и корректировать процессы. Некоторые элементы экрана скрываются и не доступны в ручном режиме.")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(autoDropChecker, "Авторазгрузка", "Автоматический сброс по истечению таймера перемешивания в автоматическом режиме!")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60)
+        ).listener(new TapTargetSequence.Listener() {
+            @Override
+            public void onSequenceFinish() {
+                //TODO: Установить флаг завершения обучения
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putBoolean(APP_PREFERENCES_TAP_TARGET, false);
+                editor.apply();
+            }
+
+            @Override
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+            }
+
+            @Override
+            public void onSequenceCanceled(TapTarget lastTarget) {
+
+            }
+        }).start();
+    }
     @Override
     public void onBackPressed() {
+        touchLockLayout.setVisibility(VISIBLE);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Выход");
         builder.setIcon(R.drawable.warning);
@@ -362,7 +677,7 @@ public class OperatorViewActivity extends AppCompatActivity {
         hydroGateOption = factoryOptionList.isHydroGate();
 
         if (factoryOptionList.isDropConveyor()) conveyorUploadDrop.setVisibility(VISIBLE);
-        else conveyorUploadDrop.setVisibility(INVISIBLE);
+        else conveyorUploadDrop.setVisibility(GONE);
 
         //тип транспортера:
         // 0 - лента
@@ -419,8 +734,13 @@ public class OperatorViewActivity extends AppCompatActivity {
 
     private void startPolling() {
         new Thread(() -> {
-            AnimationDrawable animationDrawable = (AnimationDrawable) mixerView.getBackground();
-            ReflectionRetrieval retrieval = new ReflectionRetrieval();
+            RotateAnimation r = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, .5f, RotateAnimation.RELATIVE_TO_SELF, .5f);
+            r.setDuration(1000);
+            r.setInterpolator(new LinearInterpolator());
+            r.setRepeatCount(Animation.INFINITE);
+            r.setRepeatMode(Animation.RESTART);
+
+            retrieval = new ReflectionRetrieval();
 
             DecimalFormat decFormat = new DecimalFormat("#0.0");
             CalcUtil calc = new CalcUtil();
@@ -428,8 +748,80 @@ public class OperatorViewActivity extends AppCompatActivity {
                 //todo: здесь условие для break прерывания работы while(true)
                 retrieval.getValues();
                 try {
-                    if (exchangeLevel == 1) disp = new Gson().fromJson(OkHttpUtil.getDispatcherStates(), DispatcherStates.class);
+                    if (exchangeLevel == 1) {
+                        disp = new Gson().fromJson(OkHttpUtil.getDispatcherStates(), DispatcherStates.class);
+                        current = new Gson().fromJson(OkHttpUtil.getCurrent(), Current.class);
+                    }
+
+                    //Если состояние завода - работа, то
+                    if (globalFactoryState) {
+                        stateFactory.setTextColor(Color.GREEN);
+                        int dkSum = (int) (retrieval.getHopper11RecipeValue() + retrieval.getHopper12RecipeValue() +
+                                retrieval.getHopper21RecipeValue() + retrieval.getHopper22RecipeValue() +
+                                retrieval.getHopper31RecipeValue() + retrieval.getHopper32RecipeValue() +
+                                retrieval.getHopper41RecipeValue() + retrieval.getHopper42RecipeValue());
+
+                        int chemySum = (int) (retrieval.getChemy1RecipeValue() + retrieval.getChemy2RecipeValue());
+                        int cementSum = (int) (retrieval.getCement1RecipeValue() + retrieval.getCement2RecipeValue());
+
+                        int percentDK = (int) (retrieval.getCurrentWeightDKValue() / dkSum * 100);
+                        int percentDCh = (int) (retrieval.getCurrentWeightChemyValue() / chemySum * 100);
+                        int percentDC = (int) (retrieval.getCurrentWeightCementValue() / cementSum * 100);
+                        int percentDW = (int) (retrieval.getCurrentWeightWaterValue() / retrieval.getWaterRecipeValue() * 100);
+
+                        runOnUiThread(() -> {
+                            pbInert.setProgress(percentDK, true);
+                            pbChemy.setProgress(percentDCh, true);
+                            pbWater.setProgress(percentDW, true);
+                            pbSilos.setProgress(percentDC, true);
+                        });
+
+                        //todo: если стоят галочки набора доз то setValue набранного дозатора должен быть 100%
+                    } else {
+                        stateFactory.setTextColor(Color.YELLOW);
+                        pbInert.setProgress(0);
+                        pbChemy.setProgress(0);
+                        pbWater.setProgress(0);
+                        pbSilos.setProgress(0);
+                    }
+
+                    if (retrieval.isSkipPosEndSensorUpValue() == 1 && retrieval.isSkipPosEndSensorDownValue() == 0) {
+                        if (skipSendUp) {
+                            new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(false);
+                            skipSendUp = false;
+                        }
+                    }
+                    if (retrieval.isSkipPosEndSensorDownValue() == 1 && retrieval.isSkipPosEndSensorUpValue() == 0) {
+                        if (skipSendDown) {
+                            new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(false);
+                            skipSendDown = false;
+                        }
+                    }
+
                     new Handler(Looper.getMainLooper()).post(() -> {
+                        if (retrieval.getRecepieCorrectOptionValue() == 1)
+                            recepieCorrectionOption.setChecked(true);
+                        else recepieCorrectionOption.setChecked(false);
+
+                        if (retrieval.getAutoCorrectShnekOptionValue() == 1)
+                            autoCorrectionShnekSelector.setChecked(true);
+                        else autoCorrectionShnekSelector.setChecked(false);
+
+                        rtDK.setText(String.valueOf(retrieval.getMotoClockHorConveyorValue()));
+                        rtLT.setText(String.valueOf(retrieval.getMotoClockVertConvValue()));
+                        rtSkip.setText(String.valueOf(retrieval.getMotoClockSkipValue()));
+                        rtMixer.setText(String.valueOf(retrieval.getMotoClockMixerValue()));
+                        rtShnek1.setText(String.valueOf(retrieval.getMotoClockShnek1Value()));
+                        rtShnek2.setText(String.valueOf(retrieval.getMotoClockShnek2Value()));
+                        rtShnek3.setText(String.valueOf(retrieval.getMotoClockShnek3Value()));
+                        rtVW.setText(String.valueOf(retrieval.getMotoClockValveWaterValue()));
+                        rtPW.setText(String.valueOf(retrieval.getMotoClockPumpWaterValue()));
+                        rtChemy1.setText(String.valueOf(retrieval.getMotoClockPumpChemy1Value()));
+                        rtChemy2.setText(String.valueOf(retrieval.getMotoClockPumpChemy2Value()));
+                        rtOil.setText(String.valueOf(retrieval.getMotoClockOilStationValue()));
+
+                        timeMix.setText("Таймер: " + retrieval.getCountdownTimeMixValue());
+
                         //рецепты на бункерах
                         recepieBuncker1.setText(decFormat.format(retrieval.getHopper11RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper11Value()));
                         recepieBuncker2.setText(decFormat.format(retrieval.getHopper21RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper21Value()));
@@ -460,37 +852,64 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                         amperage.setText("Сила тока (А): " + decFormat.format(retrieval.getAmperageMixerValue()));
 
+                        timeMixBtn.setText("Время перемешивания, сек: " + (int) retrieval.getMixingTimeValue() / 1000);
+
                         //инфо блок слева
                         if (exchangeLevel == 1) {
                             try {
-                                if (disp != null){
+                                if (disp != null) {
                                     operatorName.setText("Оператор смены: " + disp.getOperatorName());
                                     calc.cycleCalcCounter(Float.valueOf(disp.getPartyCapacity()), Float.valueOf(disp.getMixCapacity()));
-                                    mixCounterTotal.setText("Всего замесов: "+ calc.getCycleSum());
+                                    mixCounterTotal.setText("Всего замесов: " + calc.getCycleSum());
                                     mixCounterCurrent.setText("Текущий замес: " + disp.getMixCounter());
-                                    recipeName.setText("Рецепт/заказ: " + disp.getCurrentRecepie() +"/"+ disp.getCurrentOrder());
-                                    dailyCounter.setText("Произведено за сегодня м3: " + disp.getProductionCapacityDay());
-                                    partyOptionBtn.setText("Партия\n" +  disp.getPartyCapacity());
-                                    mixOptionBtn.setText("Замес\n" + disp.getMixCapacity());
+                                    recipeName.setText("Рецепт: " + disp.getCurrentRecepie());
+                                    orderName.setText("Заказ: " + disp.getCurrentOrder());
+                                    transporter.setText("Водитель: " + disp.getCurrentTrans());
+                                    organization.setText("Заказчик: " + disp.getCurrentOrg());
+                                    dailyCounter.setText("Произведено за сегодня м³: " + disp.getProductionCapacityDay());
+                                    partyOptionBtn.setText("Партия м³\n" + disp.getPartyCapacity());
+                                    mixOptionBtn.setText("Замес м³\n" + disp.getMixCapacity());
 
                                     selectedOrg = disp.getCurrentOrg();
                                     selectedTrans = disp.getCurrentTrans();
 
-                                    if (disp.getFactoryState() == "1") stateFactory.setText("Статус работы завода: работа");
+                                    if (disp.getFactoryState().equals("1"))
+                                        stateFactory.setText("Статус работы завода: работа");
                                     else stateFactory.setText("Статус работы завода: ожидание");
                                 }
-                            }catch (Exception exc){
+                                if (current != null) {
+                                    if (current.getState().equals("work")) {
+                                        stateFactory.setText("Статус работы завода: работа");
+                                        stateFactory.setTextColor(Color.GREEN);
+                                        isBeepIdle = false;
+                                        if (!isBeepWork) {
+                                            toneG.startTone(ToneGenerator.TONE_PROP_ACK, 400);
+                                            isBeepWork = true;
+                                        }
+                                    }
+                                    if (current.getState().equals("idle")) {
+                                        stateFactory.setText("Статус работы завода: ожидание");
+                                        stateFactory.setTextColor(Color.YELLOW);
+                                        isBeepWork = false;
+                                        if (!isBeepIdle) {
+                                            toneG.startTone(ToneGenerator.TONE_CDMA_SOFT_ERROR_LITE, 400);
+                                            isBeepIdle = true;
+                                        }
+                                    }
+                                }
+                            } catch (Exception exc) {
                                 exc.printStackTrace();
                             }
-                        }else {
+                        } else {
                             operatorName.setText("Оператор смены: " + operatorLogin);
                             mixCounterCurrent.setText("Текущий замес: " + retrieval.getMixCounterValue());
                             mixCounterTotal.setText("Всего замесов: " + retrieval.getTotalMixCounterValue());
-                            partyOptionBtn.setText("Партия\n" + retrieval.getBatchVolumeValue());
-                            mixOptionBtn.setText("Замес\n" + retrieval.getMixingCapacity());
-                            recipeOptionBtn.setText("Рецепт\n" + selectedRecepie);
+                            partyOptionBtn.setText("Партия м³\n" + retrieval.getBatchVolumeValue());
+                            mixOptionBtn.setText("Замес м³\n" + retrieval.getMixingCapacity());
+//                            recipeOptionBtn.setText("Рецепт\n" + selectedRecepie);
 
-                            if (globalFactoryState) stateFactory.setText("Статус работы завода: работа");
+                            if (globalFactoryState)
+                                stateFactory.setText("Статус работы завода: работа");
                             else stateFactory.setText("Статус работы завода: ожидание");
                         }
 
@@ -520,12 +939,14 @@ public class OperatorViewActivity extends AppCompatActivity {
                             startMixerEngine.setBackgroundColor(Color.GREEN);
                             if (!animationMixerState) { //анимация смесителя вкл
                                 animationMixerState = true;
-                                animationDrawable.start();
+                                blade1.startAnimation(r);
+                                blade2.startAnimation(r);
                             }
                         } else {
                             startMixerEngine.setBackgroundColor(Color.WHITE);
                             animationMixerState = false;
-                            animationDrawable.stop();
+                            blade1.clearAnimation();
+                            blade2.clearAnimation();
                         }
 
                         //скип стрелки
@@ -680,10 +1101,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                             autoDropChecker.setChecked(true);
                         else autoDropChecker.setChecked(false);
 
-                        if (retrieval.getReverseDKValue() == 1) reverseConveyor.setBackgroundColor(Color.GREEN);
+                        if (retrieval.getReverseDKValue() == 1)
+                            reverseConveyor.setBackgroundColor(Color.GREEN);
                         else reverseConveyor.setBackgroundColor(Color.WHITE);
 
-                        if (retrieval.getConveyorDropValue() == 1) conveyorUploadDrop.setBackgroundColor(Color.GREEN);
+                        if (retrieval.getConveyorDropValue() == 1)
+                            conveyorUploadDrop.setBackgroundColor(Color.GREEN);
                         else conveyorUploadDrop.setBackgroundColor(Color.WHITE);
 
                         //горизонтальный конвейер стрелка
@@ -717,7 +1140,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                             silosSelector2.setChecked(false);
                         }
 
-                        //фильтр аэрация шнек
+                        //фильтр аэрация вибратор
                         if (retrieval.isSilosCementFilterValue() == 1)
                             filterSilos.setBackgroundColor(Color.GREEN);
                         else filterSilos.setBackgroundColor(Color.WHITE);
@@ -749,17 +1172,13 @@ public class OperatorViewActivity extends AppCompatActivity {
                         if (retrieval.isManualAutoModeValue() == 0) {
                             globalModeState = false;
                             //TODO Ручной
-
-                            manualAutoSwitcher.setBackgroundColor(Color.WHITE);
-                            manualAutoSwitcher.setText("Переключить в автомат");
+//                            manualAutoSwitcher.setText("Переключить в автомат");
+                            manualAutoSwitcher.setImageResource(R.drawable.hand_mode);
                             if (factoryOptionList.getTransporterType() != 11 && accessLevel != 1)
                                 runVerticalConv.setVisibility(VISIBLE);
                             runCycleBtn.setVisibility(GONE);
                             if (accessLevel != 1) {
-                                startSelfChemy.setVisibility(VISIBLE);
-                                startSelfWater.setVisibility(VISIBLE);
-                                startSelfCement.setVisibility(VISIBLE);
-                                startSelfDK.setVisibility(VISIBLE);
+                                halfAutoMode.setVisibility(VISIBLE);
                                 horLineStart.setVisibility(VISIBLE);
                                 if (isReverseConveyor) reverseConveyor.setVisibility(VISIBLE);
                             }
@@ -767,20 +1186,18 @@ public class OperatorViewActivity extends AppCompatActivity {
                             if (factoryOptionList.getTransporterType() == 11 && accessLevel != 1) {
                                 skipArrowUp.setVisibility(VISIBLE);
                                 skipArrowDown.setVisibility(VISIBLE);
-                                resetCounterBtn.setVisibility(VISIBLE);
+
                             }
+                            if (accessLevel != 1) resetBtn.setVisibility(VISIBLE);
                         } else {
                             globalModeState = true;
                             //TODO Автомат
-                            resetCounterBtn.setVisibility(GONE);
-                            manualAutoSwitcher.setBackgroundColor(Color.GRAY);
-                            manualAutoSwitcher.setText("Переключить в ручной");
+                            resetBtn.setVisibility(GONE);
+//                            manualAutoSwitcher.setText("Переключить в ручной");
+                            manualAutoSwitcher.setImageResource(R.drawable.gears_svgrepo_com);
                             runVerticalConv.setVisibility(INVISIBLE);
                             runCycleBtn.setVisibility(VISIBLE);
-                            startSelfChemy.setVisibility(INVISIBLE);
-                            startSelfWater.setVisibility(INVISIBLE);
-                            startSelfCement.setVisibility(INVISIBLE);
-                            startSelfDK.setVisibility(INVISIBLE);
+                            halfAutoMode.setVisibility(INVISIBLE);
                             horLineStart.setVisibility(INVISIBLE);
                             reverseConveyor.setVisibility(INVISIBLE);
 
@@ -790,10 +1207,14 @@ public class OperatorViewActivity extends AppCompatActivity {
                             }
                         }
 
-                        runOnUiThread(()->{
+                        runOnUiThread(() -> {
                             organizationSelectBtn.setText("Заказчик\n" + selectedOrg);
                             transporterSelectBtn.setText("Водитель\n" + selectedTrans);
                             performance.setText(String.valueOf(retrieval.getScadaPerformanceValue()));
+                            infoApp.setText(
+                                    "APP: "+ BuildConfig.VERSION_NAME +
+                                    "\nPLC: "+ retrieval.getFirmwareVersionValue()
+                            );
                         });
 
                     });
@@ -808,6 +1229,138 @@ public class OperatorViewActivity extends AppCompatActivity {
     //TODO GET
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
     private void initActions() {
+        recipesMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), RecipesActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+        ordersMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), OrdersActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+        orgsMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), OrganizationsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+        driversMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), TransportersActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+        touchLock.setOnClickListener(view -> {
+            touchLockLayout.setVisibility(VISIBLE);
+        });
+        touchUnlock.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (seekBar.getProgress() > 95) touchLockLayout.setVisibility(GONE);
+                else seekBar.setThumb(getResources().getDrawable(R.drawable.lock, null));
+
+                seekBar.setProgress(0);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress > 95)
+                    seekBar.setThumb(getResources().getDrawable(R.drawable.unlock, null));
+                else seekBar.setThumb(getResources().getDrawable(R.drawable.lock, null));
+            }
+        });
+        closeAlarmLayoutBtn.setOnClickListener(view -> alarmsWarningLayout.setVisibility(GONE));
+        alarm.setOnClickListener(view -> {
+            alarmsWarningLayout.setVisibility(VISIBLE);
+            try {
+                runOnUiThread(() -> alarmWarningText.setText(AlarmUtil.getAlarms()));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        correctionBtn.setOnLongClickListener(view -> {
+            Toast.makeText(getApplicationContext(), "Корректировка", Toast.LENGTH_SHORT).show();
+            return true;
+        });
+        correctionBtn.setOnClickListener(view -> {
+            recepieCorrectionOption.setSelected(true);
+            autoCorrectionShnekSelector.setSelected(true);
+            correctionDialog.show();
+        });
+        recepieCorrectionOption.setOnClickListener(view -> {
+            new CommandDispatcher(tagListManual.get(154)).writeSingleInvertedBoolRegister();
+        });
+        autoCorrectionShnekSelector.setOnClickListener(view -> {
+            new CommandDispatcher(tagListManual.get(155)).writeSingleInvertedBoolRegister();
+        });
+        closeDialog.setOnClickListener(view -> correctionDialog.hide());
+        catalogsBtn.setOnClickListener(view -> {
+            tabMenu.selectTab(tabMenu.getTabAt(0));
+            tableMenu.setVisibility(VISIBLE);
+            fillers.setVisibility(GONE);
+            mainMenuDL.setVisibility(VISIBLE);
+        });
+        mainMenuDL.setOnTouchListener((view, motionEvent) -> {
+            mainMenuDL.setVisibility(INVISIBLE);
+            return false;
+        });
+        reportsMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+        });
+        learningMenu.setOnClickListener(view -> {
+            mainMenuDL.setVisibility(GONE);
+            helpTapTarget();
+        });
+        helpMenu.setOnClickListener(view -> openPDF("tablet.pdf"));
+        exitMenu.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Выход");
+            builder.setIcon(R.drawable.warning);
+            builder.setMessage("Вы действительно хотите закрыть приложение и завершить работу?");
+
+            builder.setPositiveButton("Да", (dialog, id) -> {
+                try {
+                    System.exit(0);
+                    finishAffinity();
+                } catch (Exception ex) {
+                    Log.e("EXIT", ex.getMessage());
+                }
+            });
+            builder.setNegativeButton("Нет", (dialog, id) -> {
+                dialog.dismiss();
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        });
+        tabMenu.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                System.err.println(tabMenu.getSelectedTabPosition());
+                if (tabMenu.getSelectedTabPosition() >= 1) {
+                    fillers.setVisibility(VISIBLE);
+                    tableMenu.setVisibility(GONE);
+                } else {
+                    fillers.setVisibility(GONE);
+                    tableMenu.setVisibility(VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         switch (accessLevel) {
             case 1: { //Диспетчер
                 stopCycle.setVisibility(INVISIBLE);
@@ -819,16 +1372,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                 closeMixer.setVisibility(INVISIBLE);
                 incrementWater.setVisibility(GONE);
                 decrementWater.setVisibility(GONE);
-                resetCounterBtn.setVisibility(INVISIBLE);
+                resetBtn.setVisibility(INVISIBLE);
                 skipArrowUp.setVisibility(INVISIBLE);
                 skipArrowDown.setVisibility(INVISIBLE);
-                recipeOptionBtn.setVisibility(INVISIBLE);
-
-                startSelfDK.setVisibility(INVISIBLE);
-                startSelfChemy.setVisibility(INVISIBLE);
-                startSelfCement.setVisibility(INVISIBLE);
-                startSelfWater.setVisibility(INVISIBLE);
+                halfAutoMode.setVisibility(INVISIBLE);
                 manualAutoSwitcher.setVisibility(INVISIBLE);
+                correctionBtn.setVisibility(INVISIBLE);
                 break;
             }
             case 0:
@@ -839,12 +1388,20 @@ public class OperatorViewActivity extends AppCompatActivity {
                 conveyorUploadDrop.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(77)).writeSingleInvertedBoolRegister();
                 });
+                manualAutoSwitcher.setOnLongClickListener(view -> {
+                    Toast.makeText(getApplicationContext(), "Режим работы", Toast.LENGTH_SHORT).show();
+                    return true;
+                });
                 manualAutoSwitcher.setOnClickListener(view -> {
-//                    new CommandDispatcher(tagListManual.get(0)).writeSingleInvertedBoolRegister();
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Режим работы ");
                     String modeSwitchName = "\"Автоматический\"";
-                    if (globalModeState) modeSwitchName = "\"Ручной\"";
+                    builder.setIcon(R.drawable.gears_svgrepo_com);
+
+                    if (globalModeState) {
+                        modeSwitchName = "\"Ручной\"";
+                        builder.setIcon(R.drawable.hand_mode);
+                    }
                     builder.setMessage("Изменить режим работы на " + modeSwitchName + "?");
                     builder.setPositiveButton("Да", (dialog, id) -> new CommandDispatcher(tagListManual.get(0)).writeSingleInvertedBoolRegister());
                     builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
@@ -894,10 +1451,28 @@ public class OperatorViewActivity extends AppCompatActivity {
                         new CommandDispatcher(tagListManual.get(11)).writeSingleInvertedBoolRegister();
                 });
                 doserDispenserCement.setOnClickListener(view -> {
+                    if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Смеситель не запущен!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
+                    }
                     if (!globalModeState)
                         new CommandDispatcher(tagListManual.get(12)).writeSingleInvertedBoolRegister();
                 });
                 horLineStart.setOnClickListener(view -> {
+                    if (retrieval.isSkipPosEndSensorUpValue() == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Скип вверху!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
+                    }
                     if (!globalModeState) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Горизонтальный конвейер");
@@ -929,57 +1504,72 @@ public class OperatorViewActivity extends AppCompatActivity {
                         new CommandDispatcher(tagListManual.get(19)).writeSingleInvertedBoolRegister();
                 });
 
-                skipArrowUp.setOnTouchListener((view, motionEvent) -> {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN: { //удержание
-                            skipArrowUp.setImageResource(R.drawable.arrow_up);
-                            new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(true);
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP: { // опускание
-                            try {
-                                Thread.sleep(300);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            skipArrowUp.setImageResource(R.drawable.arrow_up_off);
-                            new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(false);
-                            break;
-                        }
+                skipArrowUp.setOnClickListener(view -> {
+                    if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Смеситель не запущен!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
                     }
-                    return false;
+                    skipArrowUp.setImageResource(R.drawable.arrow_up);
+
+                    boolean value = true;
+                    if (retrieval.isSkipMoveUpValue() == 1) value = false;
+                    new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(value);
+                    new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(false);
+                    skipSendUp = true;
+                    skipSendDown = false;
                 });
-                skipArrowDown.setOnTouchListener((view, motionEvent) -> {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_DOWN: { //удержание
-                            skipArrowDown.setImageResource(R.drawable.arrow_down);
-                            new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(true);
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP: { // опускание
-                            try {
-                                Thread.sleep(300);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            skipArrowDown.setImageResource(R.drawable.arrow_down_off);
-                            new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(false);
-                            break;
-                        }
+                skipArrowDown.setOnClickListener(view -> {
+                    if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Смеситель не запущен!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
                     }
-                    return false;
+                    skipArrowDown.setImageResource(R.drawable.arrow_down);
+                    boolean value = true;
+                    if (retrieval.isSkipMoveDownValue() == 1) value = false;
+                    new CommandDispatcher(tagListManual.get(23)).writeSingleRegisterWithValue(value);
+                    new CommandDispatcher(tagListManual.get(22)).writeSingleRegisterWithValue(false);
+                    skipSendUp = false;
+                    skipSendDown = true;
                 });
+
                 aerationSilos.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(24)).writeSingleInvertedBoolRegister();
+                    Toast.makeText(getApplicationContext(), "Аэрация", Toast.LENGTH_SHORT).show();
+                });
+                aerationSilos.setOnLongClickListener(view -> {
+                    Toast.makeText(getApplicationContext(), "Аэрация", Toast.LENGTH_LONG).show();
+                    return true;
                 });
                 startMixerEngine.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(25)).writeSingleInvertedBoolRegister();
                 });
                 vibroSilos.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(80)).writeSingleInvertedBoolRegister();
+                    Toast.makeText(getApplicationContext(), "Вибратор", Toast.LENGTH_SHORT).show();
+                });
+                vibroSilos.setOnLongClickListener(view -> {
+                    Toast.makeText(getApplicationContext(), "Вибратор", Toast.LENGTH_LONG).show();
+                    return true;
+                });
+
+                filterSilos.setOnLongClickListener(view -> {
+                    Toast.makeText(getApplicationContext(), "Фильтр", Toast.LENGTH_LONG).show();
+                    return true;
                 });
                 filterSilos.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(81)).writeSingleInvertedBoolRegister();
+                    Toast.makeText(getApplicationContext(), "Фильтр", Toast.LENGTH_SHORT).show();
+
                 });
                 openMixer.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(21)).writeSingleInvertedBoolRegister();
@@ -988,15 +1578,19 @@ public class OperatorViewActivity extends AppCompatActivity {
                     new CommandDispatcher(tagListManual.get(82)).writeSingleInvertedBoolRegister();
                 });
                 openMixer.setOnTouchListener((view, motionEvent) -> {
-                    new Thread(()->{
+                    new Thread(() -> {
                         switch (motionEvent.getAction()) {
                             case MotionEvent.ACTION_DOWN: { //удержание
                                 new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
                                 break;
                             }
                             case MotionEvent.ACTION_UP: { // опускание
-                                try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
-                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                                try {
+                                    Thread.sleep(300);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
                                 break;
                             }
                         }
@@ -1004,16 +1598,23 @@ public class OperatorViewActivity extends AppCompatActivity {
                     return false;
                 });
                 closeMixer.setOnTouchListener((view, motionEvent) -> {
-                    new Thread(()->{
+                    new Thread(() -> {
                         switch (motionEvent.getAction()) {
                             case MotionEvent.ACTION_DOWN: { //удержание
-                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
-                                else new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                                if (hydroGateOption)
+                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
+                                else
+                                    new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
                                 break;
                             }
                             case MotionEvent.ACTION_UP: { // опускание
-                                try {Thread.sleep(300);} catch (InterruptedException e) {e.printStackTrace();}
-                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
+                                try {
+                                    Thread.sleep(300);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                if (hydroGateOption)
+                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
                                 break;
                             }
                         }
@@ -1041,16 +1642,18 @@ public class OperatorViewActivity extends AppCompatActivity {
                                 new CommandDispatcher(84).writeValue("false");
                                 OkHttpUtil.updStateFactory(true);
                             }).start();
-                        } else new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
+                        } else
+                            new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
 
                         globalFactoryState = true;
 
-                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "work");   //смена статуса
+                        dbUtilUpdate.updCurrentTable("state", "work");   //смена статуса
                         runClickCount = 0;
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Перемешивание");
                         builder.setMessage("Автоматический режим запущен!");
+                        builder.setIcon(R.drawable.play);
                         builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
@@ -1066,7 +1669,8 @@ public class OperatorViewActivity extends AppCompatActivity {
                             if (runClickCount == 3) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setTitle("Подсказка");
-                                builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 3-x секунд");
+                                builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 2-x секунд");
+                                builder.setIcon(R.drawable.play);
                                 builder.setPositiveButton("OK", (dialog, id) -> {
                                     runClickCount = 0;
                                     dialog.dismiss();
@@ -1075,7 +1679,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                                 alertDialog.setCancelable(false);
                                 alertDialog.show();
                             }
-                            handlerRunCycle.postDelayed(runCycle, 3000);
+                            handlerRunCycle.postDelayed(runCycle, 2000);
                             break;
                         case MotionEvent.ACTION_UP:
                             handlerRunCycle.removeCallbacks(runCycle);
@@ -1087,9 +1691,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Подтвержение");
                     builder.setMessage("Остановить перемешивание ?");
+                    builder.setIcon(R.drawable.stop);
                     builder.setCancelable(false);
                     builder.setPositiveButton("Да", (dialog, id) -> {
-                        new Thread(()->{
+                        new Thread(() -> {
                             new CommandDispatcher(tagListManual.get(84)).writeSingleRegisterWithValue(false);
                             try {
                                 Thread.sleep(1000);
@@ -1101,7 +1706,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                                 OkHttpUtil.updStateFactory(false);
                             }
                             globalFactoryState = false;
-                            new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "idle");
+                            dbUtilUpdate.updCurrentTable("state", "idle");
                         }).start();
                     });
                     builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
@@ -1123,31 +1728,35 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
                 runVerticalConv.setOnClickListener(view -> {
                     if (!animationMixerState) {
+                        notification("Предупреждение", "Не включен смеситель!");
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Уведомление");
                         builder.setMessage("Смеситель не включен!");
                         builder.setPositiveButton("Ok", (dialog, id) -> dialog.dismiss());
                         AlertDialog alertDialog = builder.create();
                         alertDialog.show();
+                        return;
                     }
                     new CommandDispatcher(tagListManual.get(115)).writeSingleInvertedBoolRegister();
                 });
                 incrementWater.setOnClickListener(view -> {
                     if (exchangeLevel == 1)
-                        new Thread(() -> new CommandDispatcher(135).writeInverted()).start();
-                    else new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
+                        new Thread(() -> new CommandDispatcher(135).writeValue("true")).start();
+                    else
+                        new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
                 });
                 decrementWater.setOnClickListener(view -> {
                     if (exchangeLevel == 1)
-                        new Thread(() -> new CommandDispatcher(136).writeInverted()).start();
-                    else new CommandDispatcher(tagListManual.get(136)).writeSingleFrontBoolRegister(200);
+                        new Thread(() -> new CommandDispatcher(136).writeValue("true")).start();
+                    else
+                        new CommandDispatcher(tagListManual.get(136)).writeSingleFrontBoolRegister(200);
                 });
                 autoDropChecker.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(156)).writeSingleInvertedBoolRegister();
                     //todo: тут смена статуса на окончание для индикации "готово к разгрузке"
                 });
                 silosSelector1.setOnClickListener(view -> {
-                    new Thread(()->{
+                    new Thread(() -> {
                         new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(false);
                     }).start();
                 });
@@ -1156,38 +1765,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                         new CommandDispatcher(tagListManual.get(158)).writeSingleRegisterWithValue(true);
                     }).start();
                 });
-                recipeOptionBtn.setOnClickListener(view -> {
-                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), recipeOptionBtn);
-                    popupMenu.getMenuInflater().inflate(R.menu.popup_select_rec_ord, popupMenu.getMenu());
-                    popupMenu.setOnMenuItemClickListener(menuItem -> {
-                        switch (menuItem.getItemId()) {
-                            case R.id.recepie: {
-                                new Thread(() -> {
-                                    List<Recepie> recepieList = new ArrayList<>();
-                                    if (exchangeLevel == 1) {
-                                        recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {
-                                        }.getType()));
-                                    } else recepieList = new DBUtilGet(this).getRecipes();
-
-                                    if (recepieList != null) {
-                                        RecipeLoaderDialog recDialog = new RecipeLoaderDialog(recepieList);
-                                        recDialog.show(getSupportFragmentManager(), "custom");
-                                    } else {
-                                        Toast.makeText(this, "Рецепты отсутствуют!", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).start();
-                                break;
-                            }
-                            case R.id.order: {
-                                Intent intent = new Intent(getApplicationContext(), OrdersActivity.class);
-                                startActivity(intent);
-                                break;
-                            }
-                        }
-                        return true;
-                    });
-                    popupMenu.show();
-
+                timeMixBtn.setOnClickListener(view -> {
+                    TimeMixingDialog dialog = new TimeMixingDialog();
+                    dialog.show(getSupportFragmentManager(), "custom");
                 });
                 partyOptionBtn.setOnClickListener(view -> {
                     PartyCapacityDialog dialog = new PartyCapacityDialog();
@@ -1197,22 +1777,37 @@ public class OperatorViewActivity extends AppCompatActivity {
                     MixCapacityDialog dialog = new MixCapacityDialog();
                     dialog.show(getSupportFragmentManager(), "custom");
                 });
-                resetCounterBtn.setOnClickListener(view -> {
-                    if (exchangeLevel == 1) {
-                        new Thread(() -> {
-                            new CommandDispatcher(71).writeInverted();
-                            OkHttpUtil.updStateFactory(false);
-                        }).start();
-                    } else {
-                        new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
-                        new DBUtilUpdate(getApplicationContext()).updCurrentTable("state", "idle");
-                    }
+                resetBtn.setOnLongClickListener(view -> {
+                    Toast.makeText(getApplicationContext(), "Обнуление цикла", Toast.LENGTH_SHORT).show();
+                    return true;
+                });
+
+                resetBtn.setOnClickListener(view -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Сброс циклов ");
+                    builder.setIcon(R.drawable.reset_svgrepo_com);
+                    builder.setMessage("Выполнить обнуление счетчика циклов?");
+                    builder.setPositiveButton("Да", (dialog, id) -> {
+                        if (exchangeLevel == 1) {
+                            new Thread(() -> {
+                                new CommandDispatcher(71).writeValue("true");
+                                OkHttpUtil.updStateFactory(false);
+                            }).start();
+                        } else {
+                            new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
+                            dbUtilUpdate.updCurrentTable("state", "idle");
+                        }
+                    });
+                    builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 });
                 resetAlarmBtn.setOnClickListener(view -> {
                     alarmsWarningLayout.setVisibility(INVISIBLE);
                     if (exchangeLevel == 1)
-                        new Thread(() -> new CommandDispatcher(1).writeInverted()).start();
-                    else new CommandDispatcher(tagListManual.get(1)).writeSingleFrontBoolRegister(2000);
+                        new Thread(() -> new CommandDispatcher(1).writeValue("true")).start();
+                    else
+                        new CommandDispatcher(tagListManual.get(1)).writeSingleFrontBoolRegister(2000);
                 });
                 organizationSelectBtn.setOnClickListener(view -> {
                     new Thread(() -> {
@@ -1221,7 +1816,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                             orgList.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {
                             }.getType()));
                         } else {
-                            orgList = new DBUtilGet(this).getOrgs();
+                            orgList = dbUtilGet.getOrgs();
                         }
                         OrganizationListDialog dialog = new OrganizationListDialog(orgList);
                         dialog.show(getSupportFragmentManager(), "custom");
@@ -1233,7 +1828,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                         if (exchangeLevel == 1) {
                             transList.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {
                             }.getType()));
-                        } else transList = new DBUtilGet(this).getTrans();
+                        } else transList = dbUtilGet.getTrans();
 
                         TransporterListDialog dialog = new TransporterListDialog(transList);
                         dialog.show(getSupportFragmentManager(), "custom");
@@ -1241,52 +1836,6 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
             }
         }
-
-        touchLock.setOnClickListener(view -> {
-            touchLockLayout.setVisibility(VISIBLE);
-        });
-        touchUnlock.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                if (seekBar.getProgress() > 95) touchLockLayout.setVisibility(GONE);
-                else seekBar.setThumb(getResources().getDrawable(R.drawable.lock, null));
-
-                seekBar.setProgress(0);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (progress > 95)
-                    seekBar.setThumb(getResources().getDrawable(R.drawable.unlock, null));
-                else seekBar.setThumb(getResources().getDrawable(R.drawable.lock, null));
-            }
-        });
-
-        closeAlarmLayoutBtn.setOnClickListener(view -> {
-            alarmsWarningLayout.setVisibility(GONE);
-        });
-        alarm.setOnClickListener(view -> {
-            alarmsWarningLayout.setVisibility(VISIBLE);
-            try {
-                runOnUiThread(() -> alarmWarningText.setText(AlarmUtil.getAlarms()));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        catalogsBtn.setOnClickListener(view -> {
-            CatalogMenuDialog dialog = new CatalogMenuDialog(this);
-            dialog.show(getSupportFragmentManager(), "custom");
-        });
-        reportsMenu.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), ReportsActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        });
     }
 
     private void startThreads() {
@@ -1294,17 +1843,15 @@ public class OperatorViewActivity extends AppCompatActivity {
         if (exchangeLevel == 0) {
             //поток записи доз в учет по метке "Веса готорвы к чтению"
             new Thread(() -> {
-                ReflectionRetrieval retrieval = new ReflectionRetrieval();
+                retrieval = new ReflectionRetrieval();
                 while (true) {
                     retrieval.getValues();
                     try {
                         if (retrieval.isWeightsReadyReadValue() == 1) {
-                            Current current = new DBUtilGet(getApplicationContext()).getCurrent();
-                            Recepie recepie = new DBUtilGet(getApplicationContext()).getRecipeForID(current.getRecipeID());
+                            Current current = dbUtilGet.getCurrent();
+                            Recepie recepie = dbUtilGet.getRecipeForID(current.getRecipeID());
 
-                            System.out.println(selectedOrder);
-                            //TODO:
-                            if (selectedOrder.equals("Не указано")){
+                            if (selectedOrder.equals("Не указано")) {
                                 new ReportRecordingUtil().recordWeights(
                                         getApplicationContext(),
                                         "",
@@ -1320,7 +1867,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         recepie.getId(), retrieval.getBatchVolumeValue()
                                 );
                             } else {
-                                Order selectedOrder = new DBUtilGet(getApplicationContext()).getOrderForID(current.getOrderID());
+                                Order selectedOrder = dbUtilGet.getOrderForID(current.getOrderID());
                                 selectedOrder.setCurrentMixCount(selectedOrder.getCurrentMixCount() + 1);
 
                                 if (selectedOrder.getCurrentMixCount() == selectedOrder.getTotalMixCounter()) {
@@ -1330,7 +1877,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                                     Constants.selectedOrder = "Не указано";
                                 }
-                                new DBUtilUpdate(getApplicationContext()).updateOrder(selectedOrder);
+                                dbUtilUpdate.updateOrder(selectedOrder);
 
                                 new ReportRecordingUtil().recordWeights(
                                         getApplicationContext(),
@@ -1357,6 +1904,22 @@ public class OperatorViewActivity extends AppCompatActivity {
             }).start();
         }
 
+        new Thread(()->{
+            while (true) {
+                try{
+                    Thread.sleep(4000);
+                    if (!ConnectionUtil.isWifiConnected(getApplicationContext())) {
+                        runOnUiThread(()-> Toast.makeText(getApplicationContext(), "Отсутствует подлючение к сети WiFi", Toast.LENGTH_SHORT).show());
+                    }
+                    if (!ConnectionUtil.isIpConnected("192.168.250.10")) {
+                        runOnUiThread(()-> Toast.makeText(getApplicationContext(), "Отсутствует соединение с PLC", Toast.LENGTH_SHORT).show());
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         //Произведено за сегодня
         new Thread(() -> {
             SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
@@ -1367,11 +1930,13 @@ public class OperatorViewActivity extends AppCompatActivity {
                     if (exchangeLevel == 1) {
                         try {
                             String req = OkHttpUtil.getMixes(date.format(new Date()), date.format(new Date()));
-                            if (req.trim().equals("Empty")) mixList = new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
+                            if (req.trim().equals("Empty"))
+                                mixList = new Gson().fromJson(req, new TypeToken<List<Mix>>() {
+                                }.getType());
                         } catch (Exception e) {
 //                            e.printStackTrace();
                         }
-                    } else mixList = new DBUtilGet(this).getMixListForDate(date.format(new Date()));
+                    } else mixList = dbUtilGet.getMixListForDate(date.format(new Date()));
 
                     float result = 0;
                     for (Mix mix : mixList) {
@@ -1382,8 +1947,11 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                     new Handler(Looper.getMainLooper()).post(() -> {
                         if (exchangeLevel != 1 && accessLevel != 1) {
-                            dailyCounter.setText("Произведено за сегодня м3: " + finalResult);
-                            recipeName.setText("Рецепт/заказ: " +selectedRecepie +"/"+ selectedOrder);
+                            dailyCounter.setText("Произведено за сегодня м³: " + finalResult);
+                            recipeName.setText("Рецепт: " + selectedRecepie);
+                            orderName.setText("Заказ: " + selectedOrder);
+                            transporter.setText("Водитель: " + selectedTrans);
+                            organization.setText("Заказчик: " + selectedOrg);
                         }
                     });
                 } catch (Exception e) {
@@ -1391,15 +1959,61 @@ public class OperatorViewActivity extends AppCompatActivity {
                 }
             }
         }).start();
+
+        if (true) {
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        Thread.sleep(2000);
+                        StorageMillage storageMillage = new StorageMillageBuilder().getValues(getApplicationContext());
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            DecimalFormat df = new DecimalFormat("#0.00");
+                            // Set UI elements
+                            buncker1.setText(df.format(storageMillage.getBunckerMillage1()));
+                            buncker2.setText(df.format(storageMillage.getBunckerMillage2()));
+                            buncker3.setText(df.format(storageMillage.getBunckerMillage3()));
+                            buncker4.setText(df.format(storageMillage.getBunckerMillage4()));
+                            water1.setText(df.format(storageMillage.getWaterMillage()));
+
+                            chemy1.setText(df.format(storageMillage.getChemy1Millage()));
+                            chemy2.setText(df.format(storageMillage.getChemy2Millage()));
+
+                            cement1.setText(df.format(storageMillage.getSilos1Millage()));
+                            cement2.setText(df.format(storageMillage.getSilos2Millage()));
+                        });
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
     }
 
     private void setsID() {
+        tabMenu = findViewById(R.id.tabMenu);
+        fillers = findViewById(R.id.fillers);
+        tableMenu = findViewById(R.id.tableMenu);
+
+        pbChemy = findViewById(R.id.pbChemy);
+        pbSilos = findViewById(R.id.pbSilos);
+        pbWater = findViewById(R.id.pbWater);
+        pbInert = findViewById(R.id.pbInert);
+
+        blade1 = findViewById(R.id.blade1);
+        blade2 = findViewById(R.id.blade2);
         silosSelector1 = findViewById(R.id.silosSelector1);
         silosSelector2 = findViewById(R.id.silosSelector2);
-        horLineView = findViewById(R.id.horLineView);
+
         touchUnlock = findViewById(R.id.seekBar);
         touchLock = findViewById(R.id.touchLock);
         touchLockLayout = findViewById(R.id.touchLockLayout);
+        mainMenuDL = findViewById(R.id.mainMenuDL);
+
+        recipesMenu = findViewById(R.id.recipesMenu);
+        ordersMenu = findViewById(R.id.ordersMenu);
+        orgsMenu = findViewById(R.id.orgsMenu);
+        driversMenu = findViewById(R.id.driversMenu);
+
         doser11 = findViewById(R.id.doser11);
         doser12 = findViewById(R.id.doser12);
         doser21 = findViewById(R.id.doser21);
@@ -1408,8 +2022,8 @@ public class OperatorViewActivity extends AppCompatActivity {
         doser32 = findViewById(R.id.doser32);
         doser41 = findViewById(R.id.doser41);
         doser42 = findViewById(R.id.doser42);
+
         pumpWater = findViewById(R.id.pumpWater);
-        pumpWater2 = findViewById(R.id.pumpWater2);
         doserShnek1 = findViewById(R.id.doserShnek1);
         doserShnek2 = findViewById(R.id.doserShnek2);
         doserDispenserCement = findViewById(R.id.doserDispenserCement);
@@ -1417,9 +2031,11 @@ public class OperatorViewActivity extends AppCompatActivity {
         doserDispenserChemy = findViewById(R.id.doserDispenserChemy);
         skipUp = findViewById(R.id.skipUp);
         reportsMenu = findViewById(R.id.reportsMenu);
+        learningMenu = findViewById(R.id.learninMenu);
+        helpMenu = findViewById(R.id.helpMenu);
+        exitMenu = findViewById(R.id.exitMenu);
         catalogsBtn = findViewById(R.id.catalogsMenu);
         buncker2View = findViewById(R.id.buncker2View);
-        bunckerChemy1 = findViewById(R.id.bunckerChemy1);
 
         chemy2LL = findViewById(R.id.chemy2LL);
         chemy3LL = findViewById(R.id.chemy3LL);
@@ -1427,11 +2043,41 @@ public class OperatorViewActivity extends AppCompatActivity {
 
         cement2LL = findViewById(R.id.cement2LL);
 
+        buncker1 = findViewById(R.id.buncker1);
+        buncker2 = findViewById(R.id.buncker2);
+        buncker3 = findViewById(R.id.buncker3);
+        buncker4 = findViewById(R.id.buncker4);
+        chemy1 = findViewById(R.id.chemy1);
+        chemy2 = findViewById(R.id.chemy2);
+        chemy3 = findViewById(R.id.chemy3);
+        water1 = findViewById(R.id.water1);
+        water2 = findViewById(R.id.water2);
+        cement1 = findViewById(R.id.cement1);
+        cement2 = findViewById(R.id.cement2);
+        cement3 = findViewById(R.id.cement3);
+        cement4 = findViewById(R.id.cement4);
+
+        rtDK = findViewById(R.id.rtDK);
+        rtLT = findViewById(R.id.rtLT);
+        rtSkip = findViewById(R.id.rtSkip);
+        rtMixer = findViewById(R.id.rtMixer);
+        rtShnek1 = findViewById(R.id.rtShnek1);
+        rtShnek2 = findViewById(R.id.rtShnek2);
+        rtShnek3 = findViewById(R.id.rtShnek3);
+        rtShnek4 = findViewById(R.id.rtShnek4);
+        rtVW = findViewById(R.id.rtVW);
+        rtPW = findViewById(R.id.rtPW);
+        rtChemy1 = findViewById(R.id.rtChemy1);
+        rtChemy2 = findViewById(R.id.rtChemy2);
+        rtOil = findViewById(R.id.rtOil);
+
+        timeMix = findViewById(R.id.timeMix);
         recipeName = findViewById(R.id.recepieName);
+        orderName = findViewById(R.id.orderName);
+        transporter = findViewById(R.id.transporter);
+        organization = findViewById(R.id.organization);
         doseWater1 = findViewById(R.id.doseWater1);
         recipeWater1 = findViewById(R.id.recepieWater1);
-        bunckerChemy2 = findViewById(R.id.bunckerChemy2);
-        bunckerChemy3 = findViewById(R.id.bunckerChemy3);
         doseSilos1 = findViewById(R.id.doseSilos1);
 
         silos2View = findViewById(R.id.silos2View);
@@ -1442,12 +2088,11 @@ public class OperatorViewActivity extends AppCompatActivity {
         levelUpSilos2 = findViewById(R.id.levelUpSilos2);
         recipeSilos2 = findViewById(R.id.recepieSilos2);
         recipeSilos1 = findViewById(R.id.recepieSilos1);
-        titleSilos1 = findViewById(R.id.silosSelector1);
         aerationSilos = findViewById(R.id.aerationSilos);
         vibroSilos = findViewById(R.id.vibroSilos);
         filterSilos = findViewById(R.id.filterSilos);
-        recipeOptionBtn = findViewById(R.id.recepieOptionBtn);
         partyOptionBtn = findViewById(R.id.partyOptionBtn);
+        timeMixBtn = findViewById(R.id.timeMixBtn);
         mixOptionBtn = findViewById(R.id.mixOptionBtn);
         openMixer = findViewById(R.id.openMixer);
         closeMixer = findViewById(R.id.closeMixer);
@@ -1459,32 +2104,27 @@ public class OperatorViewActivity extends AppCompatActivity {
         mixCounterCurrent = findViewById(R.id.mixCounterCurrent);
         stateFactory = findViewById(R.id.stateFactory);
         dailyCounter = findViewById(R.id.dailyCounter);
-        titleChemy1 = findViewById(R.id.titleChemy1);
-        titleChemy2 = findViewById(R.id.titleChemy2);
-        titleChemy3 = findViewById(R.id.titleChemy3);
         recipeChemy2 = findViewById(R.id.recepieChemy2);
-        recipeChemy3 = findViewById(R.id.recepieChemy3);
         doseChemy2 = findViewById(R.id.doseChemy2);
-        doseChemy3 = findViewById(R.id.doseChemy3);
         recipeChemy1 = findViewById(R.id.recepieChemy1);
         doseChemy1 = findViewById(R.id.doseChemy1);
         startSelfDK = findViewById(R.id.startSelfDK);
         startSelfChemy = findViewById(R.id.startSelfChemy);
         startSelfCement = findViewById(R.id.startSelfCement);
         startSelfWater = findViewById(R.id.startSelfWater);
+        halfAutoMode = findViewById(R.id.halfAutoMode);
         amperage = findViewById(R.id.amperage);
         mixFully = findViewById(R.id.mixFully);
         mixerView = findViewById(R.id.mixerView);
-        mixerView.setBackgroundResource(R.drawable.mixer_animation);
 
         reverseConveyor = findViewById(R.id.reverseConveyor);
         conveyorUploadDrop = findViewById(R.id.conveyorUploadDrop);
+        correctionBtn = findViewById(R.id.correctionBtn);
         closeAlarmLayoutBtn = findViewById(R.id.closeAlarmLayoutBtn);
         resetAlarmBtn = findViewById(R.id.resetAlarmBtn);
         alarmsWarningLayout = findViewById(R.id.alarmsWarningLayout);
         alarmWarningText = findViewById(R.id.alarmWarningText);
 
-        hopper1 = findViewById(R.id.hopper1);
         hopper2 = findViewById(R.id.hopper2);
         hopper3 = findViewById(R.id.hopper3);
         hopper4 = findViewById(R.id.hopper4);
@@ -1495,22 +2135,14 @@ public class OperatorViewActivity extends AppCompatActivity {
         autoDropChecker = findViewById(R.id.autoDropChecker);
         skipDown = findViewById(R.id.skipDown);
         skipMiddle = findViewById(R.id.skipMiddle);
-        titleBuncker1 = findViewById(R.id.titleBuncker1);
-        titleBuncker4 = findViewById(R.id.titleBuncker4);
         recepieBuncker4 = findViewById(R.id.recepieBuncker4);
         doseBuncker4 = findViewById(R.id.doseBuncker4);
-        titleBuncker3 = findViewById(R.id.titleBuncker3);
-        titleBuncker2 = findViewById(R.id.titleBuncker2);
         recepieBuncker1 = findViewById(R.id.recepieBuncker1);
         recepieBuncker2 = findViewById(R.id.recepieBuncker2);
         doseBuncker1 = findViewById(R.id.doseBuncker1);
         doseBuncker2 = findViewById(R.id.doseBuncker2);
-        dispenserChemyView = findViewById(R.id.dispenserChemyView);
-        dispenserWaterView = findViewById(R.id.dispenserWaterView);
-        dispenserCementView = findViewById(R.id.dispenserCementView);
         doserChemy1 = findViewById(R.id.doserChemy1);
         doserChemy2 = findViewById(R.id.doserChemy2);
-        doserChemy3 = findViewById(R.id.doserChemy3);
         weigthDC = findViewById(R.id.weigthDC);
         weigthWater = findViewById(R.id.weigthWater);
         weightDCh = findViewById(R.id.weightDCh);
@@ -1529,8 +2161,6 @@ public class OperatorViewActivity extends AppCompatActivity {
         dropProcessArrow = findViewById(R.id.dropProcessArrow);
         overflowChemy = findViewById(R.id.overflowChemy);
         overflowWater = findViewById(R.id.overflowWater);
-        levelDownSilos1 = findViewById(R.id.levelDownSilos1);
-        levelUpSilos1 = findViewById(R.id.levelUpSilos1);
         closeSensorMixer = findViewById(R.id.closeSensorMixer);
         middleSensorMixer = findViewById(R.id.middleSensorMixer);
         openSensorMixer = findViewById(R.id.openSensorMixer);
@@ -1546,18 +2176,26 @@ public class OperatorViewActivity extends AppCompatActivity {
         horLineStart = findViewById(R.id.horLineStart);
         organizationSelectBtn = findViewById(R.id.organizationSelectBtn);
         transporterSelectBtn = findViewById(R.id.driverSelectBtn);
-        resetCounterBtn = findViewById(R.id.resetCounterBtn);
+        resetBtn = findViewById(R.id.resetCounterBtn);
         performance = findViewById(R.id.performance);
+        infoApp = findViewById(R.id.infoApp);
 
+        mCorrectionBuilder = new AlertDialog.Builder(this);
+        mCorrectionView = getLayoutInflater().inflate(R.layout.dialog_correction, null);
+        mCorrectionBuilder.setView(mCorrectionView);
+        correctionDialog = mCorrectionBuilder.create();
+        autoCorrectionShnekSelector = mCorrectionView.findViewById(R.id.autoCorrectionShnekSelector);
+        recepieCorrectionOption = mCorrectionView.findViewById(R.id.recepieCorrectionOption);
+        closeDialog = mCorrectionView.findViewById(R.id.hideDialog);
     }
 
     @SuppressWarnings("deprecation")
     private void vibrate(int ms) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+        if (SDK_INT >= android.os.Build.VERSION_CODES.S) {
             VibratorManager vibratorManager = (VibratorManager) getApplicationContext().getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
             Vibrator vibrator = vibratorManager.getDefaultVibrator();
             vibrator.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        } else if (SDK_INT >= android.os.Build.VERSION_CODES.O) {
             Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
             vibrator.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
@@ -1568,10 +2206,10 @@ public class OperatorViewActivity extends AppCompatActivity {
     }
 
     public void setCurrentOptions() {
-        Current currentOptions = new DBUtilGet(this).getCurrent();
+        Current currentOptions = dbUtilGet.getCurrent();
         if (currentOptions != null) {
-            Order order = new DBUtilGet(this).getOrderForID(currentOptions.getOrderID());
-            Recepie recepie = new DBUtilGet(this).getRecipeForID(currentOptions.getRecipeID());
+            Order order = dbUtilGet.getOrderForID(currentOptions.getOrderID());
+            Recepie recepie = dbUtilGet.getRecipeForID(currentOptions.getRecipeID());
 
             if (recepie != null) selectedRecepie = recepie.getMark();
             if (order != null) selectedOrder = order.getNameOrder();
@@ -1579,6 +2217,68 @@ public class OperatorViewActivity extends AppCompatActivity {
             if (currentOptions.getState() != null) {
                 if (currentOptions.getState().equals("work")) globalFactoryState = true;
                 if (currentOptions.getState().equals("idle")) globalFactoryState = false;
+            }
+        }
+    }
+
+    public void notification(String title, String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "CHANNEL_ID")
+                .setSmallIcon(R.drawable.logo_zzbo_1)
+                .setContentTitle(title)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentText(message);
+        createNotificationChannel();
+        Notification notification = builder.build();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1, notification);
+    }
+
+    private void createNotificationChannel() {
+        if (SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", "Предупреждения", NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void openPDF(String filename) {
+        copyFile(filename);
+
+        File file = new File(Environment.getExternalStorageDirectory(), "Download/"+ filename);
+        Uri uriPdfPath = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file);
+        Intent pdfOpenIntent = new Intent(Intent.ACTION_VIEW);
+        pdfOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        pdfOpenIntent.setClipData(ClipData.newRawUri("", uriPdfPath));
+        pdfOpenIntent.setDataAndType(uriPdfPath, "application/pdf");
+        pdfOpenIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION |  Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+
+        try {
+            startActivity(pdfOpenIntent);
+        } catch (ActivityNotFoundException activityNotFoundException) {
+            Toast.makeText(this,"Нет приложения для открытия файла PDF",Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    private void copyFile(String name) {
+        AssetManager assetManager = getAssets();
+        InputStream in;
+        OutputStream out;
+        File file = new File(getFilesDir(), name);
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            try {
+                in = assetManager.open(name);
+                out = new FileOutputStream(Environment.getExternalStorageDirectory() + "/Download/" + name);
+                byte[] buffer = new byte[1024];
+                int read;
+                while((read = in.read(buffer)) != -1) out.write(buffer, 0, read);
+                in.close();
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                Log.i("CopyFromAssets", "Не удалось скопировать файл: " + file.getName() + " " + e);
             }
         }
     }

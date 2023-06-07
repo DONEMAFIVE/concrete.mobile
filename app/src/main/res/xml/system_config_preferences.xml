@@ -4,14 +4,17 @@
 
     <PreferenceCategory app:title="@string/system_header">
         <EditTextPreference
+            app:key="device_id"
+            app:title="@string/android_id"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:key="plc_ip"
             app:title="@string/plc_ip"
             app:useSimpleSummaryProvider="true" />
 
-        <EditTextPreference
-            android:key="mac_plc"
-            android:title="MAC контроллера"
-            app:useSimpleSummaryProvider="true"/>
         <EditTextPreference
             app:key="scada_ip"
             app:title="@string/scada_ip"
@@ -36,24 +39,31 @@
             app:key="hardkey"
             app:title="@string/hardkey"
             app:useSimpleSummaryProvider="true" />
+        <Preference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_zzbo_foreground"
+            app:key="getLicence"
+            app:title="Проверить лицензию" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/report_header">
+<!--    <PreferenceCategory-->
+<!--        android:visibility="gone"-->
+<!--        app:title="@string/report_header">-->
 
-        <SwitchPreferenceCompat
-            app:key="yandex_option"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/send_mail_title" />
+<!--        <SwitchPreferenceCompat-->
+<!--            app:key="yandex_option"-->
+<!--            app:summaryOff="@string/attachment_summary_off"-->
+<!--            app:summaryOn="@string/attachment_summary_on"-->
+<!--            app:title="@string/send_mail_title" />-->
 
-        <EditTextPreference
-            app:dependency="yandex_option"
-            app:key="time_sync"
-            app:title="@string/time_sync_title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
+<!--        <EditTextPreference-->
+<!--            app:dependency="yandex_option"-->
+<!--            app:key="time_sync"-->
+<!--            app:title="@string/time_sync_title"-->
+<!--            app:useSimpleSummaryProvider="true" />-->
+<!--    </PreferenceCategory>-->
 
     <PreferenceCategory >
         <Preference

@@ -57,6 +57,7 @@ public class MixCapacityDialog extends DialogFragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
                     }).start();
 
                     Toast.makeText(getActivity(), "Замес: " + mixCapacity.getText(), Toast.LENGTH_LONG).show();

@@ -26,7 +26,7 @@ import java.util.List;
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.models.Mix;
-import ru.zzbo.concretemobile.utils.DateTimeUtils;
+import ru.zzbo.concretemobile.utils.DateTimeUtil;
 import ru.zzbo.concretemobile.utils.DatesGenerate;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 import ru.zzbo.concretemobile.utils.TableView;
@@ -60,16 +60,18 @@ public class ReportForPartyFragment extends Fragment {
         dates = new DatesGenerate(this.dateFirst, this.dateEnd).getLostDates();
 
         new Thread(() -> {
-            if (exchangeLevel == 1) {
-                String req = OkHttpUtil.getMixes(dateFirst, dateEnd);
-                if (!req.trim().equals("Empty")){
-                    report =  new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
-                }
-            } else report = new DBUtilGet(getContext()).getMixList();
+            try {
+                if (exchangeLevel == 1) {
+                    String req = OkHttpUtil.getMixes(dateFirst, dateEnd);
+                    if (!req.trim().equals("Empty")){
+                        report =  new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
+                    }
+                } else report = new DBUtilGet(getContext()).getMixList();
 
-            if (report != null) new Handler(Looper.getMainLooper()).post(() -> buildPartyReport());
-
-
+                if (report != null) new Handler(Looper.getMainLooper()).post(() -> buildPartyReport());
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }).start();
 
     }
@@ -166,6 +168,44 @@ public class ReportForPartyFragment extends Fragment {
         times.add("00:00:00");
         SimpleDateFormat time = new SimpleDateFormat("HH:mm:ss");
 
+        if (mixList.size() == 1) {
+            mixList.add(new Mix(
+                    -1,
+                    "0",
+                    0,
+                    "0",
+                    "0",
+                    "0",
+                    0,
+                    "0",
+                    "0",
+                    "0",
+                    0,
+                    "0",
+                    0,
+                    "0",
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    "0"
+            ));
+        }
         for (int i = 0; i < mixList.size() - 1; i++) {
             if (flagEmptyCement) {   //Проверка на наличие галочки "Не учитывать замесы без цемента"
                 if (!(mixList.get(i).getSilos1() == 0.0 && mixList.get(i).getSilos2() == 0.0)) {
@@ -210,7 +250,7 @@ public class ReportForPartyFragment extends Fragment {
             }
 
             try {
-                loadingTime = time.format(time.parse(new DateTimeUtils().sumTimes(times)));
+                loadingTime = time.format(time.parse(new DateTimeUtil().sumTimes(times)));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -278,7 +318,7 @@ public class ReportForPartyFragment extends Fragment {
                 if ((mixList.get(i + 1).getMixCounter() != 0) || (mixList.get(i + 1).getMixCounter() != 1)) {
                     times.add(mixList.get(i + 1).getLoadingTime());
                     try {
-                        loadingTime = time.format(time.parse(new DateTimeUtils().sumTimes(times)));
+                        loadingTime = time.format(time.parse(new DateTimeUtil().sumTimes(times)));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -334,7 +374,7 @@ public class ReportForPartyFragment extends Fragment {
                             totalChemy2.floatValue(),
                             loadingTime
                     );
-                    result.add(currentMix);
+                    if (currentMix.getId() != -1) result.add(currentMix);
                     break;
                 }
             }

@@ -3,6 +3,7 @@ package ru.zzbo.concretemobile.gui.dialogs.uploaders;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.selectedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.selectedRecepie;
+import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
@@ -94,6 +96,7 @@ public class RecipeLoaderDialog extends DialogFragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(2000);
                         }).start();
 
                     }

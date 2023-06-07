@@ -16,8 +16,7 @@ public class S7Protection {
    public int sch_rel;
    public int bart_sch;
    public int anl_sch;
-   protected void Update(byte[] Src)
-   {
+   protected void Update(byte[] Src) {
        sch_schal = S7.GetWordAt(Src,2);
        sch_par   = S7.GetWordAt(Src,4);
        sch_rel   = S7.GetWordAt(Src,6);

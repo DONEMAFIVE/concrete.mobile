@@ -15,8 +15,7 @@ public class S7CpuInfo {
     private final int BufSize = 256;
     protected byte[] Buffer = new byte[BufSize];       
 
-    protected void Update(byte[] Src, int Pos)
-    {
+    protected void Update(byte[] Src, int Pos) {
         System.arraycopy(Src, Pos, Buffer, 0, BufSize);
     }   
     

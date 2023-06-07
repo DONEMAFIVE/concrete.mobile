@@ -46,39 +46,39 @@ public class CatalogMenuDialog extends DialogFragment {
 
                     switch (i) {
                         case 0: {
-                            new Thread(() -> {
-                                List<Recepie> recepieList = new ArrayList<>();
-                                if (exchangeLevel == 1) {
-                                    recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
-                                } else recepieList = new DBUtilGet(getContext()).getRecipes();
-
-                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recepieList);
-                                recipeEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
-                            }).start();
+//                            new Thread(() -> {
+//                                List<Recepie> recepieList = new ArrayList<>();
+//                                if (exchangeLevel == 1) {
+//                                    recepieList.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
+//                                } else recepieList = new DBUtilGet(getContext()).getRecipes();
+//
+//                                RecipeEditorDialog recipeEditorDialog = new RecipeEditorDialog(recepieList);
+//                                recipeEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
+//                            }).start();
                             break;
                         }
                         case 1: {
-                            new Thread(() -> {
-                                List<Organization> organizationList = new ArrayList<>();
-                                if (exchangeLevel == 1) {
-                                    organizationList.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {}.getType()));
-                                } else organizationList = new DBUtilGet(getContext()).getOrgs();
-
-                                OrganizationEditorDialog organizationEditorDialog = new OrganizationEditorDialog(organizationList);
-                                organizationEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
-                            }).start();
+//                            new Thread(() -> {
+//                                List<Organization> organizationList = new ArrayList<>();
+//                                if (exchangeLevel == 1) {
+//                                    organizationList.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {}.getType()));
+//                                } else organizationList = new DBUtilGet(getContext()).getOrgs();
+//
+//                                OrganizationEditorDialog organizationEditorDialog = new OrganizationEditorDialog(organizationList);
+//                                organizationEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
+//                            }).start();
                             break;
                         }
                         case 2: {
-                            new Thread(() -> {
-                                List<Transporter> transporterList = new ArrayList<>();
-                                if (exchangeLevel == 1) {
-                                    transporterList.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {}.getType()));
-                                } else transporterList = new DBUtilGet(getContext()).getTrans();
-
-                                TransporterEditorDialog transporterEditorDialog = new TransporterEditorDialog(transporterList);
-                                transporterEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
-                            }).start();
+//                            new Thread(() -> {
+//                                List<Transporter> transporterList = new ArrayList<>();
+//                                if (exchangeLevel == 1) {
+//                                    transporterList.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {}.getType()));
+//                                } else transporterList = new DBUtilGet(getContext()).getTrans();
+//
+//                                TransporterEditorDialog transporterEditorDialog = new TransporterEditorDialog(transporterList);
+//                                transporterEditorDialog.show(operatorViewActivity.getSupportFragmentManager(), "custom");
+//                            }).start();
                             break;
                         }
                         case 3: {

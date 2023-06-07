@@ -1,6 +1,6 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.DateTimeUtils.getDateFromDatePicker;
+import static ru.zzbo.concretemobile.utils.DateTimeUtil.getDateFromDatePicker;
 
 import android.Manifest;
 import android.app.Activity;
@@ -38,8 +38,8 @@ import ru.zzbo.concretemobile.gui.fragments.reports.ReportForMarksFragment;
 import ru.zzbo.concretemobile.gui.fragments.reports.ReportForMixesFragment;
 import ru.zzbo.concretemobile.gui.fragments.reports.ReportForPartyFragment;
 import ru.zzbo.concretemobile.gui.fragments.reports.ReportForTotalFragment;
-import ru.zzbo.concretemobile.utils.DateTimeUtils;
-import ru.zzbo.concretemobile.utils.SqliteToExcel;
+import ru.zzbo.concretemobile.utils.DateTimeUtil;
+import ru.zzbo.concretemobile.utils.SqliteToExcelUtil;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -193,16 +193,16 @@ public class ReportsActivity extends AppCompatActivity {
                     new Thread(() -> {
                         runOnUiThread(() -> progressLoading.setVisibility(View.VISIBLE));
 
-                        SqliteToExcel sqliteToExcel = new SqliteToExcel(this, startDate, endDate);
+                        SqliteToExcelUtil sqliteToExcelUtil = new SqliteToExcelUtil(this, startDate, endDate);
 
                         //todo: выбор отчета
-                        if (mixesReportChecker.isChecked()) sqliteToExcel.createSheetMixes(cementLessFilter.isChecked());
-                        if (partyReportChecker.isChecked()) sqliteToExcel.createSheetParty(cementLessFilter.isChecked());
-                        if (marksReportChecker.isChecked()) sqliteToExcel.createSheetMark();
-                        if (totalReportChecker.isChecked()) sqliteToExcel.createSheetTotal();
+                        if (mixesReportChecker.isChecked()) sqliteToExcelUtil.createSheetMixes(cementLessFilter.isChecked());
+                        if (partyReportChecker.isChecked()) sqliteToExcelUtil.createSheetParty(cementLessFilter.isChecked());
+                        if (marksReportChecker.isChecked()) sqliteToExcelUtil.createSheetMark();
+                        if (totalReportChecker.isChecked()) sqliteToExcelUtil.createSheetTotal();
 
 
-                        if (sqliteToExcel.exportExcel()) {
+                        if (sqliteToExcelUtil.exportExcel()) {
                             runOnUiThread(() -> {
                                 Toast.makeText(getApplicationContext(), "Успешно", Toast.LENGTH_SHORT).show();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -265,7 +265,7 @@ public class ReportsActivity extends AppCompatActivity {
             startDate = sdf.format(getDateFromDatePicker(dateBeginWidget));
             endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
 
-            if (DateTimeUtils.startLongerEnd(startDate, endDate)) {
+            if (DateTimeUtil.startLongerEnd(startDate, endDate)) {
                 runOnUiThread(() -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setTitle("Уведомление").setMessage("Указан неверный диапазон дат!");
@@ -371,7 +371,7 @@ public class ReportsActivity extends AppCompatActivity {
         closeDialog = mFilterView.findViewById(R.id.closeDialog);
         dateBeginWidget = mFilterView.findViewById(R.id.dateBeginWidget);
         dateEndWidget = mFilterView.findViewById(R.id.dateEndWidget);
-        cementLessFilter = mFilterView.findViewById(R.id.cementLessFilter);
+        cementLessFilter = mFilterView.findViewById(R.id.autoCorrectionShnekSelector);
 
         mSaveBuilder = new AlertDialog.Builder(this);
         mSaveView = getLayoutInflater().inflate(R.layout.dialog_save_report, null);

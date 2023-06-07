@@ -7,7 +7,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import ru.zzbo.concretemobile.db.builders.StorageMillageBuilder;
 import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
+import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
@@ -19,7 +21,9 @@ public class DBUtilInsert {
     private DBInitializer dbInitializer;
     private SQLiteDatabase sqLiteDatabase;
 
+    private Context context;
     public DBUtilInsert(Context context) {
+        this.context = context;
         dbInitializer = new DBInitializer(context);
     }
 
@@ -329,9 +333,143 @@ public class DBUtilInsert {
             cv.put("loadingTime", mix.getLoadingTime());
 
             sqLiteDatabase.insert("mixes", null, cv);
+            calcMillage(mix);
+
         } finally {
             closeSession();
         }
     }
 
+    private void calcMillage(Mix mix){
+        StorageMillage storageMillage = new StorageMillageBuilder().getValues(context);
+        //к пробегу прибавить данные из замеса
+        storageMillage.setBunckerMillage1(storageMillage.getBunckerMillage1() + mix.getBuncker11());
+        storageMillage.setBunckerMillage1(storageMillage.getBunckerMillage1() + mix.getBuncker12());
+        storageMillage.setBunckerMillage2(storageMillage.getBunckerMillage2() + mix.getBuncker21());
+        storageMillage.setBunckerMillage2(storageMillage.getBunckerMillage2() + mix.getBuncker22());
+        storageMillage.setBunckerMillage3(storageMillage.getBunckerMillage3() + mix.getBuncker31());
+        storageMillage.setBunckerMillage3(storageMillage.getBunckerMillage3() + mix.getBuncker32());
+        storageMillage.setBunckerMillage4(storageMillage.getBunckerMillage4() + mix.getBuncker41());
+        storageMillage.setBunckerMillage4(storageMillage.getBunckerMillage4() + mix.getBuncker42());
+        storageMillage.setWaterMillage(storageMillage.getWaterMillage() + mix.getWater1());
+        storageMillage.setChemy1Millage(storageMillage.getChemy1Millage() + mix.getChemy1());
+        storageMillage.setChemy2Millage(storageMillage.getChemy2Millage() + mix.getChemy2());
+//        storageMillage.setChemy3Millage(storageMillage.getChemy3Millage() + mix.getChemy3());
+        storageMillage.setSilos1Millage(storageMillage.getSilos1Millage() + mix.getSilos1());
+        storageMillage.setSilos2Millage(storageMillage.getSilos2Millage() + mix.getSilos2());
+//        storageMillage.setSilos3Millage(storageMillage.getSilos3Millage() + mix.getSilos3());
+//        storageMillage.setSilos4Millage(storageMillage.getSilos4Millage() + mix.getSilos4());
+
+        //для каждого склада вычесть данные из замеса, привязанные к бункеру
+        switch (storageMillage.getSetStorageBuncker1()){
+            case 0:{
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker11());
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker12());
+                break;
+            }
+            case 1:{
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker11());
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker12());
+                break;
+            }
+            case 2:{
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker11());
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker12());
+                break;
+            }
+            case 3:{
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker11());
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker12());
+                break;
+            }
+        }
+        switch (storageMillage.getSetStorageBuncker2()){
+            case 0:{
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker21());
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker22());
+                break;
+            }
+            case 1:{
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker21());
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker22());
+                break;
+            }
+            case 2:{
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker21());
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker22());
+                break;
+            }
+            case 3:{
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker21());
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker22());
+                break;
+            }
+        }
+        switch (storageMillage.getSetStorageBuncker3()){
+            case 0:{
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker31());
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker32());
+                break;
+            }
+            case 1:{
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker31());
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker32());
+                break;
+            }
+            case 2:{
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker31());
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker32());
+                break;
+            }
+            case 3:{
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker31());
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker32());
+                break;
+            }
+        }
+        switch (storageMillage.getSetStorageBuncker4()){
+            case 0:{
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker41());
+                storageMillage.setInertStorage1(storageMillage.getInertStorage1() - mix.getBuncker42());
+                break;
+            }
+            case 1:{
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker41());
+                storageMillage.setInertStorage2(storageMillage.getInertStorage2() - mix.getBuncker42());
+                break;
+            }
+            case 2:{
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker41());
+                storageMillage.setInertStorage3(storageMillage.getInertStorage3() - mix.getBuncker42());
+                break;
+            }
+            case 3:{
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker41());
+                storageMillage.setInertStorage4(storageMillage.getInertStorage1() - mix.getBuncker42());
+                break;
+            }
+        }
+
+        new DBUtilUpdate(context).updateStorageMillageValues(storageMillage);
+
+    }
+
+    public void addColumnTable(String table, String column, String type, String afterColumn) {
+        String sqlStr = "ALTER TABLE `" + table + "` ADD COLUMN `" + column + "` " + type + " NOT NULL AFTER `" + afterColumn + "`;";
+        try {
+            Cursor cursor = sqLiteDatabase.rawQuery(sqlStr, null);
+        } finally {
+            closeSession();
+        }
+    }
+
+    public void insertParameter(String table, String param, String value) {
+        String sql = "INSERT INTO `"+table+"` (`parameter`, `value`) VALUES ('" + param + "', '" + value + "');";
+        try {
+
+
+        } finally {
+            closeSession();
+        }
+    }
 }

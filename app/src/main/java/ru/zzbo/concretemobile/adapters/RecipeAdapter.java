@@ -89,8 +89,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             loadToPlcBtn = view.findViewById(R.id.load_to_plc_btn);
             editRecipeBtn = view.findViewById(R.id.edit_recipe_btn);
             delRecipeBtn = view.findViewById(R.id.del_recipe_btn);
-
-            if (exchangeLevel != 0) editRecipeBtn.setVisibility(View.GONE);
         }
+    }
+
+    public void filterList(List<Recepie> filteredList){
+        recepies = filteredList;
+        notifyDataSetChanged();
     }
 }

@@ -9,7 +9,43 @@
 
     tools:context=".gui.LoginActivity">
 
+    <!--todo: Уведомление о новом обновлении-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/info"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Доступно новое обновление" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Обновить" />
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <LinearLayout
+        android:id="@+id/linearLayout6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -51,23 +87,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="24sp"
                     android:ems="10"
                     android:hint="Логин"
+                    android:minHeight="48dp"
                     android:spinnerMode="dropdown"
-                    android:minHeight="48dp" />
+                    android:textSize="24sp" />
 
                 <EditText
                     android:id="@+id/passwdField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="24sp"
-                    android:paddingStart="10dp"
                     android:ems="10"
                     android:hint="Пароль"
                     android:inputType="textPassword"
-                    android:minHeight="48dp" />
+                    android:minHeight="48dp"
+                    android:paddingStart="10dp"
+                    android:textSize="24sp" />
 
                 <CheckBox
                     android:id="@+id/rememberLogin"
@@ -82,15 +118,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:entries="@array/connect_type"
-                    android:spinnerMode="dialog">
-                </Spinner>
+                    android:spinnerMode="dialog"></Spinner>
 
                 <Button
                     android:id="@+id/okBtn"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
-                    android:textSize="24sp"
-                    android:text="Войти" />
+                    android:text="Войти"
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -107,6 +142,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/info"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
+        tools:ignore="MissingConstraints">
+
+    </LinearLayout>
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/progress_loading"
@@ -142,6 +189,7 @@
                     android:text="Подключение..."
                     android:textColor="@color/white" />
             </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>

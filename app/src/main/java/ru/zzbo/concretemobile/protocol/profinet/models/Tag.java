@@ -12,13 +12,29 @@ public class Tag {
     private int intValueIf;
     private long DIntValueIf;
     private float realValueIf;
+    private String stringValueIf;
     private String description;
 
     private int isAlarm;
 
     public Tag(){}
 
-    public Tag(int id, int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String description, int isAlarm) {
+//    public Tag(int id, int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String description, int isAlarm) {
+//        this.id = id;
+//        this.area = area;
+//        this.dbNumber = dbNumber;
+//        this.start = start;
+//        this.bit = bit;
+//        this.typeTag = typeTag;
+//        this.boolValueIf = boolValueIf;
+//        this.intValueIf = intValueIf;
+//        this.DIntValueIf = DIntValueIf;
+//        this.realValueIf = realValueIf;
+//        this.description = description;
+//        this.isAlarm = isAlarm;
+//    }
+
+    public Tag(int id, int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String stringValueIf, String description, int isAlarm) {
         this.id = id;
         this.area = area;
         this.dbNumber = dbNumber;
@@ -29,11 +45,25 @@ public class Tag {
         this.intValueIf = intValueIf;
         this.DIntValueIf = DIntValueIf;
         this.realValueIf = realValueIf;
+        this.stringValueIf = stringValueIf;
         this.description = description;
         this.isAlarm = isAlarm;
     }
+//    public Tag(int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String description, int isAlarm) {
+//        this.area = area;
+//        this.dbNumber = dbNumber;
+//        this.start = start;
+//        this.bit = bit;
+//        this.typeTag = typeTag;
+//        this.boolValueIf = boolValueIf;
+//        this.intValueIf = intValueIf;
+//        this.DIntValueIf = DIntValueIf;
+//        this.realValueIf = realValueIf;
+//        this.description = description;
+//        this.isAlarm = isAlarm;
+//    }
 
-    public Tag(int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String description, int isAlarm) {
+    public Tag(int area, int dbNumber, int start, int bit, String typeTag, boolean boolValueIf, int intValueIf, long DIntValueIf, float realValueIf, String stringValueIf, String description, int isAlarm) {
         this.area = area;
         this.dbNumber = dbNumber;
         this.start = start;
@@ -43,9 +73,11 @@ public class Tag {
         this.intValueIf = intValueIf;
         this.DIntValueIf = DIntValueIf;
         this.realValueIf = realValueIf;
+        this.stringValueIf = stringValueIf;
         this.description = description;
         this.isAlarm = isAlarm;
     }
+
 
     public int getId() {
         return id;
@@ -142,7 +174,13 @@ public class Tag {
     public void setIsAlarm(int isAlarm) {
         this.isAlarm = isAlarm;
     }
+    public void setStringValueIf(String stringValueIf) {
+        this.stringValueIf = stringValueIf;
+    }
 
+    public String getStringValueIf() {
+        return stringValueIf;
+    }
     @Override
     public String toString() {
         return "Tag{" +

@@ -1,6 +1,5 @@
 package ru.zzbo.concretemobile.gui.catalogs;
 
-
 import static ru.zzbo.concretemobile.utils.Constants.editedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
@@ -98,9 +97,9 @@ public class EditOrderActivity extends AppCompatActivity {
             namePayment.add("Терминал");
 
             if (exchangeLevel == 1){
-                org.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>() {}.getType()));
-                trans.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>() {}.getType()));
-                recepies.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>() {}.getType()));
+                org.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>(){}.getType()));
+                trans.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>(){}.getType()));
+                recepies.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>(){}.getType()));
             }  else {
                 org.addAll(new DBUtilGet(this).getOrgs());
                 trans.addAll(new DBUtilGet(this).getTrans());

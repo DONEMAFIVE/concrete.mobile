@@ -61,7 +61,7 @@
         </LinearLayout>
 
         <CheckBox
-            android:id="@+id/cementLessFilter"
+            android:id="@+id/autoCorrectionShnekSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Не учитывать замесы без цемента" />

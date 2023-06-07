@@ -201,6 +201,8 @@ public class ReflectionRetrieval {
     private int alarmDCShiberErrorValue;
     private int alarmSkipSensorValue;
     private double scadaPerformanceValue;
+    private int recepieCorrectOptionValue;
+    private int autoCorrectShnekOptionValue;
 
     //инициализация переменных
     public void getValues() {
@@ -364,6 +366,14 @@ public class ReflectionRetrieval {
             Field mixerWindowViewOpenSensorField = tagCollector.getClass().getDeclaredField("mixerWindowViewOpenSensor");
             mixerWindowViewOpenSensorField.setAccessible(true);
             mixerWindowViewOpenSensorValue = (int) mixerWindowViewOpenSensorField.get(tagCollector);
+
+            Field recepieCorrectOptionField = tagCollector.getClass().getDeclaredField("recepieCorrectOption");
+            recepieCorrectOptionField.setAccessible(true);
+            recepieCorrectOptionValue = (int) recepieCorrectOptionField.get(tagCollector);
+
+            Field autoCorrectShnekOptionField = tagCollector.getClass().getDeclaredField("autoCorrectShnekOption");
+            autoCorrectShnekOptionField.setAccessible(true);
+            autoCorrectShnekOptionValue = (int) autoCorrectShnekOptionField.get(tagCollector);
 
             //DB14 (REAL)
             Field hopper11RecipeField = tagCollector.getClass().getDeclaredField("hopper11Recipe");
@@ -2152,6 +2162,14 @@ public class ReflectionRetrieval {
 
     public int getAlarmSkipDoubleSensorCrashValue() {
         return alarmSkipSensorValue;
+    }
+
+    public int getRecepieCorrectOptionValue() {
+        return recepieCorrectOptionValue;
+    }
+
+    public int getAutoCorrectShnekOptionValue() {
+        return autoCorrectShnekOptionValue;
     }
 
     @Override

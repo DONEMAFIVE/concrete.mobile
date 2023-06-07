@@ -4,7 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.util.List;
+
 import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
+import ru.zzbo.concretemobile.db.models.ParameterDB;
+import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Recepie;
@@ -15,7 +19,9 @@ public class DBUtilUpdate {
     private DBInitializer dbInitializer;
     private SQLiteDatabase sqLiteDatabase;
 
+    private Context context;
     public DBUtilUpdate(Context context) {
+        this.context = context;
         dbInitializer = new DBInitializer(context);
     }
 
@@ -236,6 +242,35 @@ public class DBUtilUpdate {
         } finally {
             closeSession();
         }
+    }
+
+    public void saveParameterToDB(Context context, String parameter, String value, String tableName) {
+        List<ParameterDB> factorySetting = new DBUtilGet(context).getParametersDB(tableName);
+
+        for (ParameterDB current : factorySetting){
+            if (current.getParameter().equals(parameter)){
+                updateParameterTypeTable(tableName, parameter, value);
+            }
+        }
+    }
+
+    public void updateStorageMillageValues(StorageMillage storageMillage) {
+        saveParameterToDB(context, "buncker1_millage",String.valueOf(storageMillage.getBunckerMillage1()), "inert_balance");
+        saveParameterToDB(context, "buncker2_millage",String.valueOf(storageMillage.getBunckerMillage2()), "inert_balance");
+        saveParameterToDB(context, "buncker3_millage",String.valueOf(storageMillage.getBunckerMillage3()), "inert_balance");
+        saveParameterToDB(context, "buncker4_millage",String.valueOf(storageMillage.getBunckerMillage4()), "inert_balance");
+        saveParameterToDB(context, "water_millage",String.valueOf(storageMillage.getWaterMillage()), "inert_balance");
+        saveParameterToDB(context, "chemy1_millage",String.valueOf(storageMillage.getChemy1Millage()), "inert_balance");
+        saveParameterToDB(context, "chemy2_millage",String.valueOf(storageMillage.getChemy2Millage()), "inert_balance");
+        saveParameterToDB(context, "chemy3_millage",String.valueOf(storageMillage.getChemy3Millage()), "inert_balance");
+        saveParameterToDB(context, "silos1_millage",String.valueOf(storageMillage.getSilos1Millage()), "inert_balance");
+        saveParameterToDB(context, "silos2_millage",String.valueOf(storageMillage.getSilos2Millage()), "inert_balance");
+        saveParameterToDB(context, "silos3_millage",String.valueOf(storageMillage.getSilos3Millage()), "inert_balance");
+        saveParameterToDB(context, "silos4_millage",String.valueOf(storageMillage.getSilos4Millage()), "inert_balance");
+        saveParameterToDB(context, "inert_storage1",String.valueOf(storageMillage.getInertStorage1()), "inert_balance");
+        saveParameterToDB(context, "inert_storage2",String.valueOf(storageMillage.getInertStorage2()), "inert_balance");
+        saveParameterToDB(context, "inert_storage3",String.valueOf(storageMillage.getInertStorage3()), "inert_balance");
+        saveParameterToDB(context, "inert_storage4",String.valueOf(storageMillage.getInertStorage4()), "inert_balance");
     }
 
 }

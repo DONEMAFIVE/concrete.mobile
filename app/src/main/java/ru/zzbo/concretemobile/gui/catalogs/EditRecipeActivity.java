@@ -218,9 +218,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Рецепт удален!", Toast.LENGTH_LONG).show();
             finish();
         });
-        closeWindow.setOnClickListener(view -> {
-            finish();
-        });
+        closeWindow.setOnClickListener(view -> finish());
     }
 
     private void initFieldForRecipe() {
