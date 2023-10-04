@@ -24,6 +24,7 @@ public class FactoryComplectationBuilder {
             if (parameter.getParameter().equals("dropConveyor")) result.setDropConveyor(Boolean.parseBoolean(parameter.getValue()));
             if (parameter.getParameter().equals("mixCapacity")) result.setMixCapacity(Float.parseFloat(parameter.getValue()));
             if (parameter.getParameter().equals("hydroGate")) result.setHydroGate(Boolean.parseBoolean(parameter.getValue()));
+            if (parameter.getParameter().equals("dDryCHDispenser")) result.setdDryCHDispenser(Boolean.parseBoolean(parameter.getValue()));
 
         }
 

@@ -319,14 +319,6 @@
                     android:text="Сохранить и закрыть" />
 
                 <Button
-                    android:id="@+id/delOrg"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_margin="20dp"
-                    android:layout_weight="0.3"
-                    android:text="Удалить" />
-
-                <Button
                     android:id="@+id/closeOrg"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"

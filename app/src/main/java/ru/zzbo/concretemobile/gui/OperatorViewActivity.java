@@ -1,7 +1,6 @@
 package ru.zzbo.concretemobile.gui;
 
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.app.NotificationManager.IMPORTANCE_MAX;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
@@ -20,6 +19,7 @@ import static ru.zzbo.concretemobile.utils.Constants.globalFactoryState;
 import static ru.zzbo.concretemobile.utils.Constants.globalMixStartTime;
 import static ru.zzbo.concretemobile.utils.Constants.globalModeState;
 import static ru.zzbo.concretemobile.utils.Constants.hydroGateOption;
+import static ru.zzbo.concretemobile.utils.Constants.mPlayer;
 import static ru.zzbo.concretemobile.utils.Constants.mSettings;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
 import static ru.zzbo.concretemobile.utils.Constants.retrieval;
@@ -32,7 +32,6 @@ import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -41,12 +40,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Build;
@@ -112,6 +109,7 @@ import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
 import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
 import ru.zzbo.concretemobile.db.builders.StorageMillageBuilder;
 import ru.zzbo.concretemobile.db.models.StorageMillage;
+import ru.zzbo.concretemobile.gui.catalogs.RequisitesActivity;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.MixCapacityDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.OrganizationListDialog;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.PartyCapacityDialog;
@@ -127,18 +125,21 @@ import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.DataManager;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
+import ru.zzbo.concretemobile.protocol.profinet.commands.StartAutoCycle;
 import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 import ru.zzbo.concretemobile.reporting.ReportRecordingUtil;
 import ru.zzbo.concretemobile.utils.AlarmUtil;
 import ru.zzbo.concretemobile.utils.CalcUtil;
 import ru.zzbo.concretemobile.utils.ConnectionUtil;
 import ru.zzbo.concretemobile.utils.Constants;
+import ru.zzbo.concretemobile.utils.NotificationUtil;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class OperatorViewActivity extends AppCompatActivity {
     private ToolTipsManager toolTipsManager;
     private RadioButton silosSelector1;
     private RadioButton silosSelector2;
+    private RadioButton silosSelector3;
     //    private ImageView horLineView;
     private SeekBar touchUnlock;
     private TabLayout tabMenu;
@@ -152,8 +153,16 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageButton orgsMenu;
     private ImageButton driversMenu;
     private ImageButton helpMenu;
+    private ImageButton usersMenu;
+    private ImageButton passportMenu;
+    private ImageButton invoiceMenu;
+    private ImageButton nameBunckersMenu;
+    private ImageButton requisitesMenu;
     private ImageButton exitMenu;
     private ImageButton learningMenu;
+    private LinearLayout usersLayout;
+    private LinearLayout requisitesLayout;
+    private LinearLayout learningLayout;
 
     private ImageButton correctionBtn;
     private Button closeAlarmLayoutBtn;
@@ -212,7 +221,7 @@ public class OperatorViewActivity extends AppCompatActivity {
     private ImageView levelUpSilos2;
     private TextView recipeSilos2;
     private TextView recipeSilos1;
-    //    private TextView titleSilos1;
+    private TextView titleSilos1;
     private ImageButton aerationSilos;
     private ImageButton vibroSilos;
     private ImageButton filterSilos;
@@ -230,9 +239,12 @@ public class OperatorViewActivity extends AppCompatActivity {
     private TextView mixCounterCurrent;
     private TextView stateFactory;
     private TextView dailyCounter;
-    //    private TextView titleChemy1;
-//    private TextView titleChemy2;
-//    private TextView titleChemy3;
+
+    private TextView titleChemy1;
+    private TextView titleChemy2;
+    private TextView titleChemy3;
+    private TextView titleWater1;
+    private TextView titleWater2;
     private TextView recipeChemy2;
     //    private TextView recipeChemy3;
     private TextView doseChemy2;
@@ -250,10 +262,10 @@ public class OperatorViewActivity extends AppCompatActivity {
     private CheckBox autoDropChecker;
     private ImageView skipDown;
     private ImageView skipMiddle;
-    //    private TextView titleBuncker1;
-    //    private TextView titleBuncker2;
-    //    private TextView titleBuncker3;
-    //    private TextView titleBuncker4;
+    private TextView titleBuncker1;
+    private TextView titleBuncker2;
+    private TextView titleBuncker3;
+    private TextView titleBuncker4;
     private TextView recepieBuncker1;
     private TextView recepieBuncker4;
     private TextView doseBuncker4;
@@ -463,6 +475,70 @@ public class OperatorViewActivity extends AppCompatActivity {
                         .tintTarget(true)
                         .transparentTarget(true)
                         .targetRadius(60),
+                TapTarget.forView(overflowChemy, "Датчик", "Датчик перелива химии в дозаторе")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(overflowWater, "Датчик", "Датчик перелива воды в дозаторе")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(closeSensorDC, "Датчики положения затвора", "Датчик положения затвора ДЦ\n1 - закрыто\n2 - открыто")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
+                TapTarget.forView(closeSensorMixer, "Датчики положения шибера", "Датчик положения шибера смесителя\n1 - закрыто\n2 - открыто на половину\n3 - открыто")
+                        .outerCircleColor(R.color.yellow_zzbo_200)
+                        .outerCircleAlpha(0.96f)
+                        .targetCircleColor(R.color.white)
+                        .titleTextSize(20)
+                        .titleTextColor(R.color.white)
+                        .descriptionTextSize(14)
+                        .descriptionTextColor(R.color.black)
+                        .textColor(R.color.black)
+                        .textTypeface(Typeface.SANS_SERIF)
+                        .dimColor(R.color.black)
+                        .drawShadow(true)
+                        .cancelable(!tapTarget)
+                        .tintTarget(true)
+                        .transparentTarget(true)
+                        .targetRadius(60),
                 TapTarget.forView(resetBtn, "Сброс циклов", "Выполняется для обнуления счетчика циклов, перед началом запуска следующей партии.")
                         .outerCircleColor(R.color.yellow_zzbo_200)
                         .outerCircleAlpha(0.96f)
@@ -614,6 +690,22 @@ public class OperatorViewActivity extends AppCompatActivity {
         separationHopper3 = settings.getBoolean("hopper3", false);
         separationHopper4 = settings.getBoolean("hopper4", false);
 
+        titleBuncker1.setText(configList.getBuncker11());
+        titleBuncker2.setText(configList.getBuncker21());
+        titleBuncker3.setText(configList.getBuncker31());
+        titleBuncker4.setText(configList.getBuncker41());
+
+        titleChemy1.setText(configList.getChemy1());
+        titleChemy2.setText(configList.getChemy2());
+        titleChemy3.setText(configList.getChemy3());
+
+        titleWater1.setText(configList.getWater1());
+        titleWater2.setText(configList.getWater2());
+
+        silosSelector1.setText(configList.getSilos1());
+        silosSelector2.setText(configList.getSilos2());
+        silosSelector3.setText(configList.getSilos3());
+
         //количество бункеров
         switch (factoryOptionList.getInertBunckerCounter()) {
             case 1: {
@@ -734,19 +826,16 @@ public class OperatorViewActivity extends AppCompatActivity {
 
     private void startPolling() {
         new Thread(() -> {
-            RotateAnimation r = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, .5f, RotateAnimation.RELATIVE_TO_SELF, .5f);
-            r.setDuration(1000);
-            r.setInterpolator(new LinearInterpolator());
-            r.setRepeatCount(Animation.INFINITE);
-            r.setRepeatMode(Animation.RESTART);
-
-            retrieval = new ReflectionRetrieval();
+            RotateAnimation ra = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, .5f, RotateAnimation.RELATIVE_TO_SELF, .5f);
+            ra.setDuration(500);
+            ra.setInterpolator(new LinearInterpolator());
+            ra.setRepeatCount(Animation.INFINITE);
+            ra.setRepeatMode(Animation.RESTART);
 
             DecimalFormat decFormat = new DecimalFormat("#0.0");
             CalcUtil calc = new CalcUtil();
             while (true) {
                 //todo: здесь условие для break прерывания работы while(true)
-                retrieval.getValues();
                 try {
                     if (exchangeLevel == 1) {
                         disp = new Gson().fromJson(OkHttpUtil.getDispatcherStates(), DispatcherStates.class);
@@ -799,6 +888,16 @@ public class OperatorViewActivity extends AppCompatActivity {
                     }
 
                     new Handler(Looper.getMainLooper()).post(() -> {
+                        if ((retrieval.getMixCounterValue() == retrieval.getTotalMixCounterValue()) && (retrieval.getTotalMixCounterValue() != 0)) {
+                            stateFactory.setTextColor(Color.YELLOW);
+                            stateFactory.setText("Статус работы завода: ожидание");
+                            if (globalFactoryState) {
+                                mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.context_023_end_auto_cycle);
+                                mPlayer.start();
+                            }
+                            globalFactoryState = false;
+                        }
+
                         if (retrieval.getRecepieCorrectOptionValue() == 1)
                             recepieCorrectionOption.setChecked(true);
                         else recepieCorrectionOption.setChecked(false);
@@ -939,8 +1038,8 @@ public class OperatorViewActivity extends AppCompatActivity {
                             startMixerEngine.setBackgroundColor(Color.GREEN);
                             if (!animationMixerState) { //анимация смесителя вкл
                                 animationMixerState = true;
-                                blade1.startAnimation(r);
-                                blade2.startAnimation(r);
+                                blade1.startAnimation(ra);
+                                blade2.startAnimation(ra);
                             }
                         } else {
                             startMixerEngine.setBackgroundColor(Color.WHITE);
@@ -950,13 +1049,21 @@ public class OperatorViewActivity extends AppCompatActivity {
                         }
 
                         //скип стрелки
-                        if (retrieval.isSkipMoveUpValue() == 1)
+                        if (retrieval.isSkipMoveUpValue() == 1){
+                            skipArrowUp.setVisibility(VISIBLE);
                             skipArrowUp.setImageResource(R.drawable.arrow_up);
-                        else skipArrowUp.setImageResource(R.drawable.arrow_up_off);
+                        } else {
+                            skipArrowUp.setImageResource(R.drawable.arrow_up_off);
+                            skipArrowUp.setVisibility(INVISIBLE);
+                        }
 
-                        if (retrieval.isSkipMoveDownValue() == 1)
+                        if (retrieval.isSkipMoveDownValue() == 1){
+                            skipArrowDown.setVisibility(VISIBLE);
                             skipArrowDown.setImageResource(R.drawable.arrow_down);
-                        else skipArrowDown.setImageResource(R.drawable.arrow_down_off);
+                        } else {
+                            skipArrowDown.setImageResource(R.drawable.arrow_down_off);
+                            skipArrowDown.setVisibility(INVISIBLE);
+                        }
 
 
                         if (factoryOptionList.getTransporterType() == 11) {
@@ -992,14 +1099,17 @@ public class OperatorViewActivity extends AppCompatActivity {
                         }
 
                         //перелив
-                        if (retrieval.isWaterOverflowSensorValue() == 1)
+                        if (retrieval.isWaterOverflowSensorValue() == 1) {
+                            mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_026_w_overflow);
+                            mPlayer.start();
                             overflowWater.setImageResource(R.drawable.shiber_lock);
-                        else
-                            overflowWater.setImageResource(R.drawable.shiber_empty);
-                        if (retrieval.isChemyOverflowSensorValue() == 1)
+                        } else overflowWater.setImageResource(R.drawable.shiber_empty);
+
+                        if (retrieval.isChemyOverflowSensorValue() == 1) {
+                            mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_025_ch_overflow);
+                            mPlayer.start();
                             overflowChemy.setImageResource(R.drawable.shiber_lock);
-                        else
-                            overflowChemy.setImageResource(R.drawable.shiber_empty);
+                        } else overflowChemy.setImageResource(R.drawable.shiber_empty);
 
                         //цемент концевые
                         if (retrieval.isCementDisFlapOpenPosIndValue() == 1)
@@ -1201,10 +1311,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                             horLineStart.setVisibility(INVISIBLE);
                             reverseConveyor.setVisibility(INVISIBLE);
 
-                            if (factoryOptionList.getTransporterType() == 11) {
-                                skipArrowUp.setVisibility(INVISIBLE);
-                                skipArrowDown.setVisibility(INVISIBLE);
-                            }
+//                            if (factoryOptionList.getTransporterType() == 11) {
+//                                skipArrowUp.setVisibility(INVISIBLE);
+//                                skipArrowDown.setVisibility(INVISIBLE);
+//                            }
                         }
 
                         runOnUiThread(() -> {
@@ -1317,6 +1427,28 @@ public class OperatorViewActivity extends AppCompatActivity {
             helpTapTarget();
         });
         helpMenu.setOnClickListener(view -> openPDF("tablet.pdf"));
+        requisitesMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), RequisitesActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        });
+        usersMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), UsersActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        });
+
+        passportMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), PassportActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        });
+
+        nameBunckersMenu.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), NameBunckerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            startActivity(intent);
+        });
         exitMenu.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Выход");
@@ -1361,6 +1493,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
             }
         });
+
         switch (accessLevel) {
             case 1: { //Диспетчер
                 stopCycle.setVisibility(INVISIBLE);
@@ -1378,10 +1511,14 @@ public class OperatorViewActivity extends AppCompatActivity {
                 halfAutoMode.setVisibility(INVISIBLE);
                 manualAutoSwitcher.setVisibility(INVISIBLE);
                 correctionBtn.setVisibility(INVISIBLE);
+                learningLayout.setVisibility(GONE);
                 break;
             }
             case 0:
             case 3: {
+                learningLayout.setVisibility(VISIBLE);
+                usersLayout.setVisibility(GONE);
+
                 reverseConveyor.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(137)).writeSingleInvertedBoolRegister();
                 });
@@ -1410,49 +1547,162 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
 
                 doser11.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(2)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser12.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(3)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser21.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(4)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser22.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(5)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser31.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(6)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser32.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(7)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser41.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(8)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doser42.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(9)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
 
                 doserDispenserWater.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (retrieval.isChemyDisFlapOpenIndValue() == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Выключите насос слива дозатора химии!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
+                    }
+                    if (!globalModeState){
                         new CommandDispatcher(tagListManual.get(10)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserDispenserChemy.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (retrieval.isWaterDisFlapOpenIndValue() == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Выключите насос слива дозатора воды!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
+                    }
+                    if (!globalModeState){
                         new CommandDispatcher(tagListManual.get(11)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserDispenserCement.setOnClickListener(view -> {
                     if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
+                        mPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
                         builder.setTitle("Предупреждение");
                         builder.setMessage("Смеситель не запущен!");
                         builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
@@ -1460,8 +1710,17 @@ public class OperatorViewActivity extends AppCompatActivity {
                         alertDialog.show();
                         return;
                     }
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(12)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 horLineStart.setOnClickListener(view -> {
                     if (retrieval.isSkipPosEndSensorUpValue() == 1) {
@@ -1484,28 +1743,75 @@ public class OperatorViewActivity extends AppCompatActivity {
                     }
                 });
                 pumpWater.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(14)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserChemy1.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(15)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserChemy2.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(16)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserShnek1.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(18)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
                 doserShnek2.setOnClickListener(view -> {
-                    if (!globalModeState)
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(19)).writeSingleInvertedBoolRegister();
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Включите ручной режим!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
                 });
 
                 skipArrowUp.setOnClickListener(view -> {
                     if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
+                        mPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Предупреждение");
                         builder.setMessage("Смеситель не запущен!");
@@ -1525,6 +1831,8 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
                 skipArrowDown.setOnClickListener(view -> {
                     if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
+                        mPlayer.start();
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Предупреждение");
                         builder.setMessage("Смеситель не запущен!");
@@ -1551,6 +1859,18 @@ public class OperatorViewActivity extends AppCompatActivity {
                     return true;
                 });
                 startMixerEngine.setOnClickListener(view -> {
+                    if (retrieval.isCementDisFlapOpenIndValue() == 1){
+                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.warning_005_dc_open);
+                        mPlayer.start();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                        builder.setIcon(R.drawable.warning);
+                        builder.setTitle("Предупреждение");
+                        builder.setMessage("Закройте дозатор цемента!");
+                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                        return;
+                    }
                     new CommandDispatcher(tagListManual.get(25)).writeSingleInvertedBoolRegister();
                 });
                 vibroSilos.setOnClickListener(view -> {
@@ -1628,63 +1948,67 @@ public class OperatorViewActivity extends AppCompatActivity {
                 //TODO: Попытка сделать защиту от случайногог нажатия
                 Handler handlerRunCycle = new Handler();
                 Runnable runCycle = () -> {
-                    try {
-                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-                        globalMixStartTime = timeFormat.format(new Date());
-                        if (exchangeLevel == 1) {
-                            new Thread(() -> {
-                                new CommandDispatcher(84).writeValue("true");
-                                try {
-                                    Thread.sleep(500);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                new CommandDispatcher(84).writeValue("false");
-                                OkHttpUtil.updStateFactory(true);
-                            }).start();
-                        } else
-                            new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
+                    if (new StartAutoCycle().checkProc(this)) {
+                        try {
+                            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+                            globalMixStartTime = timeFormat.format(new Date());
+                            if (exchangeLevel == 1) {
+                                new Thread(() -> {
+                                    new CommandDispatcher(84).writeValue("true");
+                                    try {
+                                        Thread.sleep(500);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    new CommandDispatcher(84).writeValue("false");
+                                    OkHttpUtil.updStateFactory(true);
+                                }).start();
+                            } else new CommandDispatcher(tagListManual.get(84)).writeSingleFrontBoolRegister(500);
 
-                        globalFactoryState = true;
+                            globalFactoryState = true;
 
-                        dbUtilUpdate.updCurrentTable("state", "work");   //смена статуса
-                        runClickCount = 0;
+                            dbUtilUpdate.updCurrentTable("state", "work");   //смена статуса
+                            runClickCount = 0;
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Перемешивание");
-                        builder.setMessage("Автоматический режим запущен!");
-                        builder.setIcon(R.drawable.play);
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    } catch (Exception exc) {
-                        exc.printStackTrace();
-                    }
+                            Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.context_024_start_auto_cycle);
+                            mPlayer.start();
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            builder.setTitle("Перемешивание");
+                            builder.setMessage("Автоматический режим запущен!");
+                            builder.setIcon(R.drawable.play);
+                            builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        } catch (Exception exc) {
+                            exc.printStackTrace();
+                        }
+                    } else runClickCount = 0;
                 };
 
                 runCycleBtn.setOnTouchListener((arg0, arg1) -> {
                     switch (arg1.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            runClickCount++;
-                            if (runClickCount == 3) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setTitle("Подсказка");
-                                builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 2-x секунд");
-                                builder.setIcon(R.drawable.play);
-                                builder.setPositiveButton("OK", (dialog, id) -> {
-                                    runClickCount = 0;
-                                    dialog.dismiss();
-                                });
-                                AlertDialog alertDialog = builder.create();
-                                alertDialog.setCancelable(false);
-                                alertDialog.show();
-                            }
-                            handlerRunCycle.postDelayed(runCycle, 2000);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            handlerRunCycle.removeCallbacks(runCycle);
-                            break;
-                    }
+                            case MotionEvent.ACTION_DOWN:
+                                runClickCount++;
+                                if (runClickCount == 3) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                    builder.setTitle("Подсказка");
+                                    builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 2-x секунд");
+                                    builder.setIcon(R.drawable.play);
+                                    builder.setPositiveButton("OK", (dialog, id) -> {
+                                        runClickCount = 0;
+                                        dialog.dismiss();
+                                    });
+                                    AlertDialog alertDialog = builder.create();
+                                    alertDialog.setCancelable(false);
+                                    alertDialog.show();
+                                }
+                                handlerRunCycle.postDelayed(runCycle, 2000);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                handlerRunCycle.removeCallbacks(runCycle);
+                                break;
+                        }
                     return true;
                 });
                 stopCycle.setOnClickListener(view -> {
@@ -1728,6 +2052,8 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
                 runVerticalConv.setOnClickListener(view -> {
                     if (!animationMixerState) {
+                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
+                        mPlayer.start();
                         notification("Предупреждение", "Не включен смеситель!");
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle("Уведомление");
@@ -1839,13 +2165,18 @@ public class OperatorViewActivity extends AppCompatActivity {
     }
 
     private void startThreads() {
+        new Thread(() -> {
+            while(true){
+                retrieval.getValues();
+                try{Thread.sleep(100);}catch(InterruptedException e){e.printStackTrace();}
+            }
+        }).start();
+
         //plc
         if (exchangeLevel == 0) {
             //поток записи доз в учет по метке "Веса готорвы к чтению"
             new Thread(() -> {
-                retrieval = new ReflectionRetrieval();
                 while (true) {
-                    retrieval.getValues();
                     try {
                         if (retrieval.isWeightsReadyReadValue() == 1) {
                             Current current = dbUtilGet.getCurrent();
@@ -1853,7 +2184,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                             if (selectedOrder.equals("Не указано")) {
                                 new ReportRecordingUtil().recordWeights(
-                                        getApplicationContext(),
+                                        this,
                                         "",
                                         0,
                                         "",
@@ -1864,7 +2195,8 @@ public class OperatorViewActivity extends AppCompatActivity {
                                         0,
                                         recepie.getName(),
                                         retrieval.getMixingCapacity(),
-                                        recepie.getId(), retrieval.getBatchVolumeValue()
+                                        recepie.getId(),
+                                        retrieval.getBatchVolumeValue()
                                 );
                             } else {
                                 Order selectedOrder = dbUtilGet.getOrderForID(current.getOrderID());
@@ -1880,7 +2212,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                                 dbUtilUpdate.updateOrder(selectedOrder);
 
                                 new ReportRecordingUtil().recordWeights(
-                                        getApplicationContext(),
+                                        this,
                                         selectedOrder.getNameOrder(),
                                         selectedOrder.getNumberOrder(),
                                         selectedOrder.getUploadAddress(),
@@ -1931,8 +2263,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                         try {
                             String req = OkHttpUtil.getMixes(date.format(new Date()), date.format(new Date()));
                             if (req.trim().equals("Empty"))
-                                mixList = new Gson().fromJson(req, new TypeToken<List<Mix>>() {
-                                }.getType());
+                                mixList = new Gson().fromJson(req, new TypeToken<List<Mix>>() {}.getType());
                         } catch (Exception e) {
 //                            e.printStackTrace();
                         }
@@ -2003,6 +2334,7 @@ public class OperatorViewActivity extends AppCompatActivity {
         blade2 = findViewById(R.id.blade2);
         silosSelector1 = findViewById(R.id.silosSelector1);
         silosSelector2 = findViewById(R.id.silosSelector2);
+        silosSelector3 = findViewById(R.id.silosSelector3);
 
         touchUnlock = findViewById(R.id.seekBar);
         touchLock = findViewById(R.id.touchLock);
@@ -2032,7 +2364,15 @@ public class OperatorViewActivity extends AppCompatActivity {
         skipUp = findViewById(R.id.skipUp);
         reportsMenu = findViewById(R.id.reportsMenu);
         learningMenu = findViewById(R.id.learninMenu);
+        usersLayout = findViewById(R.id.usersLayout);
+        learningLayout = findViewById(R.id.learningLayout);
+        requisitesLayout = findViewById(R.id.requisitesLayout);
         helpMenu = findViewById(R.id.helpMenu);
+        usersMenu = findViewById(R.id.usersMenu);
+        passportMenu = findViewById(R.id.passportMenu);
+        invoiceMenu = findViewById(R.id.invoiceMenu);
+        nameBunckersMenu = findViewById(R.id.nameBunckersMenu);
+        requisitesMenu = findViewById(R.id.requisitesMenu);
         exitMenu = findViewById(R.id.exitMenu);
         catalogsBtn = findViewById(R.id.catalogsMenu);
         buncker2View = findViewById(R.id.buncker2View);
@@ -2135,6 +2475,18 @@ public class OperatorViewActivity extends AppCompatActivity {
         autoDropChecker = findViewById(R.id.autoDropChecker);
         skipDown = findViewById(R.id.skipDown);
         skipMiddle = findViewById(R.id.skipMiddle);
+        titleBuncker1 = findViewById(R.id.titleBuncker1);
+        titleBuncker2 = findViewById(R.id.titleBuncker2);
+        titleBuncker3 = findViewById(R.id.titleBuncker3);
+        titleBuncker4 = findViewById(R.id.titleBuncker4);
+
+        titleChemy1 = findViewById(R.id.titleChemy1);
+        titleChemy2 = findViewById(R.id.titleChemy2);
+        titleChemy3 = findViewById(R.id.titleChemy3);
+
+        titleWater1 = findViewById(R.id.titleWater1);
+        titleWater2 = findViewById(R.id.titleWater2);
+
         recepieBuncker4 = findViewById(R.id.recepieBuncker4);
         doseBuncker4 = findViewById(R.id.doseBuncker4);
         recepieBuncker1 = findViewById(R.id.recepieBuncker1);
@@ -2228,18 +2580,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentText(message);
-        createNotificationChannel();
+        NotificationUtil.createNotificationChannel(this, "Предупреждения");
         Notification notification = builder.build();
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(1, notification);
-    }
-
-    private void createNotificationChannel() {
-        if (SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("CHANNEL_ID", "Предупреждения", NotificationManager.IMPORTANCE_HIGH);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 
     private void openPDF(String filename) {

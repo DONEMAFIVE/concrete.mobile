@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.gui.catalogs;
 
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.editedRecepie;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
@@ -319,5 +320,10 @@ public class EditRecipeActivity extends AppCompatActivity {
         delRecipe = findViewById(R.id.delOrder);
         closeWindow = findViewById(R.id.close);
         if (editedRecepie.getId() == 0) delRecipe.setVisibility(View.INVISIBLE);
+
+        if (accessLevel == 0) {
+            delRecipe.setVisibility(View.GONE);
+            saveRecipe.setVisibility(View.GONE);
+        }
     }
 }

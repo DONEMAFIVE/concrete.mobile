@@ -26,8 +26,8 @@ import java.util.List;
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.models.Mix;
+import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.DateTimeUtil;
-import ru.zzbo.concretemobile.utils.DatesGenerate;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 import ru.zzbo.concretemobile.utils.TableView;
 
@@ -57,7 +57,7 @@ public class ReportForPartyFragment extends Fragment {
 
         tableView = view.findViewById(R.id.partyReportTableView);
         if (this.dateFirst.equals("")) this.dateFirst = this.dateEnd;
-        dates = new DatesGenerate(this.dateFirst, this.dateEnd).getLostDates();
+        dates = new DateTimeUtil(this.dateFirst, this.dateEnd).getLostDates();
 
         new Thread(() -> {
             try {
@@ -77,6 +77,7 @@ public class ReportForPartyFragment extends Fragment {
     }
 
     public void buildPartyReport() {
+        Constants.partyDone = false;
         try {
             String singleRow = "ID | Заказ | № заказа | Дата | Время | Заказчик | ID Заказчика | Перевозчик | ID Перевозчика | Рецепт | ID Рецепта | Замес | Объем | Партия | Силос 1 | Силос 2 | Бункер 11 | Бункер 12 | Бункер 21 | Бункер 22 | Бункер 31 | Бункер 32 | Бункер 41 | Бункер 42 | Вода 1 | Вода 2 | ДВПЛ | Химия 1 | Химия 2 | Адрес выгрузки | Стоимость | Способ оплаты | Оператор | Время погрузки";
             List<String> tableHeader = Arrays.asList(singleRow.split("\\|"));
@@ -136,6 +137,7 @@ public class ReportForPartyFragment extends Fragment {
             }
 
             tableView.addRows(rows);
+            Constants.partyDone = true;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

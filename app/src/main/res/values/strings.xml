@@ -12,7 +12,8 @@
     <!-- SYSTEM Preferences -->
     <string name="android_id">ID устройства</string>
     <string name="plc_mac">Mac контроллера</string>
-    <string name="plc_ip">IP адрес контроллера</string>
+    <string name="plc_ip">IP адрес PLC</string>
+    <string name="hmi_ip">IP адрес HMI</string>
     <string name="plc_port">PORT контроллера</string>
     <string name="scada_ip">IP адрес PC</string>
     <string name="rest_ip">REST IP адрес</string>
@@ -55,4 +56,31 @@
     <string name="title_activity_item_detail_host">ItemDetailHostActivity</string>
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
+
+
+
+    <string name="connect_ftp_server">Подключить FTP-сервер</string>
+    <string name="disconnect_ftp_server">Отключить FTP-сервер</string>
+
+    <string name="backup">Резервное копирование</string>
+
+    <string name="input_server_ip">Пожалуйста, введите ip сервера</string>
+    <string name="input_server_port">Пожалуйста, введите порт сервера</string>
+    <string name="input_user">Пожалуйста, введите имя пользователя</string>
+    <string name="input_password">Пожалуйста, введите пароль пользователя</string>
+    <string name="title_server_ip_and_port">Пожалуйста, введите ip и порт сервера</string>
+    <string name="title_user">Имя пользователя:</string>
+    <string name="title_password">Пароль:</string>
+
+    <string name="run_ftp_server">Запустить FTP-сервер</string>
+    <string name="stop_ftp_server">Остановить сервер FTP</string>
+
+    <string name="download_file_tips">Do you want to download the file?</string>
+    <string name="choose_file_to_upload">Choose file to upload</string>
+
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="file">Файл</string>
+    <string name="dir">Направление</string>
+    <string name="link">Ссылка</string>
 </resources>

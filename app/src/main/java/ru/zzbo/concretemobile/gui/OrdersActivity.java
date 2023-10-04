@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.gui;
 
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.editedOrder;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
@@ -58,7 +59,6 @@ import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.SetRecipe;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.DateTimeUtil;
-import ru.zzbo.concretemobile.utils.DatesGenerate;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 import ru.zzbo.concretemobile.utils.TableView;
 
@@ -86,6 +86,7 @@ public class OrdersActivity extends AppCompatActivity {
     private List<Order> order = new ArrayList<>();
     private Order currentOrder = new Order();
 
+    private boolean hideNewOrderBtn = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +95,11 @@ public class OrdersActivity extends AppCompatActivity {
         initUI();
         firstRun();
         initActions();
+
+        if (accessLevel == 0) {
+            hideNewOrderBtn = true;
+        }
+
     }
 
     @Override
@@ -106,7 +112,7 @@ public class OrdersActivity extends AppCompatActivity {
         checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE, 101);
         startDate = sdf.format(getDateFromDatePicker(dateBeginWidget));
         endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
-        dates = new DatesGenerate(startDate, endDate).getLostDates();
+        dates = new DateTimeUtil(startDate, endDate).getLostDates();
     }
 
     private void initActions() {
@@ -116,7 +122,6 @@ public class OrdersActivity extends AppCompatActivity {
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), tableRow);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_order, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(menuItem -> {
-
                     if (exchangeLevel == 1) {
                         for (Order ord : order)
                             if (ord.getId() == Integer.valueOf(row.get(0))) currentOrder = ord;
@@ -288,6 +293,12 @@ public class OrdersActivity extends AppCompatActivity {
                     return true;
                 });
                 popupMenu.show();
+
+                if (accessLevel == 0){
+                    popupMenu.getMenu().getItem(1).setVisible(false);
+                    popupMenu.getMenu().getItem(2).setVisible(false);
+                    popupMenu.getMenu().getItem(3).setVisible(false);
+                }
             }
 
             @Override
@@ -317,10 +328,12 @@ public class OrdersActivity extends AppCompatActivity {
         mAddFab.setOnClickListener(view -> {
             if (!isAllFabsVisible) {
                 mAddFiltersFab.show();
-                mAddNewFab.show();
+                if (!hideNewOrderBtn) {
+                    mAddNewFab.show();
+                    addNewActionText.setVisibility(View.VISIBLE);
+                }
 
                 addFilterActionText.setVisibility(View.VISIBLE);
-                addNewActionText.setVisibility(View.VISIBLE);
                 isAllFabsVisible = true;
             } else {
                 mAddFiltersFab.hide();
@@ -410,7 +423,7 @@ public class OrdersActivity extends AppCompatActivity {
             applyBtn.setOnClickListener(e -> {
                 startDate = sdf.format(getDateFromDatePicker(dateBeginWidget));
                 endDate = sdf.format(getDateFromDatePicker(dateEndWidget));
-                dates = new DatesGenerate(startDate, endDate).getLostDates();
+                dates = new DateTimeUtil(startDate, endDate).getLostDates();
 
                 if (DateTimeUtil.startLongerEnd(startDate, endDate)) {
                     runOnUiThread(() -> {

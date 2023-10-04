@@ -3,7 +3,6 @@ package ru.zzbo.concretemobile.protocol.profinet.collectors;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.lockStateRequests;
 import static ru.zzbo.concretemobile.utils.Constants.tagListMain;
-import static ru.zzbo.concretemobile.utils.OkHttpUtil.sendGet;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,14 +26,12 @@ import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
 public class DynamicTagCollector {
 
-    private final int tagCounter = 220;     //количество тэгов - количество из tag_main_thread+1, следить за актуальностью этого значения если добавляются новые тэги в основной поток чтения
+    private static int tagCounter;// = 226;     //количество тэгов - количество из tag_main_thread+1, следить за актуальностью этого значения если добавляются новые тэги в основной поток чтения
 
     public static DynamicTagCollector tagCollector;
 
     private static List<Tag> tagList;                       //список тегов полученных из БД
-    private static List<BlockBool> tagBoolAnswer;
     private static List<BlockMultiple> tagRealAnswer;
-    private static List<BlockMultiple> tagDIntAnswer;
     private static List<BlockMultiple> tagIntAnswer;
 
     private DynamicTagCollector() {
@@ -46,12 +42,11 @@ public class DynamicTagCollector {
             tagCollector = new DynamicTagCollector();
         }
         tagList = tagListMain;
+        tagCounter = tagListMain.size() + 1;
         DynamicTagBuilder dynamicTagCollector = new DynamicTagBuilder(tagList);
         dynamicTagCollector.buildSortedTags();
-        tagBoolAnswer = dynamicTagCollector.getTagBoolAnswer();
         tagRealAnswer = dynamicTagCollector.getTagRealAnswer();
         tagIntAnswer = dynamicTagCollector.getTagIntAnswer();
-        tagDIntAnswer = dynamicTagCollector.getTagDIntAnswer();
         return tagCollector;
     }
 
@@ -284,10 +279,9 @@ public class DynamicTagCollector {
 
                 commandDispatcher = new CommandDispatcher();
 
-                if (!lockStateRequests) request = commandDispatcher.readMultipleBoolRegister(tagBoolAnswer);
-                if (!lockStateRequests) request.addAll(commandDispatcher.readMultipleRealRegister(tagRealAnswer, tagListMain));
+                if (!lockStateRequests) request = commandDispatcher.readMultipleRealRegister(tagRealAnswer, tagListMain);
                 if (!lockStateRequests) request.addAll(commandDispatcher.readMultipleIntRegister(tagIntAnswer, tagListMain));
-                if (!lockStateRequests) request.addAll(commandDispatcher.readMultipleDIntRegister(tagDIntAnswer, tagListMain));
+
                 if (request == null) continue;
                 if (!lockStateRequests) answer = sortTagAnswer(request);
                 // === ответ от PLC сформирован в коллекции answer
@@ -521,7 +515,7 @@ public class DynamicTagCollector {
         while (true) {
             try {
                 m = System.currentTimeMillis();
-                Thread.sleep(10);
+                Thread.sleep(50);
                 retrieval = gson.fromJson(OkHttpUtil.getPlcData(), ReflectionRetrieval.class);
                 manualAutoMode = retrieval.isManualAutoModeValue();
                 pendingProductionState = retrieval.isPendingProductionStateValue();

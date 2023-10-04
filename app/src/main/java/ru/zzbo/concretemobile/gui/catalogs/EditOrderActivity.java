@@ -20,6 +20,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.internal.platform.Platform;
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilInsert;
@@ -141,133 +142,142 @@ public class EditOrderActivity extends AppCompatActivity {
 
     public void actions() {
         saveOrder.setOnClickListener(view -> {
+            try {
+                Recepie recepie = recepies.get(recipeSpinner.getSelectedItemPosition());
+                Organization organization = org.get(organizationSpinner.getSelectedItemPosition());
+                Transporter transporter = trans.get(driverSpinner.getSelectedItemPosition());
 
-            Recepie recepie = recepies.get(recipeSpinner.getSelectedItemPosition());
-            Organization organization = org.get(organizationSpinner.getSelectedItemPosition());
-            Transporter transporter = trans.get(driverSpinner.getSelectedItemPosition());
-
-            CalcUtil calc = new CalcUtil();
-            calc.cycleCalcCounter(Float.valueOf(partyCapacityField.getText().toString()), Float.valueOf(mixCapacityField.getText().toString()));
-            int cycleSum = calc.getCycleSum();
-            float capacityMix = calc.getCapacityMix();
-
-            float countBuncker11 = recepie.getBunckerRecepie11() * capacityMix;
-            float countBuncker12 = recepie.getBunckerRecepie12() * capacityMix;
-            float countBuncker21 = recepie.getBunckerRecepie21() * capacityMix;
-            float countBuncker22 = recepie.getBunckerRecepie22() * capacityMix;
-            float countBuncker31 = recepie.getBunckerRecepie31() * capacityMix;
-            float countBuncker32 = recepie.getBunckerRecepie32() * capacityMix;
-            float countBuncker41 = recepie.getBunckerRecepie41() * capacityMix;
-            float countBuncker42 = recepie.getBunckerRecepie42() * capacityMix;
-
-            float countChemy1 = recepie.getChemyRecepie1() * capacityMix;
-            float countChemy2 = recepie.getChemy2Recepie() * capacityMix;
-            float countWater1 = recepie.getWater1Recepie() * capacityMix;
-            float countWater2 = recepie.getWater2Recepie() * capacityMix;
-            float countSilos1 = recepie.getSilosRecepie1() * capacityMix;
-            float countSilos2 = recepie.getSilosRecepie2() * capacityMix;
-
-            float totalCountBuncker11 = countBuncker11 * cycleSum;
-            float totalCountBuncker12 = countBuncker12 * cycleSum;
-            float totalCountBuncker21 = countBuncker21 * cycleSum;
-            float totalCountBuncker22 = countBuncker22 * cycleSum;
-            float totalCountBuncker31 = countBuncker31 * cycleSum;
-            float totalCountBuncker32 = countBuncker32 * cycleSum;
-            float totalCountBuncker41 = countBuncker41 * cycleSum;
-            float totalCountBuncker42 = countBuncker42 * cycleSum;
-            float totalCountChemy1 = countChemy1 * cycleSum;
-            float totalCountChemy2 = countChemy2 * cycleSum;
-            float totalCountWater1 = countWater1 * cycleSum;
-            float totalCountWater2 = countWater2 * cycleSum;
-            float totalCountSilos1 = countSilos1 * cycleSum;
-            float totalCountSilos2 = countSilos2 * cycleSum;
-
-            Order order = new Order(
-                    editedOrder.getId(),
-                    nameOrderField.getText().toString(),
-                    Integer.parseInt(numberOrderField.getText().toString()),
-                    dateOrderField.getText().toString(),
-                    "",
-                    organization.getOrganizationName(),
-                    organization.getId(),
-                    transporter.getDriverName(),
-                    transporter.getId(),
-                    recepie.getName(),
-                    recepie.getId(),
-                    Float.valueOf(partyCapacityField.getText().toString()),
-                    Float.valueOf(mixCapacityField.getText().toString()),
-                    cycleSum,
-                    recepie.getMark(),
-                    recepie.getClassPie(),
-                    recepie.getBunckerRecepie11(),
-                    recepie.getBunckerRecepie12(),
-                    recepie.getBunckerRecepie21(),
-                    recepie.getBunckerRecepie22(),
-                    recepie.getBunckerRecepie31(),
-                    recepie.getBunckerRecepie32(),
-                    recepie.getBunckerRecepie41(),
-                    recepie.getBunckerRecepie42(),
-                    recepie.getChemyRecepie1(),
-                    recepie.getChemy2Recepie(),
-                    recepie.getWater1Recepie(),
-                    recepie.getWater2Recepie(),
-                    recepie.getSilosRecepie1(),
-                    recepie.getSilosRecepie2(),
-                    recepie.getBunckerShortage11(),
-                    recepie.getBunckerShortage12(),
-                    recepie.getBunckerShortage21(),
-                    recepie.getBunckerShortage22(),
-                    recepie.getBunckerShortage31(),
-                    recepie.getBunckerShortage32(),
-                    recepie.getBunckerShortage41(),
-                    recepie.getBunckerShortage42(),
-                    recepie.getChemyShortage1(),
-                    recepie.getChemyShortage2(),
-                    recepie.getWater1Shortage(),
-                    recepie.getWater2Shortage(),
-                    recepie.getSilosShortage1(),
-                    recepie.getSilosShortage2(),
-                    totalCountBuncker11,
-                    totalCountBuncker12,
-                    totalCountBuncker21,
-                    totalCountBuncker22,
-                    totalCountBuncker31,
-                    totalCountBuncker32,
-                    totalCountBuncker41,
-                    totalCountBuncker42,
-                    totalCountChemy1,
-                    totalCountChemy2,
-                    totalCountWater1,
-                    totalCountWater2,
-                    totalCountSilos1,
-                    totalCountSilos2,
-                    0,
-                    0,
-                    addressUploadField.getText().toString(),
-                    amountConcreteField.getText().toString(),
-                    paymentSpinner.getSelectedItem().toString(),
-                    operatorLogin,
-                    commentOrderField.getText().toString()
-            );
-
-            new Thread(() -> {
-                if (exchangeLevel == 1){
-                    Gson gson = new GsonBuilder()
-                            .serializeSpecialFloatingPointValues()
-                            .setPrettyPrinting()
-                            .create();
-                    System.out.println(gson.toJson(order));
-                    if (editedOrder.getNumberOrder() != 0) OkHttpUtil.updOrder(gson.toJson(order));
-                    else OkHttpUtil.newOrder(gson.toJson(order));
-                }else {
-                    if (editedOrder.getNumberOrder() != 0) new DBUtilUpdate(getApplicationContext()).updateOrder(order);
-                    else new DBUtilInsert(this).insertIntoOrder(order);
+                if (recepie == null || organization == null || transporter == null) {
+                    Toast.makeText(getApplicationContext(), "Недостаточно данных!", Toast.LENGTH_LONG).show();
+                    return;
                 }
+                CalcUtil calc = new CalcUtil();
+                calc.cycleCalcCounter(Float.valueOf(partyCapacityField.getText().toString()), Float.valueOf(mixCapacityField.getText().toString()));
+                int cycleSum = calc.getCycleSum();
+                float capacityMix = calc.getCapacityMix();
 
-            }).start();
+                float countBuncker11 = recepie.getBunckerRecepie11() * capacityMix;
+                float countBuncker12 = recepie.getBunckerRecepie12() * capacityMix;
+                float countBuncker21 = recepie.getBunckerRecepie21() * capacityMix;
+                float countBuncker22 = recepie.getBunckerRecepie22() * capacityMix;
+                float countBuncker31 = recepie.getBunckerRecepie31() * capacityMix;
+                float countBuncker32 = recepie.getBunckerRecepie32() * capacityMix;
+                float countBuncker41 = recepie.getBunckerRecepie41() * capacityMix;
+                float countBuncker42 = recepie.getBunckerRecepie42() * capacityMix;
 
-            Toast.makeText(getApplicationContext(), "Заявка сохранена", Toast.LENGTH_LONG).show();
-            onBackPressed();
+                float countChemy1 = recepie.getChemyRecepie1() * capacityMix;
+                float countChemy2 = recepie.getChemy2Recepie() * capacityMix;
+                float countWater1 = recepie.getWater1Recepie() * capacityMix;
+                float countWater2 = recepie.getWater2Recepie() * capacityMix;
+                float countSilos1 = recepie.getSilosRecepie1() * capacityMix;
+                float countSilos2 = recepie.getSilosRecepie2() * capacityMix;
+
+                float totalCountBuncker11 = countBuncker11 * cycleSum;
+                float totalCountBuncker12 = countBuncker12 * cycleSum;
+                float totalCountBuncker21 = countBuncker21 * cycleSum;
+                float totalCountBuncker22 = countBuncker22 * cycleSum;
+                float totalCountBuncker31 = countBuncker31 * cycleSum;
+                float totalCountBuncker32 = countBuncker32 * cycleSum;
+                float totalCountBuncker41 = countBuncker41 * cycleSum;
+                float totalCountBuncker42 = countBuncker42 * cycleSum;
+                float totalCountChemy1 = countChemy1 * cycleSum;
+                float totalCountChemy2 = countChemy2 * cycleSum;
+                float totalCountWater1 = countWater1 * cycleSum;
+                float totalCountWater2 = countWater2 * cycleSum;
+                float totalCountSilos1 = countSilos1 * cycleSum;
+                float totalCountSilos2 = countSilos2 * cycleSum;
+
+                Order order = new Order(
+                        editedOrder.getId(),
+                        nameOrderField.getText().toString(),
+                        Integer.parseInt(numberOrderField.getText().toString()),
+                        dateOrderField.getText().toString(),
+                        "",
+                        organization.getOrganizationName(),
+                        organization.getId(),
+                        transporter.getDriverName(),
+                        transporter.getId(),
+                        recepie.getName(),
+                        recepie.getId(),
+                        Float.valueOf(partyCapacityField.getText().toString()),
+                        Float.valueOf(mixCapacityField.getText().toString()),
+                        cycleSum,
+                        recepie.getMark(),
+                        recepie.getClassPie(),
+                        recepie.getBunckerRecepie11(),
+                        recepie.getBunckerRecepie12(),
+                        recepie.getBunckerRecepie21(),
+                        recepie.getBunckerRecepie22(),
+                        recepie.getBunckerRecepie31(),
+                        recepie.getBunckerRecepie32(),
+                        recepie.getBunckerRecepie41(),
+                        recepie.getBunckerRecepie42(),
+                        recepie.getChemyRecepie1(),
+                        recepie.getChemy2Recepie(),
+                        recepie.getWater1Recepie(),
+                        recepie.getWater2Recepie(),
+                        recepie.getSilosRecepie1(),
+                        recepie.getSilosRecepie2(),
+                        recepie.getBunckerShortage11(),
+                        recepie.getBunckerShortage12(),
+                        recepie.getBunckerShortage21(),
+                        recepie.getBunckerShortage22(),
+                        recepie.getBunckerShortage31(),
+                        recepie.getBunckerShortage32(),
+                        recepie.getBunckerShortage41(),
+                        recepie.getBunckerShortage42(),
+                        recepie.getChemyShortage1(),
+                        recepie.getChemyShortage2(),
+                        recepie.getWater1Shortage(),
+                        recepie.getWater2Shortage(),
+                        recepie.getSilosShortage1(),
+                        recepie.getSilosShortage2(),
+                        totalCountBuncker11,
+                        totalCountBuncker12,
+                        totalCountBuncker21,
+                        totalCountBuncker22,
+                        totalCountBuncker31,
+                        totalCountBuncker32,
+                        totalCountBuncker41,
+                        totalCountBuncker42,
+                        totalCountChemy1,
+                        totalCountChemy2,
+                        totalCountWater1,
+                        totalCountWater2,
+                        totalCountSilos1,
+                        totalCountSilos2,
+                        0,
+                        0,
+                        addressUploadField.getText().toString(),
+                        amountConcreteField.getText().toString(),
+                        paymentSpinner.getSelectedItem().toString(),
+                        operatorLogin,
+                        commentOrderField.getText().toString()
+                );
+
+                new Thread(() -> {
+                    if (exchangeLevel == 1) {
+                        Gson gson = new GsonBuilder()
+                                .serializeSpecialFloatingPointValues()
+                                .setPrettyPrinting()
+                                .create();
+                        System.out.println(gson.toJson(order));
+                        if (editedOrder.getNumberOrder() != 0)
+                            OkHttpUtil.updOrder(gson.toJson(order));
+                        else OkHttpUtil.newOrder(gson.toJson(order));
+                    } else {
+                        if (editedOrder.getNumberOrder() != 0)
+                            new DBUtilUpdate(getApplicationContext()).updateOrder(order);
+                        else new DBUtilInsert(this).insertIntoOrder(order);
+                    }
+
+                }).start();
+
+                Toast.makeText(getApplicationContext(), "Заявка сохранена", Toast.LENGTH_LONG).show();
+                onBackPressed();
+            } catch (Exception e) {
+                Toast.makeText(getApplicationContext(), "Недостаточно данных, проверьте каталоги!", Toast.LENGTH_LONG).show();
+            }
         });
 
         close.setOnClickListener(view -> onBackPressed());

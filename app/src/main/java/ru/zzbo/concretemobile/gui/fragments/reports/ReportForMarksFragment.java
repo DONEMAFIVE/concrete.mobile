@@ -1,5 +1,7 @@
 package ru.zzbo.concretemobile.gui.fragments.reports;
 
+import static ru.zzbo.concretemobile.utils.Constants.marksDone;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +25,7 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.models.Mix;
 import ru.zzbo.concretemobile.utils.Constants;
-import ru.zzbo.concretemobile.utils.DatesGenerate;
+import ru.zzbo.concretemobile.utils.DateTimeUtil;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 import ru.zzbo.concretemobile.utils.TableView;
 
@@ -34,6 +36,7 @@ public class ReportForMarksFragment extends Fragment {
     private List<String> dates;
     private TableView tableView;
     private List<Mix> report;
+
 
     public ReportForMarksFragment(String dateFirst, String dateEnd) {
         this.dateFirst = dateFirst;
@@ -51,12 +54,13 @@ public class ReportForMarksFragment extends Fragment {
         tableView = view.findViewById(R.id.marksReportTableView);
 
         if (this.dateFirst.equals("")) this.dateFirst = this.dateEnd;
-        dates = new DatesGenerate(this.dateFirst, this.dateEnd).getLostDates();
+        dates = new DateTimeUtil(this.dateFirst, this.dateEnd).getLostDates();
 
-        new Thread(()->{ buildMarksReport();}).start();
+        new Thread(() -> buildMarksReport()).start();
     }
 
     public void buildMarksReport() {
+        marksDone = false;
         try {
             //сборка заголовка
             List<String> headTable = new ArrayList<>();
@@ -126,7 +130,7 @@ public class ReportForMarksFragment extends Fragment {
                 }
                 totalSum = 0;
             }
-
+            marksDone = true;
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

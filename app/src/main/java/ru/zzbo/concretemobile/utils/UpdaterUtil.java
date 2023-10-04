@@ -1,7 +1,6 @@
 package ru.zzbo.concretemobile.utils;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 
@@ -14,12 +13,10 @@ import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
@@ -29,7 +26,7 @@ import ru.zzbo.concretemobile.BuildConfig;
 public class UpdaterUtil {
     private static final String APP_DIR = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/";
 
-    private static void install(Context context , String fileName) {
+    private static void install(Context context, String fileName) {
         File file = new File(APP_DIR + fileName);
 
         if (file.exists()) {
@@ -52,7 +49,7 @@ public class UpdaterUtil {
         }
     }
 
-    public static void downloadInstall(String apkurl, Context context){
+    public static void downloadInstall(String apkurl, Context context) {
         try {
             URL url = new URL(apkurl);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
@@ -76,14 +73,14 @@ public class UpdaterUtil {
             fos.close();
             is.close();
 
-            new Handler(Looper.getMainLooper()).post(()->{
+            new Handler(Looper.getMainLooper()).post(() -> {
                 Toast.makeText(context, "Загрузка завершена!", Toast.LENGTH_SHORT).show();
             });
 
 
             install(context, "app.apk");
         } catch (IOException e) {
-            new Handler(Looper.getMainLooper()).post(()->{
+            new Handler(Looper.getMainLooper()).post(() -> {
                 Toast.makeText(context, "Ошибка загрузки!", Toast.LENGTH_LONG).show();
             });
         }

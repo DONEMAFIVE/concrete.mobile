@@ -7,13 +7,24 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class DateTimeUtil {
     public static SimpleDateFormat fullDateFormat = new SimpleDateFormat("dd.MM.yyyy");
     public static SimpleDateFormat fullTimeFormat = new SimpleDateFormat("HH:mm:ss");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private List<LocalDate> prepareList;
+    private String dateBegin;
+    private String dateEnd;
 
     /**
      * Проверка - дата начала периода не может быть больше даты его окончания
@@ -91,5 +102,31 @@ public class DateTimeUtil {
         calendar.set(year, month, day);
 
         return calendar.getTime();
+    }
+
+    public DateTimeUtil() {}
+
+    public DateTimeUtil(String dateBegin, String dateEnd) {
+        this.dateBegin = dateBegin;
+        this.dateEnd = dateEnd;
+        gen();
+    }
+
+    public List<String> getLostDates() {
+        List<String> result = new ArrayList<>();
+        for (LocalDate dateLocal : this.prepareList) {
+            String current = dateLocal.format(this.formatter);
+            System.out.println(current);
+            result.add(current);
+        }
+        return result;
+    }
+
+    private void gen() {
+        LocalDate dateFrom = LocalDate.parse(this.dateBegin, this.formatter);
+        LocalDate dateTill = LocalDate.parse(this.dateEnd, this.formatter);
+        long numOfDaysBetween = ChronoUnit.DAYS.between(dateFrom, dateTill) + 1L;
+        Objects.requireNonNull(dateFrom);
+        this.prepareList = IntStream.iterate(0, i -> i + 1).limit(numOfDaysBetween).mapToObj(dateFrom::plusDays).collect(Collectors.toList());
     }
 }

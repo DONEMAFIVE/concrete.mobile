@@ -24,6 +24,7 @@ import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Parameter;
 import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Requisites;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.models.Users;
 
@@ -703,6 +704,34 @@ public class DBUtilGet {
                             cursor.getString(cursor.getColumnIndex("comment"))
                     );
                 } else continue;
+            }
+        } finally {
+            closeSession();
+        }
+        return null;
+    }
+
+    @SuppressLint("Range")
+    public Requisites getRequisites() {
+        openDbConfig();
+        try {
+            Cursor cursor = sqLiteDatabase.query("requisites", null, null, null, null, null, null);
+            while (cursor.moveToNext()) {
+                return new Requisites(
+                        cursor.getInt(cursor.getColumnIndex("id")),
+                        cursor.getString(cursor.getColumnIndex("organizationType")),
+                        cursor.getString(cursor.getColumnIndex("organizationName")),
+                        cursor.getString(cursor.getColumnIndex("inn")),
+                        cursor.getString(cursor.getColumnIndex("address")),
+                        cursor.getString(cursor.getColumnIndex("headName")),
+                        cursor.getString(cursor.getColumnIndex("phone")),
+                        cursor.getString(cursor.getColumnIndex("fax")),
+                        cursor.getString(cursor.getColumnIndex("site")),
+                        cursor.getString(cursor.getColumnIndex("email")),
+                        cursor.getString(cursor.getColumnIndex("comment")),
+                        cursor.getString(cursor.getColumnIndex("loadAddress")),
+                        cursor.getString(cursor.getColumnIndex("dispatcherName"))
+                );
             }
         } finally {
             closeSession();

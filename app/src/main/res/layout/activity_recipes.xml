@@ -32,12 +32,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/createBtn"
+        app:layout_constraintEnd_toStartOf="@+id/syncRecipeHMIBtn"
         app:layout_constraintStart_toEndOf="@+id/textView18" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -55,6 +54,22 @@
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/syncRecipeHMIBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/blue_zzbo_700"
+        android:clickable="true"
+        android:drawableLeft="@drawable/upload_white"
+        android:text="Выгрузка рецептов из HMI"
+        android:textAllCaps="true"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/createBtn" />
 
     <LinearLayout
         android:id="@+id/linearLayout7"

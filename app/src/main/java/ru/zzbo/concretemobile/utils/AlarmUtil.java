@@ -1,12 +1,11 @@
 package ru.zzbo.concretemobile.utils;
-
-import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 
 public class AlarmUtil {
+
+
     public static String getAlarms() {
         String alarms = "";
-        ReflectionRetrieval retrieval = new ReflectionRetrieval();
-        retrieval.getValues();
 
         if (retrieval.getAlarmMixerShiberOpennedValue() == 1) alarms += "[Авария] - смеситель не закрыт\n";
         if (retrieval.getAlarmMixerThermalProtectionValue() == 1) alarms += "[Авария] - сработала тепловая защита смесителя\n";

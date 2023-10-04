@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.adapters;
 
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.content.Context;
@@ -63,6 +64,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         holder.nameRecipe.setText(recepie.getName());
         holder.marka.setText(recepie.getMark());
         holder.description.setText(recepie.getDescription());
+
+        if (accessLevel == 0) {
+            holder.loadToPlcBtn.setVisibility(View.VISIBLE);
+        }
+        if (accessLevel == 1) {
+            holder.loadToPlcBtn.setVisibility(View.GONE);
+        }
 
         holder.delRecipeBtn.setOnClickListener(v -> delRecipeClickListener.onClick(recepie, position));
 

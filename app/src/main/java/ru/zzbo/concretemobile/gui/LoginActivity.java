@@ -1,15 +1,12 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
-import static ru.zzbo.concretemobile.utils.Constants.androidID;
-import static ru.zzbo.concretemobile.utils.Constants.configList;
-import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
-import static ru.zzbo.concretemobile.utils.Constants.operatorLogin;
-import static ru.zzbo.concretemobile.utils.Constants.plcMac;
+import static ru.zzbo.concretemobile.utils.Constants.*;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
@@ -49,6 +46,7 @@ import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.ConnectionUtil;
+import ru.zzbo.concretemobile.utils.Constants;
 import ru.zzbo.concretemobile.utils.CryptoUtil;
 import ru.zzbo.concretemobile.utils.LicenseUtil;
 import ru.zzbo.concretemobile.utils.UpdaterUtil;
@@ -63,20 +61,19 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn;
     private CheckBox rememberLogin;
     private Spinner connection;
-    private SharedPreferences settings;
     private List<Users> userList;
     private DrawerLayout progressLoading;
-    private String version = BuildConfig.VERSION_NAME;
+    private String serverVersion = BuildConfig.VERSION_NAME;
     private long mLastClickTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_login);
-        this.settings = getSharedPreferences("setting", MODE_PRIVATE);
+        mSettings = getSharedPreferences("setting", MODE_PRIVATE);
         androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         initFieldUI();              //  Инициализация полей
         chkFirstRun();              //  Проверка при первом запуске
@@ -86,14 +83,18 @@ public class LoginActivity extends AppCompatActivity {
 
         initActions();              //  Инициализация событий
         chkUpdate();                //TODO  Проверка обновления
-
     }
+
+
     /**
      * проверить если есть новая версия, то отобразить информацию
      */
     private void chkUpdate() {
         new Thread(() -> {
-            if (!ConnectionUtil.isIpConnected("188.225.42.106")) return;
+            if (!ConnectionUtil.isIpConnected("188.225.42.106")){
+                runOnUiThread(()-> Toast.makeText(getApplicationContext(), "Нет соединения с сервером обновлений", Toast.LENGTH_LONG).show());
+                return;
+            }
 
             try {
                 URL url = new URL("http://188.225.42.106/boilershop/android/version");
@@ -102,18 +103,19 @@ public class LoginActivity extends AppCompatActivity {
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-                version = in.readLine();
+                serverVersion = in.readLine();
                 in.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (!version.equals(BuildConfig.VERSION_NAME)) {
+
+            if (!serverVersion.equals(BuildConfig.VERSION_NAME)) {
                 //Todo: отобразить уведомление
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Доступно новое обновление! Версия: " + version, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Доступно новое обновление! Версия: " + serverVersion, Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setMessage("Рекомендуем установить последнюю версию приложения.\nОбновить приложение?");
-                    builder.setTitle("Доступно новое обновление! Версия: " + version);
+                    builder.setTitle("Доступно новое обновление! Версия: " + serverVersion);
                     builder.setCancelable(false);
                     builder.setIcon(R.drawable.arrow_down);
                     builder.setPositiveButton("Обновить", (dialog, which) -> {
@@ -181,17 +183,15 @@ public class LoginActivity extends AppCompatActivity {
         dbUtilCreate = new DBUtilCreate(this);
         dbUtilGet = new DBUtilGet(this);
 
-        String versionName = BuildConfig.VERSION_NAME;
-
         SimpleDateFormat year = new SimpleDateFormat("YYYY");
-        info.setText(versionName + " ver. Златоустовский завод бетоносмесительного оборудования. " + year.format(new Date()) + "г."); //2022. Златоустовский завод бетоносмесительного оборудования (1.1 ver. Златоустовский завод бетоносмесительного оборудования. 2023г)
+        info.setText(serverVersion + " Златоустовский завод бетоносмесительного оборудования. " + year.format(new Date()) + "г."); //2022. Златоустовский завод бетоносмесительного оборудования (1.1 ver. Златоустовский завод бетоносмесительного оборудования. 2023г)
     }
 
     private void chkRememberLoginPasswd() {
         rememberLogin.setChecked(isRememberLogin());
         if (rememberLogin.isChecked()) {
-            loginSpinner.setSelection(settings.getInt("login", 0));
-            passwdField.setText(settings.getString("passwd", ""));
+            loginSpinner.setSelection(mSettings.getInt("login", 0));
+            passwdField.setText(mSettings.getString("passwd", ""));
         }
     }
 
@@ -258,6 +258,7 @@ public class LoginActivity extends AppCompatActivity {
                     builder.setTitle("Подключение").setMessage("Не удается подключиться к " + finalDevice);
                     builder.setIcon(R.drawable.warning);
                     builder.setPositiveButton("ОК", (dialog, id) -> dialog.dismiss());
+                    builder.setNeutralButton("Настройки", (dialog, id) -> startActivity(new Intent(getApplicationContext(), SystemConfigActivity.class)));
                     builder.show();
                 });
             } else {
@@ -299,7 +300,7 @@ public class LoginActivity extends AppCompatActivity {
                                 });
                                 return;
                             }
-                        } catch (NullPointerException exc) {
+                        } catch (NullPointerException exc ) {
                             exc.printStackTrace();
                             runOnUiThread(() -> {
                                 progressLoading.setVisibility(View.GONE);
@@ -329,7 +330,6 @@ public class LoginActivity extends AppCompatActivity {
             });
             return;
         }
-
 
         int accessLvl = -1;
         for (Users user : userList) {
@@ -379,27 +379,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveLoginPasswd(Spinner loginSpinner, EditText passwdField) {
-        SharedPreferences.Editor prefEditor = settings.edit();
+        SharedPreferences.Editor prefEditor = mSettings.edit();
         prefEditor.putInt("login", loginSpinner.getSelectedItemPosition());
         prefEditor.putString("passwd", String.valueOf(passwdField.getText()));
         prefEditor.apply();
     }
 
     private void saveRememberLogin(CheckBox rememberLogin) {
-        SharedPreferences.Editor prefEditor = settings.edit();
+        SharedPreferences.Editor prefEditor = mSettings.edit();
         prefEditor.putString("rememberLogin", String.valueOf(rememberLogin.isChecked()));
         prefEditor.apply();
     }
 
     private void saveConnectionType() {
-        SharedPreferences.Editor prefEditor = settings.edit();
+        SharedPreferences.Editor prefEditor = mSettings.edit();
         prefEditor.putString("connectionType", String.valueOf(connection.getSelectedItemPosition()));
         prefEditor.apply();
     }
 
     private boolean isRememberLogin() {
         try {
-            return Boolean.parseBoolean(settings.getString("rememberLogin", "false"));
+            return Boolean.parseBoolean(mSettings.getString("rememberLogin", "false"));
         } catch (Exception e) {
             return false;
         }
@@ -407,7 +407,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private int getRememberConType() {
         try {
-            return Integer.parseInt(settings.getString("connectionType", "0"));
+            return Integer.parseInt(mSettings.getString("connectionType", "0"));
         } catch (Exception e) {
             return 0;
         }

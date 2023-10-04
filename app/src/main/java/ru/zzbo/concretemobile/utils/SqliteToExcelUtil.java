@@ -51,7 +51,7 @@ public class SqliteToExcelUtil {
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.context = context;
-        this.dates = new DatesGenerate(dateStart, dateEnd).getLostDates();
+        this.dates = new DateTimeUtil(dateStart, dateEnd).getLostDates();
         this.book = new XSSFWorkbook();
         this.gson = new Gson();
 

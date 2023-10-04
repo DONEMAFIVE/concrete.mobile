@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.adapters;
 
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.content.Context;
@@ -63,6 +64,15 @@ public class TransporterAdapter extends RecyclerView.Adapter<TransporterAdapter.
         holder.nameOrg.setText(transporter.getOrganizationName());
         holder.regNumberAuto.setText(transporter.getRegNumberAuto());
         holder.comment.setText(transporter.getComment());
+
+        if (accessLevel == 0) {
+            holder.setBtn.setVisibility(View.VISIBLE);
+            holder.editBtn.setVisibility(View.GONE);
+        }
+        if (accessLevel == 1) {
+            holder.setBtn.setVisibility(View.GONE);
+            holder.editBtn.setVisibility(View.VISIBLE);
+        }
 
         holder.delBtn.setOnClickListener(v -> delClickListener.onClick(transporter, position));
 

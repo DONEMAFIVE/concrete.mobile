@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.adapters;
 
+import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.content.Context;
@@ -63,6 +64,16 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
         holder.nameOrg.setText(organization.getOrganizationName());
         holder.headNameOrg.setText(organization.getOrganizationHeadName());
         holder.comment.setText(organization.getComment());
+
+        if (accessLevel == 0) {
+            holder.setOrgBtn.setVisibility(View.VISIBLE);
+            holder.editOrgBtn.setVisibility(View.GONE);
+        }
+
+        if (accessLevel == 1) {
+            holder.setOrgBtn.setVisibility(View.GONE);
+            holder.editOrgBtn.setVisibility(View.VISIBLE);
+        }
 
         holder.delOrgBtn.setOnClickListener(v -> delOrgClickListener.onClick(organization, position));
 

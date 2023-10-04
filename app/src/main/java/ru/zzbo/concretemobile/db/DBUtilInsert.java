@@ -15,6 +15,7 @@ import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
+import ru.zzbo.concretemobile.models.Users;
 
 public class DBUtilInsert {
 
@@ -134,6 +135,22 @@ public class DBUtilInsert {
             cv.put("preDosingWaterPercent", recepie.getPreDosingWaterPercent());
 
             sqLiteDatabase.insert("recepies", null, cv);
+        } finally {
+            closeSession();
+        }
+    }
+
+    public void insertIntoUser(Users user) {
+        openDbConfig();
+
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("dateCreation", user.getDateCreation());
+            cv.put("userName", user.getUserName());
+            cv.put("login", user.getLogin());
+            cv.put("password", user.getPassword());
+            cv.put("accessLevel", user.getAccessLevel());
+            sqLiteDatabase.insert("users", null, cv);
         } finally {
             closeSession();
         }

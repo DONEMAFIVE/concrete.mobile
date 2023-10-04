@@ -1,11 +1,24 @@
 package ru.zzbo.concretemobile.utils;
 
+import static com.blankj.utilcode.util.ActivityUtils.startActivity;
+
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.webkit.MimeTypeMap;
+
+import androidx.core.content.FileProvider;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import ru.zzbo.concretemobile.BuildConfig;
 
 public class FileUtil {
     //Возвращает список файлов в папке
@@ -63,6 +76,24 @@ public class FileUtil {
         if (!chkFile.exists()) chkFile.mkdir();
     }
 
+    public void openFileXlsx(String pathFile){
+        File file = new File(Environment.getExternalStorageDirectory() +"/"+ pathFile);
+        Uri path = Uri.fromFile(file);
+        if (Build.VERSION.SDK_INT > 24) path = Uri.parse(file.getPath());
+        Intent fileOpenintent = new Intent(Intent.ACTION_VIEW);
+        fileOpenintent.setDataAndType(path, "application/vnd.ms-excel");
+        startActivity(fileOpenintent);
+    }
+
+    public void openFolder(String path){
+        File file = new File(Environment.getExternalStorageDirectory().toString() + "/" + path);
+        Uri uri_path = Uri.fromFile(file);
+        if (Build.VERSION.SDK_INT > 24) uri_path = Uri.parse(file.getPath());
+        Intent intent = new Intent(android.content.Intent.ACTION_VIEW);
+        intent.setType("*/*");
+        intent.setDataAndType(uri_path, "*/*");
+        startActivity(intent);
+    }
     //Проверка наличия директории
     public void chkExistFolder(String pathFolder) {
         try {

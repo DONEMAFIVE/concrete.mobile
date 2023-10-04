@@ -1,9 +1,13 @@
 package ru.zzbo.concretemobile.gui;
 
+import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES;
 import static ru.zzbo.concretemobile.utils.Constants.androidID;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
+import static ru.zzbo.concretemobile.utils.Constants.mSettings;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,13 +42,13 @@ import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.CryptoUtil;
 
-
 public class SystemConfigActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_system_config);
+
 //        String ANDROID_ID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         if (savedInstanceState == null) {
@@ -63,6 +67,7 @@ public class SystemConfigActivity extends AppCompatActivity {
     public static class SettingsFragment extends PreferenceFragmentCompat {
         private EditTextPreference idDeviceETP;
         private EditTextPreference plcIpETP;
+        private EditTextPreference hmiIpETP;
         private EditTextPreference scadaIpETP;
         private EditTextPreference restServerIpETP;
         private EditTextPreference serverUpdateIpETP;
@@ -87,6 +92,7 @@ public class SystemConfigActivity extends AppCompatActivity {
 
             idDeviceETP = findPreference("device_id");
             plcIpETP = findPreference("plc_ip");
+            hmiIpETP = findPreference("hmi_ip");
             scadaIpETP = findPreference("scada_ip");
             restServerIpETP = findPreference("rest_server_ip");
             serverUpdateIpETP = findPreference("server_update");
@@ -97,6 +103,7 @@ public class SystemConfigActivity extends AppCompatActivity {
 
             idDeviceETP.setText(androidID);
             plcIpETP.setText(configList.getPlcIP());
+            hmiIpETP.setText(configList.getHmiIP());
 
             scadaIpETP.setText(configList.getScadaIP());
             restServerIpETP.setText(configList.getRestServerIP());
@@ -147,6 +154,7 @@ public class SystemConfigActivity extends AppCompatActivity {
                             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_CONFIG, "rest_server_ip", restServerIpETP.getText());
                             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_CONFIG, "productionNumber", productionNumberETP.getText());
                             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_CONFIG, "first_run", "false");
+                            new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_CONFIG, "hmi_ip", hmiIpETP.getText());
 
                             Toast.makeText(getContext(), "Сохранение выполнено успешно", Toast.LENGTH_SHORT).show();
                             System.exit(0);

@@ -2,10 +2,12 @@ package ru.zzbo.concretemobile.db;
 
 public class DBConstants {
     public static String DATABASE_NAME = "source.db";
+    public static String DATABASE_NAME_RECIPES = "recipe.db";
     public static int DATABASE_VERSION = 1;
 
     //таблица configs
     public static String TABLE_NAME_CONFIG = "config";
+    public static String TABLE_NAME_RECIPES = "concrete";
     public static String COLUMN_NAME_ID = "id";
     public static String COLUMN_NAME_PARAMETER = "parameter";
     public static String COLUMN_NAME_VALUE = "value";

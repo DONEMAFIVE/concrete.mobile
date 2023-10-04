@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.reporting;
 
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.content.Context;
@@ -31,14 +32,13 @@ public class ReportRecordingUtil {
                               String currentRecepie,
                               float capacityMixer,
                               int recipeID,
-                              float totalWeight) {
+                              float totalWeight
+    ) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         DecimalFormat decFormat = new DecimalFormat("#.##");
 
-        ReflectionRetrieval retrieval = new ReflectionRetrieval();
-        retrieval.getValues();
 
         if (!Constants.globalFactoryState) nameOrder = "Ручной замес";
         String calcTimeMix = "empty";

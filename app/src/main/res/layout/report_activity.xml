@@ -16,6 +16,19 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/sync_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="#6F000000"
+            android:padding="5dp"
+            android:text="Снятие отчёта c панели"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/sync_fab"
+            app:layout_constraintEnd_toStartOf="@+id/sync_fab"
+            app:layout_constraintTop_toTopOf="@+id/sync_fab" />
+
+        <TextView
             android:id="@+id/open_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,6 +66,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/filter_fab"
             app:layout_constraintEnd_toStartOf="@+id/filter_fab"
             app:layout_constraintTop_toTopOf="@+id/filter_fab" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sync_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/open_fab"
+            app:layout_constraintEnd_toEndOf="@+id/open_fab"
+            app:srcCompat="@drawable/download_report"
+            app:tint="@color/blue_zzbo" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/open_fab"
@@ -118,28 +142,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/reportTabController"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                    </com.google.android.material.tabs.TabLayout>
-
                     <FrameLayout
                         android:id="@+id/tabReportFrame"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/reportTabController"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/reportTabController"
-                        app:layout_constraintVertical_bias="0.0">
+                        app:layout_constraintTop_toTopOf="parent">
 
                     </FrameLayout>
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/reportTabController"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                    </com.google.android.material.tabs.TabLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

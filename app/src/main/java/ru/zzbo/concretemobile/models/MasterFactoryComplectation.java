@@ -13,10 +13,15 @@ public class MasterFactoryComplectation {
     boolean dropConveyor;
     float mixCapacity;
     boolean hydroGate;
+    boolean dDryCHDispenser;
 
     public MasterFactoryComplectation() {}
 
-    public MasterFactoryComplectation(int inertBunckerCounter, boolean comboBunckerOption, int silosCounter, boolean water2, boolean humidityMixerSensor, int chemyCounter, int transporterType, boolean fibraOption, boolean dropConveyor, float mixCapacity, boolean hydroGate) {
+    public MasterFactoryComplectation(int inertBunckerCounter, boolean comboBunckerOption,
+                                      int silosCounter, boolean water2, boolean humidityMixerSensor,
+                                      int chemyCounter, int transporterType, boolean fibraOption,
+                                      boolean dropConveyor, float mixCapacity, boolean hydroGate, boolean dDryCHDispenser
+    ) {
         this.inertBunckerCounter = inertBunckerCounter;
         this.comboBunckerOption = comboBunckerOption;
         this.silosCounter = silosCounter;
@@ -28,6 +33,15 @@ public class MasterFactoryComplectation {
         this.dropConveyor = dropConveyor;
         this.mixCapacity = mixCapacity;
         this.hydroGate = hydroGate;
+        this.dDryCHDispenser = dDryCHDispenser;
+    }
+
+    public boolean isdDryCHDispenser() {
+        return dDryCHDispenser;
+    }
+
+    public void setdDryCHDispenser(boolean dDryCHDispenser) {
+        this.dDryCHDispenser = dDryCHDispenser;
     }
 
     public int getInertBunckerCounter() {

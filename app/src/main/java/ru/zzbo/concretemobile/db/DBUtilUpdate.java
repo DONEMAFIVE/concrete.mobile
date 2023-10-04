@@ -12,7 +12,9 @@ import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Recepie;
+import ru.zzbo.concretemobile.models.Requisites;
 import ru.zzbo.concretemobile.models.Transporter;
+import ru.zzbo.concretemobile.models.Users;
 
 public class DBUtilUpdate {
 
@@ -54,6 +56,54 @@ public class DBUtilUpdate {
             ContentValues cv = new ContentValues();
             cv.put(parameter, value);
             sqLiteDatabase.update("current", cv, null, null);
+        } finally {
+            closeSession();
+        }
+    }
+
+    public boolean updateUser(Users users) {
+        openDbConfig();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("id", users.getId());
+            cv.put("dateCreation", users.getDateCreation());
+            cv.put("userName", users.getUserName());
+            cv.put("login", users.getLogin());
+            cv.put("password", users.getPassword());
+            cv.put("accessLevel", users.getAccessLevel());
+            sqLiteDatabase.update("users", cv, "id" + "= ?", new String[]{String.valueOf(users.getId())});
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeSession();
+        }
+    }
+
+    public boolean updateRequisites(Requisites requisites) {
+        openDbConfig();
+        try {
+            ContentValues cv = new ContentValues();
+            cv.put("id", requisites.getId());
+            cv.put("organizationType", requisites.getOrganizationType());
+            cv.put("organizationName", requisites.getOrganizationName());
+            cv.put("inn", requisites.getInn());
+            cv.put("address", requisites.getAddress());
+            cv.put("headName", requisites.getHeadName());
+            cv.put("phone", requisites.getPhone());
+            cv.put("fax", requisites.getFax());
+            cv.put("site", requisites.getSite());
+            cv.put("email", requisites.getEmail());
+            cv.put("comment", requisites.getComment());
+            cv.put("loadAddress", requisites.getLoadAddress());
+            cv.put("dispatcherName", requisites.getDispatcherName());
+
+            sqLiteDatabase.update("requisites", cv, "id" + "= ?", new String[]{String.valueOf(requisites.getId())});
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         } finally {
             closeSession();
         }

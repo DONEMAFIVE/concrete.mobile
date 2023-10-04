@@ -32,6 +32,15 @@ public class DBUtilDelete {
         }
     }
 
+    public void deleteUser(int id) {
+        openDbConfig();
+        try {
+            sqLiteDatabase.delete("users","id=?" ,new String[]{String.valueOf(id)});
+        } finally {
+            closeSession();
+        }
+    }
+
     public void deleteOrder(int id) {
         openDbConfig();
         try {

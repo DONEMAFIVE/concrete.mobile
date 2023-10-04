@@ -16,6 +16,13 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="hmi_ip"
+            app:title="@string/hmi_ip"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
             app:key="scada_ip"
             app:title="@string/scada_ip"
             app:useSimpleSummaryProvider="true" />

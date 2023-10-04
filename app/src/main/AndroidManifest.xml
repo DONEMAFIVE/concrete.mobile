@@ -6,6 +6,7 @@
         Файл манифеста AndroidManifest.xml
         https://metanit.com/java/android/2.3.php?ysclid=lcrf7e8xu9959413466
     -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -17,6 +18,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission
         android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
@@ -34,6 +37,54 @@
         android:theme="@style/Theme.ConcreteMobile"
         android:usesCleartextTraffic="true"
         tools:targetApi="32">
+
+        <activity
+            android:name=".gui.ReportDeviceActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".gui.ReportHMIActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".gui.FtpServerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".gui.UsersActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".gui.NameBunckerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".gui.catalogs.EditUserActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".gui.TransportersActivity"
             android:exported="false">
@@ -117,11 +168,17 @@
             android:name=".gui.catalogs.EditOrderActivity"
             android:screenOrientation="landscape" />
 
+        <activity
+            android:name=".gui.PassportActivity"
+            android:screenOrientation="landscape" />
+
+
         <receiver
             android:name=".utils.BootService"
             android:enabled="true"
             android:exported="true"
             android:label="BootService">
+
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -149,6 +206,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="utils.Receiver"
+            android:exported="true"
+            tools:ignore="MissingClass">
+            <intent-filter>
+                <category android:name="android.intent.categeory.DEFAULT"/>
+            </intent-filter>
+        </receiver>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
