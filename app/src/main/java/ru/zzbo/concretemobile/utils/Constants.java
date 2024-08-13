@@ -8,12 +8,17 @@ import android.media.MediaPlayer;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.zzbo.concretemobile.db.DBUtilCreate;
+import ru.zzbo.concretemobile.db.DBUtilGet;
+import ru.zzbo.concretemobile.db.helpers.FactoryComplectationBuilder;
 import ru.zzbo.concretemobile.models.DroidConfig;
+import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.models.Order;
 import ru.zzbo.concretemobile.models.Organization;
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.models.Users;
+import ru.zzbo.concretemobile.protocol.profinet.collectors.request.OptionsController;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 
@@ -56,7 +61,7 @@ public class Constants {
     public static List<Tag> tagListMain;
     public static List<Tag> tagListManual;
     public static List<Tag> tagListOptions;
-    public static List<Tag> answer = new ArrayList<>();
+    public static OptionsController optionsController = new OptionsController();
 
     /**
      * 0 - operator
@@ -89,9 +94,19 @@ public class Constants {
     public static boolean mixesDone = false;
     public static boolean partyDone = false;
     public static boolean marksDone = false;
+    //для заводов с датчиком влажности, где работает поток корректировки влажности сухой смеси
+    public static boolean activateThreadHumidityCorrectOption = false;      //включение опции коррекции влажности
+    public static int preDosageWaterPercent = 100;                          //процент предварительного набора воды через основной дозатор
+
+    //зоны нагрузки на двигатель смесителя от холостого режима и готового раствора до пусковых токов и перегрузки
+    public static float zoneGreenAmperage = 0;
+    public static float zoneYellowAmperage = 0;
+    public static float zoneMixingEnd = 0;
 
     public static MediaPlayer mPlayer;
     public static AudioManager audioManager;
 
+    public static ArrayList answer = new ArrayList<>();
+    public static MasterFactoryComplectation factoryComplectation;
 
 }

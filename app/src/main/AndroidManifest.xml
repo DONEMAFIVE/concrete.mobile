@@ -45,7 +45,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".gui.ReportHMIActivity"
             android:exported="false">
@@ -53,7 +52,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".gui.FtpServerActivity"
             android:exported="false">
@@ -61,7 +59,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".gui.UsersActivity"
             android:exported="false">
@@ -69,7 +66,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".gui.NameBunckerActivity"
             android:exported="false">
@@ -77,7 +73,6 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".gui.catalogs.EditUserActivity"
             android:exported="false">
@@ -153,10 +148,10 @@
             android:name=".gui.ReportsActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".gui.SystemConfigActivity"
+            android:name=".gui.OptionsActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".gui.FactoryConfigActivity"
+            android:name=".gui.SetPointsActivity"
             android:screenOrientation="landscape" />
         <activity
             android:name=".gui.catalogs.RequisitesActivity"
@@ -167,18 +162,15 @@
         <activity
             android:name=".gui.catalogs.EditOrderActivity"
             android:screenOrientation="landscape" />
-
         <activity
             android:name=".gui.PassportActivity"
             android:screenOrientation="landscape" />
-
 
         <receiver
             android:name=".utils.BootService"
             android:enabled="true"
             android:exported="true"
             android:label="BootService">
-
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -205,14 +197,15 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name="utils.Receiver"
+        <receiver
+            android:name="utils.Receiver"
             android:exported="true"
             tools:ignore="MissingClass">
             <intent-filter>
-                <category android:name="android.intent.categeory.DEFAULT"/>
+                <category android:name="android.intent.categeory.DEFAULT" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

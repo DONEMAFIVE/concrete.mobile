@@ -1,10 +1,14 @@
 package ru.zzbo.concretemobile.protocol.profinet.commands;
 
+import static ru.zzbo.concretemobile.utils.Constants.preDosageWaterPercent;
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.lockStateRequests;
+import static ru.zzbo.concretemobile.utils.Constants.zoneMixingEnd;
 
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
+import ru.zzbo.concretemobile.utils.MathUtils;
 
 public class SetRecipe {
 
@@ -54,6 +58,10 @@ public class SetRecipe {
             Tag humidity41Tag = tagListManual.get(129);
             Tag humidity42Tag = tagListManual.get(130);
 
+            Tag fibraTag = tagListManual.get(122);
+            Tag dDryChTag = tagListManual.get(173);
+            Tag dwplRecepie = tagListManual.get(186);
+
             buncker11Tag.setRealValueIf(recepie.getBunckerRecepie11());
             shortageBuncker11Tag.setRealValueIf(recepie.getBunckerShortage11());
             buncker12Tag.setRealValueIf(recepie.getBunckerRecepie12());
@@ -98,52 +106,136 @@ public class SetRecipe {
             humidity41Tag.setRealValueIf(recepie.getHumidity41());
             humidity42Tag.setRealValueIf(recepie.getHumidity42());
 
+            fibraTag.setRealValueIf(recepie.getFibra());
+            recepie.setdDryCh(recepie.getdDryCh());
+            dDryChTag.setRealValueIf(recepie.getdDryCh());
+            dwplRecepie.setRealValueIf(recepie.getPathToHumidity());
+
             //блокировка
             lockStateRequests = true;
 
-            new CommandDispatcher(buncker11Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker11Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker12Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker12Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker21Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker21Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker22Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker22Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker31Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker31Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker32Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker32Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker41Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker41Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(buncker42Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageBuncker42Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(waterTag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(water2Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageWater1).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageWater2).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(silos1Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(silos2Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageSilos1).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageSilos2).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(chemy1Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(chemy2Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(chemy3Tag).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageChemy1).writeSingleRegisterWithoutLock();
-            new CommandDispatcher(shortageChemy2).writeSingleRegisterWithoutLock();
+            if (recepie.getBunckerRecepie11() == 0 && retrieval.getHopper11RecipeValue() == 0) System.err.println("pie11 empty");
+            else new CommandDispatcher(buncker11Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage11() == 0 && retrieval.getShortageHopper11FactValue() == 0) System.err.println("short11 empty");
+            else new CommandDispatcher(shortageBuncker11Tag).writeSingleRegisterWithoutLock();
+            if (recepie.getBunckerRecepie12() == 0 && retrieval.getHopper12RecipeValue() == 0) System.err.println("pie12 empty");
+            else new CommandDispatcher(buncker12Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage12() == 0 && retrieval.getShortageHopper12FactValue() == 0) System.err.println("short12 empty");
+            else new CommandDispatcher(shortageBuncker12Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie21() == 0 && retrieval.getHopper21RecipeValue() == 0) System.err.println("pie21 empty");
+            else new CommandDispatcher(buncker21Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage21() == 0  && retrieval.getShortageHopper21FactValue() == 0) System.err.println("short21 empty");
+            else new CommandDispatcher(shortageBuncker21Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie22() == 0 && retrieval.getHopper22RecipeValue() == 0) System.err.println("pie22 empty");
+            else new CommandDispatcher(buncker22Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage22() == 0 && retrieval.getShortageHopper22FactValue() == 0) System.err.println("short22 empty");
+            else new CommandDispatcher(shortageBuncker22Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie31() == 0 && retrieval.getHopper31RecipeValue() == 0) System.err.println("pie31 empty");
+            else new CommandDispatcher(buncker31Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage31() == 0 && retrieval.getShortageHopper31FactValue() == 0) System.err.println("short31 empty");
+            else new CommandDispatcher(shortageBuncker31Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie32() == 0 && retrieval.getHopper32RecipeValue() == 0) System.err.println("pie32 empty");
+            else new CommandDispatcher(buncker32Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage32() == 0 && retrieval.getShortageHopper32FactValue() == 0) System.err.println("short32 empty");
+            else new CommandDispatcher(shortageBuncker32Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie41() == 0 && retrieval.getHopper41RecipeValue() == 0) System.err.println("pie41 empty");
+            else new CommandDispatcher(buncker41Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage41() == 0 && retrieval.getShortageHopper41FactValue() == 0) System.err.println("short41 empty");
+            else new CommandDispatcher(shortageBuncker41Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerRecepie42() == 0 && retrieval.getHopper42RecipeValue() == 0) System.err.println("pie42 empty");
+            else new CommandDispatcher(buncker42Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getBunckerShortage42() == 0 && retrieval.getShortageHopper42FactValue() == 0) System.err.println("short42 empty");
+            else new CommandDispatcher(shortageBuncker42Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getFibra() == 0 && retrieval.getRecepieFibraValue() == 0) System.err.println("pieFibra empty");
+            else new CommandDispatcher(fibraTag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getdDryCh() == 0 && retrieval.getRecepieDDryChValue() == 0) System.err.println("pieDDryCh empty");
+            else new CommandDispatcher(dDryChTag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getWater1Recepie() == 0 && retrieval.getWaterRecipeValue() == 0) System.err.println("pieWater1 empty");
+            else new CommandDispatcher(waterTag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getWater2Recepie() != 0) new CommandDispatcher(water2Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getWater1Shortage() != 0) new CommandDispatcher(shortageWater1).writeSingleRegisterWithoutLock();
+            if (recepie.getWater2Shortage() != 0) new CommandDispatcher(shortageWater2).writeSingleRegisterWithoutLock();
+
+            if (recepie.getSilosRecepie1() == 0 && retrieval.getCement1RecipeValue() == 0) System.err.println("pieSilos1 empty");
+            else new CommandDispatcher(silos1Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getSilosRecepie2() == 0 && retrieval.getCement2RecipeValue() == 0) System.err.println("pieSilos2 empty");
+            else new CommandDispatcher(silos2Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getSilosShortage1() == 0 && retrieval.getShortageSilos1Value() == 0) System.err.println("shortSilos1 empty");
+            else new CommandDispatcher(shortageSilos1).writeSingleRegisterWithoutLock();
+
+            if (recepie.getSilosShortage2() == 0 && retrieval.getShortageSilos2Value() == 0) System.err.println("pieSilos2 empty");
+            else new CommandDispatcher(shortageSilos2).writeSingleRegisterWithoutLock();
+
+            if (recepie.getChemyRecepie1() == 0 && retrieval.getChemy1RecipeValue() == 0) System.err.println("chemy1 empty");
+            else new CommandDispatcher(chemy1Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getChemy2Recepie() == 0 && retrieval.getChemy2RecipeValue() == 0) System.err.println("chemy2 empty");
+            else new CommandDispatcher(chemy2Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getChemy3Recepie() != 0) new CommandDispatcher(chemy3Tag).writeSingleRegisterWithoutLock();
+
+            if (recepie.getChemyShortage1() == 0 && retrieval.getShortageChemy1Value() == 0) System.err.println("chemy1 shortage empty");
+            else new CommandDispatcher(shortageChemy1).writeSingleRegisterWithoutLock();
+
+            if (recepie.getChemyShortage2() == 0 && retrieval.getShortageChemy2Value() == 0) System.err.println("chemy2 shortage empty");
+            else new CommandDispatcher(shortageChemy2).writeSingleRegisterWithoutLock();
+
+            if ((recepie.getPathToHumidity() == 0) && (retrieval.getDwplRecepieMix() == 0)) System.out.println("no dwpl");
+            else new CommandDispatcher(dwplRecepie).writeSingleRegisterWithoutLock();
+
             new CommandDispatcher(humidity11Tag).writeSingleRegisterWithoutLock();
+
             new CommandDispatcher(humidity12Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity21Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity22Tag).writeSingleRegisterWithoutLock();
+
             new CommandDispatcher(humidity31Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity32Tag).writeSingleRegisterWithoutLock();
             new CommandDispatcher(humidity41Tag).writeSingleRegisterWithoutLock();
+
             new CommandDispatcher(humidity42Tag).writeSingleRegisterWithoutLock();
+
             if (recepie.getTimeMix() != 0) {
                 timeMixTag.setDIntValueIf(recepie.getTimeMix() * 1000);
                 new CommandDispatcher(timeMixTag).writeSingleRegisterWithoutLock();
             }
+
+            preDosageWaterPercent = recepie.getPreDosingWaterPercent();
+
+            if (recepie.getAmperageFluidity() != 0) zoneMixingEnd = recepie.getAmperageFluidity();
+
+            if (preDosageWaterPercent < 100){
+                float recalcWaterRecepie = recepie.getWater1Recepie();
+                if (preDosageWaterPercent != 0) recalcWaterRecepie = new MathUtils().reCalcValueForRecent(recepie.getWater1Recepie(), preDosageWaterPercent);
+                waterTag.setRealValueIf(recalcWaterRecepie);
+                new CommandDispatcher(waterTag).writeSingleRegisterWithoutLock();
+            }
+
             lockStateRequests = false;
 
+            Thread.sleep(100);
+            new CommandDispatcher(tagListManual.get(175)).writeSingleRegisterWithValue(true);
             return true;
 
         } catch (Exception e) {

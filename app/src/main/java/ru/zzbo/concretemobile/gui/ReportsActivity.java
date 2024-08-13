@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -68,9 +69,6 @@ import ru.zzbo.concretemobile.utils.DateTimeUtil;
 import ru.zzbo.concretemobile.utils.FileUtil;
 import ru.zzbo.concretemobile.utils.SqliteToExcelUtil;
 import ru.zzbo.concretemobile.utils.ftp.EZFtpServer;
-import ru.zzbo.concretemobile.utils.ftp.FtpConfig;
-import ru.zzbo.concretemobile.utils.ftp.user.EZFtpUser;
-import ru.zzbo.concretemobile.utils.ftp.user.EZFtpUserPermission;
 
 public class ReportsActivity extends AppCompatActivity {
 
@@ -236,8 +234,14 @@ public class ReportsActivity extends AppCompatActivity {
         });
 
         mAddOpenFab.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), ReportDeviceActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            Intent intent = new Intent(getApplicationContext(), ReportDeviceActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            startActivity(intent);
+
+            String path = Environment.getExternalStorageDirectory() + "/" + "reports" + "/";
+            Uri uri = Uri.parse(path);
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setDataAndType(uri, "*/*");
             startActivity(intent);
         });
 

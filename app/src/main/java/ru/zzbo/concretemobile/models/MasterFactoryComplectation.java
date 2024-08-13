@@ -13,14 +13,23 @@ public class MasterFactoryComplectation {
     boolean dropConveyor;
     float mixCapacity;
     boolean hydroGate;
+    boolean amperageSensor;
+    boolean dwpl;
     boolean dDryCHDispenser;
+    boolean vibroFunnelMixer;
+    boolean humSensorInert;
+    boolean planetarTypeMixer;
+    boolean reverseModuleFactory;
 
     public MasterFactoryComplectation() {}
 
     public MasterFactoryComplectation(int inertBunckerCounter, boolean comboBunckerOption,
                                       int silosCounter, boolean water2, boolean humidityMixerSensor,
                                       int chemyCounter, int transporterType, boolean fibraOption,
-                                      boolean dropConveyor, float mixCapacity, boolean hydroGate, boolean dDryCHDispenser
+                                      boolean dropConveyor, float mixCapacity, boolean hydroGate,
+                                      boolean amperageSensor, boolean dwpl, boolean dDryCHDispenser,
+                                      boolean vibroFunnelMixer, boolean humSensorInert, boolean planetarTypeMixer,
+                                      boolean reverseModuleFactory
     ) {
         this.inertBunckerCounter = inertBunckerCounter;
         this.comboBunckerOption = comboBunckerOption;
@@ -33,7 +42,13 @@ public class MasterFactoryComplectation {
         this.dropConveyor = dropConveyor;
         this.mixCapacity = mixCapacity;
         this.hydroGate = hydroGate;
+        this.amperageSensor = amperageSensor;
+        this.dwpl = dwpl;
         this.dDryCHDispenser = dDryCHDispenser;
+        this.vibroFunnelMixer = vibroFunnelMixer;
+        this.humSensorInert = humSensorInert;
+        this.planetarTypeMixer = planetarTypeMixer;
+        this.reverseModuleFactory = reverseModuleFactory;
     }
 
     public boolean isdDryCHDispenser() {
@@ -130,5 +145,53 @@ public class MasterFactoryComplectation {
 
     public void setHydroGate(boolean hydroGate) {
         this.hydroGate = hydroGate;
+    }
+
+    public boolean isAmperageSensor() {
+        return amperageSensor;
+    }
+
+    public void setAmperageSensor(boolean amperageSensor) {
+        this.amperageSensor = amperageSensor;
+    }
+
+    public boolean isDwpl() {
+        return dwpl;
+    }
+
+    public void setDwpl(boolean dwpl) {
+        this.dwpl = dwpl;
+    }
+
+    public boolean isVibroFunnelMixer() {
+        return vibroFunnelMixer;
+    }
+
+    public void setVibroFunnelMixer(boolean vibroFunnelMixer) {
+        this.vibroFunnelMixer = vibroFunnelMixer;
+    }
+
+    public boolean isHumSensorInert() {
+        return humSensorInert;
+    }
+
+    public void setHumSensorInert(boolean humSensorInert) {
+        this.humSensorInert = humSensorInert;
+    }
+
+    public boolean isPlanetarTypeMixer() {
+        return planetarTypeMixer;
+    }
+
+    public void setPlanetarTypeMixer(boolean planetarTypeMixer) {
+        this.planetarTypeMixer = planetarTypeMixer;
+    }
+
+    public boolean isReverseModuleFactory() {
+        return reverseModuleFactory;
+    }
+
+    public void setReverseModuleFactory(boolean reverseModuleFactory) {
+        this.reverseModuleFactory = reverseModuleFactory;
     }
 }

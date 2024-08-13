@@ -49,9 +49,9 @@ public class UpdaterUtil {
         }
     }
 
-    public static void downloadInstall(String apkurl, Context context) {
+    public static void downloadInstall(String apkUrl, Context context) {
         try {
-            URL url = new URL(apkurl);
+            URL url = new URL(apkUrl);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.setRequestMethod("GET");
             c.setDoOutput(true);
@@ -76,7 +76,6 @@ public class UpdaterUtil {
             new Handler(Looper.getMainLooper()).post(() -> {
                 Toast.makeText(context, "Загрузка завершена!", Toast.LENGTH_SHORT).show();
             });
-
 
             install(context, "app.apk");
         } catch (IOException e) {

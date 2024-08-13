@@ -1,12 +1,12 @@
-package ru.zzbo.concretemobile.gui.fragments.factory_config;
+package ru.zzbo.concretemobile.gui.fragments.set_points;
 
-import static ru.zzbo.concretemobile.utils.Constants.answer;
-import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
+import static ru.zzbo.concretemobile.utils.Constants.optionsController;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
@@ -23,47 +23,50 @@ import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class CementFragment extends PreferenceFragmentCompat {
+    EditTextPreference cementCount, minWeightDc, timeDischargeDc, timeVibroDc, pauseVibroDc, delayDischargeDc;
+    SwitchPreferenceCompat permissionStartVibroDc;
+    Preference saveBtn;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.dc_preferences, rootKey);
+        initFirst();
+        initThread();
+        initActions();
+    }
 
-        SwitchPreferenceCompat autoResetDc = findPreference("auto_reset_dc");
-        EditTextPreference cementCount = findPreference("cement_count");
-        EditTextPreference minWeightDc = findPreference("min_weight_dc");
-        EditTextPreference timeDischargeDc = findPreference("time_discharge_dc");
-        EditTextPreference timeVibroDc = findPreference("time_vibro");
-        EditTextPreference pauseVibroDc = findPreference("pause_vibro");
-        EditTextPreference delayDischargeDc = findPreference("delay_discharge_dc");
-        SwitchPreferenceCompat permissionStartVibroDc = findPreference("permission_start_vibro");
-        Preference saveBtn = findPreference("saveBtn");
+    private void initFirst() {
+        cementCount = findPreference("cement_count");
+        minWeightDc = findPreference("min_weight_dc");
+        timeDischargeDc = findPreference("time_discharge_dc");
+        timeVibroDc = findPreference("time_vibro");
+        pauseVibroDc = findPreference("pause_vibro");
+        delayDischargeDc = findPreference("delay_discharge_dc");
+        permissionStartVibroDc = findPreference("permission_start_vibro");
+        saveBtn = findPreference("saveBtn");
 
-        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
-
+        ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
+    }
+    private void initThread() {
         new Thread(() -> {
             try {
+                optionsController.initTags(getContext());
+                optionsController.readValues();
+
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    if (answer.get(67).getIntValueIf() == 1)  autoResetDc.setChecked(true);
+                    cementCount.setText(String.valueOf(optionsController.getSilosCountDC1()));
 
-                    float current = answer.get(29).getIntValueIf();
-                    cementCount.setText(String.valueOf((int) current));
+                    minWeightDc.setText(String.valueOf(optionsController.getWeightCountDownDC()));
 
-                    current = answer.get(117).getRealValueIf();
-                    minWeightDc.setText(String.valueOf(current));
+                    timeDischargeDc.setText(String.valueOf((float) optionsController.getTimeRunAfterMixWeightDC() / 1000));
 
-                    current = answer.get(79).getDIntValueIf();
-                    timeDischargeDc.setText(String.valueOf(current / 1000));
+                    timeVibroDc.setText(String.valueOf((float) optionsController.getTimeWorkVibroDC() / 1000));
 
-                    current = answer.get(92).getDIntValueIf();
-                    timeVibroDc.setText(String.valueOf(current / 1000));
+                    pauseVibroDc.setText(String.valueOf((float) optionsController.getTimwWaitVibroDC() / 1000));
 
-                    current = answer.get(93).getDIntValueIf();
-                    pauseVibroDc.setText(String.valueOf(current / 1000));
+                    delayDischargeDc.setText(String.valueOf((float) optionsController.getTimeoutDropDC() / 1000));
 
-                    current = answer.get(98).getDIntValueIf();
-                    delayDischargeDc.setText(String.valueOf(current / 1000));
-
-                    if (answer.get(16).getIntValueIf() == 1) permissionStartVibroDc.setChecked(true);
+//                    if (answer.get(16).getIntValueIf() == 1) permissionStartVibroDc.setChecked(true);
 
                 });
 
@@ -73,14 +76,20 @@ public class CementFragment extends PreferenceFragmentCompat {
                 });
             }
         }).start();
+    }
+    private void initActions() {
+        cementCount.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        minWeightDc.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        timeDischargeDc.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        timeVibroDc.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        pauseVibroDc.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayDischargeDc.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
 
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    ((PreferenceCategory) findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
                     findPreference("saveCategory").setVisible(false);
-
-                    new CommandDispatcher(tagListManual.get(106)).writeSingleRegisterWithValue(autoResetDc.isChecked());
 
                     float delayDropDC = Float.parseFloat(delayDischargeDc.getText());
                     float timeWorkVibroDC = Float.parseFloat(timeVibroDc.getText());
@@ -130,7 +139,7 @@ public class CementFragment extends PreferenceFragmentCompat {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
                 findPreference("saveCategory").setVisible(true);
             }).start();
             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "silosCounter", cementCount.getText());

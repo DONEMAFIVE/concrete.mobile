@@ -2,17 +2,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/dw_header">
-        <SwitchPreferenceCompat
-            app:key="auto_reset_dw"
-            app:title="Авто обнуление весов" />
 
         <SwitchPreferenceCompat
             app:key="water2"
             app:title="Шламовая вода" />
-
-        <SwitchPreferenceCompat
-            app:key="humidity_mixer_sensor"
-            app:title="Датчик влажности в смесителе" />
 
         <ListPreference
             app:key="type_dw"

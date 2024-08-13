@@ -25,13 +25,37 @@
             android:id="@+id/autoCorrectionShnekSelector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Автоматически корректировать недосып у шнека" />
+            android:text="Автоматически корректировать недосып у шнека цемента" />
 
         <CheckBox
-            android:id="@+id/recepieCorrectionOption"
+            android:id="@+id/autoCorrectionInertOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Корректировка рецепта (только 1-ый цикл)" />
+            android:text="Автоматически корректировать недосып инертных материалов" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/recepieCorrectionOption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="Корректировка рецепта по воде(только 1-й цикл)" />
+
+            <ImageButton
+                android:id="@+id/infoRecipeCorrectionWater"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:padding="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                app:srcCompat="@android:drawable/ic_menu_help" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/hideDialog"

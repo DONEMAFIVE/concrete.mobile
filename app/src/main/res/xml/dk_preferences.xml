@@ -2,9 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/dk_header">
-        <SwitchPreferenceCompat
-            app:key="auto_zero_dk"
-            app:title="Авто обнуление весов" />
 
         <ListPreference
             app:defaultValue="1"
@@ -19,11 +16,72 @@
             app:title="@string/inert_bunker_counter"
             app:useSimpleSummaryProvider="true" />
 
+        <PreferenceCategory android:title="РАЗДЕЛЕНИЕ ЗАСЛОНОК">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="hopper1"
+                android:title="Бункер 11 - 12" />
+            <EditTextPreference
+                app:key="impulse_dose11"
+                app:title="Импульсная дозация 11"
+                app:useSimpleSummaryProvider="true" />
+            <EditTextPreference
+                app:key="impulse_dose12"
+                app:title="Импульсная дозация 12"
+                app:useSimpleSummaryProvider="true"
+                android:dependency="hopper1" />
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="hopper2"
+                android:title="Бункер 21 - 22" />
+            <EditTextPreference
+                app:key="impulse_dose21"
+                app:title="Импульсная дозация 21"
+                app:useSimpleSummaryProvider="true" />
+            <EditTextPreference
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:key="impulse_dose22"
+                app:title="Импульсная дозация 22"
+                app:useSimpleSummaryProvider="true"
+                android:dependency="hopper2"/>
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="hopper3"
+                android:title="Бункер 31 - 32" />
+            <EditTextPreference
+                app:key="impulse_dose31"
+                app:title="Импульсная дозация 31"
+                app:useSimpleSummaryProvider="true" />
+            <EditTextPreference
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:key="impulse_dose32"
+                app:title="Импульсная дозация 32"
+                app:useSimpleSummaryProvider="true"
+                android:dependency="hopper3"/>
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="hopper4"
+                android:title="Бункер 41 - 42" />
+            <EditTextPreference
+                app:key="impulse_dose41"
+                app:title="Импульсная дозация 41"
+                app:useSimpleSummaryProvider="true" />
+
+            <EditTextPreference
+                app:key="impulse_dose42"
+                app:title="Импульсная дозация 42"
+                app:useSimpleSummaryProvider="true"
+                android:dependency="hopper4"/>
+        </PreferenceCategory>
+
         <EditTextPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:key="flap_pulse"
             app:title="Импульс заслонки, сек"
             app:useSimpleSummaryProvider="true" />
-
         <EditTextPreference
             app:key="flap_pause"
             app:title="Пауза заслонки, сек"
@@ -64,25 +122,6 @@
             android:key="reverse_conveyor"
             android:title="Кнопка реверс конвейера ДК" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="РАЗДЕЛЕНИЕ БУНКЕРОВ">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="hopper1"
-            android:title="Бункер 11 - 12" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="hopper2"
-            android:title="Бункер 21 - 22" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="hopper3"
-            android:title="Бункер 31 - 32" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="hopper4"
-            android:title="Бункер 41 - 42" />
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -12,7 +12,7 @@
 
         <ListPreference
             app:key="lift_after"
-            app:title="Подьем скипа после..."
+            app:title="Подьем после..."
             app:entries="@array/lift_skip_after"
             app:entryValues="@array/lift_skip_after"
             app:useSimpleSummaryProvider="true"/>
@@ -20,23 +20,32 @@
         <EditTextPreference
             app:key="delay_lift"
             app:title="Задержка подъема, сек"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"/>
 
         <EditTextPreference
             app:key="discharge_skip"
             app:title="Выгрузка скипа, сек"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"/>
 
         <EditTextPreference
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:key="discharge_lt"
             app:title="Время выгрузки ЛТ, сек"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"/>
         <EditTextPreference
             app:key="alarm_stop_skip"
             app:title="Время до аварийной остановки скипа если шибер открыт, сек"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"/>
+        <SwitchPreferenceCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="option_alarm_sensor_skip_up"
+            app:title="Аварийный датчик верхнего положения скипа" />
 
     </PreferenceCategory>
 

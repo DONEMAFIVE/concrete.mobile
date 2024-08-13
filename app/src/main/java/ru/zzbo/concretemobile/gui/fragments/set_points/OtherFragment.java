@@ -1,6 +1,6 @@
-package ru.zzbo.concretemobile.gui.fragments.factory_config;
+package ru.zzbo.concretemobile.gui.fragments.set_points;
 
-import static ru.zzbo.concretemobile.utils.Constants.answer;
+import static ru.zzbo.concretemobile.utils.Constants.optionsController;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 
@@ -15,54 +15,29 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
-
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class OtherFragment extends PreferenceFragmentCompat {
+    SwitchPreferenceCompat autoQueue;
+    SeekBarPreference dk, water, chemy, cement;
+    Preference saveBtn;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.other_preferences, rootKey);
+        initFirst();
+        initThread();
+        initActions();
+    }
 
-        SwitchPreferenceCompat autoQueue = findPreference("auto_queue");
-        SeekBarPreference dk = findPreference("dk");
-        SeekBarPreference water = findPreference("water");
-        SeekBarPreference chemy = findPreference("chemy");
-        SeekBarPreference cement = findPreference("cement");
-        Preference saveBtn = findPreference("saveBtn");
-        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
-
-        //Установка максимального значения
-        dk.setMax(3);
-        water.setMax(3);
-        chemy.setMax(3);
-        cement.setMax(3);
-
-        //Установка значений по умолчанию
-        dk.setValue(0);
-        water.setValue(0);
-        chemy.setValue(0);
-        cement.setValue(0);
-
-        new Thread(() -> new Handler(Looper.getMainLooper()).post(() -> {
-            try {
-                if (answer.get(66).getIntValueIf() == 1) autoQueue.setChecked(true);
-                dk.setValue(answer.get(39).getIntValueIf());
-                chemy.setValue(answer.get(40).getIntValueIf());
-                water.setValue(answer.get(41).getIntValueIf());
-                cement.setValue(answer.get(42).getIntValueIf());
-            } catch (NullPointerException ex) {
-                Toast.makeText(getActivity(), "Ошибка загрузки, попробуйте снова.", Toast.LENGTH_SHORT).show();
-            }
-        })).start();
-
-        saveBtn.setOnPreferenceClickListener(e-> {
+    private void initActions() {
+        saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    ((PreferenceCategory) findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
                     findPreference("saveCategory").setVisible(false);
                     if (autoQueue.isChecked()) {
                         new CommandDispatcher(tagListManual.get(107)).writeSingleRegisterWithValue(true);
@@ -105,12 +80,55 @@ public class OtherFragment extends PreferenceFragmentCompat {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
                     findPreference("saveCategory").setVisible(true);
                 }
             }).start();
             return true;
         });
+    }
+
+    private void initThread() {
+        new Thread(() -> {
+            optionsController.initTags(getContext());
+            optionsController.readValues();
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                try {
+                    if (optionsController.getUseAutoQueueUploadSourcesOption() == 1)
+                        autoQueue.setChecked(true);
+                    dk.setValue(optionsController.getQueueDK());
+                    chemy.setValue(optionsController.getQueueDCh());
+                    water.setValue(optionsController.getQueueDW());
+                    cement.setValue(optionsController.getQueueDC());
+                } catch (NullPointerException ex) {
+                    Toast.makeText(getActivity(), "Ошибка загрузки, попробуйте снова.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
+    }
+
+    private void initFirst() {
+        autoQueue = findPreference("auto_queue");
+        dk = findPreference("dk");
+        water = findPreference("water");
+        chemy = findPreference("chemy");
+        cement = findPreference("cement");
+        saveBtn = findPreference("saveBtn");
+        ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
+
+        //Установка максимального значения
+        dk.setMax(3);
+        water.setMax(3);
+        chemy.setMax(3);
+        cement.setMax(3);
+
+        //Установка значений по умолчанию
+        dk.setValue(0);
+        water.setValue(0);
+        chemy.setValue(0);
+        cement.setValue(0);
+
     }
 
 }

@@ -17,7 +17,7 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
+import ru.zzbo.concretemobile.db.helpers.ConfigBuilder;
 
 public class NameBunckerActivity extends AppCompatActivity {
 

@@ -2,6 +2,7 @@ package ru.zzbo.concretemobile.gui.dialogs.uploaders;
 
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.hydroGateOption;
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.app.AlertDialog;
@@ -26,7 +27,7 @@ public class PartyCapacityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         EditText partyCapacity = new EditText(getActivity());
-        partyCapacity.setText("1");
+        partyCapacity.setText(String.valueOf(retrieval.getBatchVolumeValue()));
         partyCapacity.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

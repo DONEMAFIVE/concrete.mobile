@@ -7,11 +7,13 @@ import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMI
 import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static ru.zzbo.concretemobile.db.DBConstants.DATABASE_VERSION;
 import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES;
 import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES_TAP_TARGET;
 import static ru.zzbo.concretemobile.utils.Constants.PERMISSION_STORAGE;
 import static ru.zzbo.concretemobile.utils.Constants.REQUEST_EXTERNAL_STORAGE;
 import static ru.zzbo.concretemobile.utils.Constants.accessLevel;
+import static ru.zzbo.concretemobile.utils.Constants.androidID;
 import static ru.zzbo.concretemobile.utils.Constants.animationMixerState;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
@@ -105,9 +107,9 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
-import ru.zzbo.concretemobile.db.builders.StorageMillageBuilder;
+import ru.zzbo.concretemobile.db.helpers.ConfigBuilder;
+import ru.zzbo.concretemobile.db.helpers.FactoryComplectationBuilder;
+import ru.zzbo.concretemobile.db.helpers.StorageMillageBuilder;
 import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.gui.catalogs.RequisitesActivity;
 import ru.zzbo.concretemobile.gui.dialogs.uploaders.MixCapacityDialog;
@@ -126,7 +128,6 @@ import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.protocol.DataManager;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.commands.StartAutoCycle;
-import ru.zzbo.concretemobile.protocol.profinet.reflections.ReflectionRetrieval;
 import ru.zzbo.concretemobile.reporting.ReportRecordingUtil;
 import ru.zzbo.concretemobile.utils.AlarmUtil;
 import ru.zzbo.concretemobile.utils.CalcUtil;
@@ -266,10 +267,10 @@ public class OperatorViewActivity extends AppCompatActivity {
     private TextView titleBuncker2;
     private TextView titleBuncker3;
     private TextView titleBuncker4;
-    private TextView recepieBuncker1;
-    private TextView recepieBuncker4;
+    private TextView recipeBuncker1;
+    private TextView recipeBuncker4;
     private TextView doseBuncker4;
-    private TextView recepieBuncker2;
+    private TextView recipeBuncker2;
     private TextView doseBuncker1;
     private TextView doseBuncker2;
     //    private ImageView dispenserChemyView;
@@ -335,9 +336,10 @@ public class OperatorViewActivity extends AppCompatActivity {
     private AlertDialog correctionDialog;
     private View mCorrectionView;
     private Button closeDialog;
+    private ImageButton infoRecipeCorrectionWater;
     private CheckBox autoCorrectionShnekSelector;
+    private CheckBox autoCorrectionInertOption;
     private CheckBox recepieCorrectionOption;
-
     private ProgressBar pbChemy;
     private ProgressBar pbSilos;
     private ProgressBar pbWater;
@@ -345,6 +347,7 @@ public class OperatorViewActivity extends AppCompatActivity {
     private boolean skipSendUp = false;
     private boolean skipSendDown = false;
     private boolean tapTarget;
+    boolean doubleBackToExitPressedOnce = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -657,26 +660,36 @@ public class OperatorViewActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        touchLockLayout.setVisibility(VISIBLE);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Выход");
-        builder.setIcon(R.drawable.warning);
-        builder.setMessage("Вы действительно хотите закрыть приложение и завершить работу?");
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else if (!doubleBackToExitPressedOnce) {
+            this.doubleBackToExitPressedOnce = true;
+            touchLockLayout.setVisibility(VISIBLE);
 
-        builder.setPositiveButton("Да", (dialog, id) -> {
-            try {
-                System.exit(0);
-                finishAffinity();
-            } catch (Exception ex) {
-                Log.e("EXIT", ex.getMessage());
-            }
-        });
-        builder.setNegativeButton("Нет", (dialog, id) -> {
-            dialog.dismiss();
-        });
+            Toast.makeText(this, "Проведите еще раз, чтобы выйти", Toast.LENGTH_SHORT).show();
 
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Выход");
+            builder.setIcon(R.drawable.warning);
+            builder.setMessage("Вы действительно хотите закрыть приложение и завершить работу?");
+
+            builder.setPositiveButton("Да", (dialog, id) -> {
+                try {
+                    System.exit(0);
+                    finishAffinity();
+                } catch (Exception ex) {
+                    Log.e("EXIT", ex.getMessage());
+                }
+            });
+            builder.setNegativeButton("Нет", (dialog, id) -> {
+                dialog.dismiss();
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
     }
 
     /**
@@ -822,8 +835,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                 break;
             }
         }
+
+        if (!factoryOptionList.isAmperageSensor()) amperage.setVisibility(INVISIBLE);
+
     }
 
+    @SuppressLint("SetTextI18n")
     private void startPolling() {
         new Thread(() -> {
             RotateAnimation ra = new RotateAnimation(0, 360, RotateAnimation.RELATIVE_TO_SELF, .5f, RotateAnimation.RELATIVE_TO_SELF, .5f);
@@ -898,13 +915,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                             globalFactoryState = false;
                         }
 
-                        if (retrieval.getRecepieCorrectOptionValue() == 1)
-                            recepieCorrectionOption.setChecked(true);
-                        else recepieCorrectionOption.setChecked(false);
-
-                        if (retrieval.getAutoCorrectShnekOptionValue() == 1)
-                            autoCorrectionShnekSelector.setChecked(true);
-                        else autoCorrectionShnekSelector.setChecked(false);
+                        recepieCorrectionOption.setChecked(retrieval.getRecepieCorrectOptionValue() == 1);
+                        autoCorrectionShnekSelector.setChecked(retrieval.getAutoCorrectShnekOptionValue() == 1);
+                        autoCorrectionInertOption.setChecked(retrieval.getAutoCorrectionInertOptValue() == 1);
 
                         rtDK.setText(String.valueOf(retrieval.getMotoClockHorConveyorValue()));
                         rtLT.setText(String.valueOf(retrieval.getMotoClockVertConvValue()));
@@ -922,15 +935,29 @@ public class OperatorViewActivity extends AppCompatActivity {
                         timeMix.setText("Таймер: " + retrieval.getCountdownTimeMixValue());
 
                         //рецепты на бункерах
-                        recepieBuncker1.setText(decFormat.format(retrieval.getHopper11RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper11Value()));
-                        recepieBuncker2.setText(decFormat.format(retrieval.getHopper21RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper21Value()));
-                        recipeBuncker3.setText(decFormat.format(retrieval.getHopper31RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper31Value()));
-                        recepieBuncker4.setText(decFormat.format(retrieval.getHopper41RecipeValue()) + "/" + decFormat.format(retrieval.getShortageHopper41Value()));
-                        recipeChemy1.setText(decFormat.format(retrieval.getChemy1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageChemy1Value()));
-                        recipeChemy2.setText(decFormat.format(retrieval.getChemy2RecipeValue()));
-                        recipeWater1.setText(decFormat.format(retrieval.getWaterRecipeValue()) + "/" + decFormat.format(retrieval.getShortageWaterValue()));
-                        recipeSilos1.setText(decFormat.format(retrieval.getCement1RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos1Value()));
-                        recipeSilos2.setText(decFormat.format(retrieval.getCement2RecipeValue()) + "/" + decFormat.format(retrieval.getShortageSilos2Value()));
+                        recipeBuncker1.setText(decFormat.format(retrieval.getHopper11RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper11Value()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper11FactValue()));
+                        recipeBuncker2.setText(decFormat.format(retrieval.getHopper21RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper21Value()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper21FactValue()));
+                        recipeBuncker3.setText(decFormat.format(retrieval.getHopper31RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper31Value()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper31FactValue()));
+                        recipeBuncker4.setText(decFormat.format(retrieval.getHopper41RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper41Value()) + "/" +
+                                decFormat.format(retrieval.getShortageHopper41FactValue()));
+
+                        recipeChemy1.setText(decFormat.format(retrieval.getChemy1RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageChemy1Value()));
+                        recipeChemy2.setText(decFormat.format(retrieval.getChemy2RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageChemy2Value()));
+                        recipeWater1.setText(decFormat.format(retrieval.getWaterRecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageWaterValue()));
+                        recipeSilos1.setText(decFormat.format(retrieval.getCement1RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageSilos1Value()));
+                        recipeSilos2.setText(decFormat.format(retrieval.getCement2RecipeValue()) + "/" +
+                                decFormat.format(retrieval.getShortageSilos2Value()));
 
                         //набранные дозы
                         doseBuncker1.setText(decFormat.format(retrieval.getDoseHopper11Value()));
@@ -949,7 +976,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                         weightDCh.setText(decFormat.format(retrieval.getCurrentWeightChemyValue()));
                         weigthWater.setText(decFormat.format(retrieval.getCurrentWeightWaterValue()));
 
-                        amperage.setText("Сила тока (А): " + decFormat.format(retrieval.getAmperageMixerValue()));
+                        if (factoryOptionList.isAmperageSensor()) {
+                            amperage.setText("Сила тока (А): " + decFormat.format(retrieval.getAmperageMixerValue()));
+                        }
 
                         timeMixBtn.setText("Время перемешивания, сек: " + (int) retrieval.getMixingTimeValue() / 1000);
 
@@ -1021,18 +1050,24 @@ public class OperatorViewActivity extends AppCompatActivity {
                             closeSensorMixer.setImageResource(R.drawable.shiber_empty);
                         }
 
-                        if (retrieval.isMixerHalfOpenValue() == 1)
+                        if (retrieval.isMixerHalfOpenValue() == 1) {
                             middleSensorMixer.setImageResource(R.drawable.shiber_open);
-                        else middleSensorMixer.setImageResource(R.drawable.shiber_empty);
+                        } else {
+                            middleSensorMixer.setImageResource(R.drawable.shiber_empty);
+                        }
 
-                        if (retrieval.isMixerOpenValue() == 1)
+                        if (retrieval.isMixerOpenValue() == 1) {
                             openSensorMixer.setImageResource(R.drawable.shiber_open);
-                        else openSensorMixer.setImageResource(R.drawable.shiber_empty);
+                        } else {
+                            openSensorMixer.setImageResource(R.drawable.shiber_empty);
+                        }
 
                         //смеситель не пуст
-                        if (retrieval.isMixerNotEmptyValue() == 1)
+                        if (retrieval.isMixerNotEmptyValue() == 1) {
                             mixFully.setVisibility(VISIBLE);
-                        else mixFully.setVisibility(INVISIBLE);
+                        } else {
+                            mixFully.setVisibility(INVISIBLE);
+                        }
 
                         if (retrieval.isMixerRollersWorkIndicationValue() == 1) {
                             startMixerEngine.setBackgroundColor(Color.GREEN);
@@ -1049,7 +1084,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                         }
 
                         //скип стрелки
-                        if (retrieval.isSkipMoveUpValue() == 1){
+                        if (retrieval.isSkipMoveUpValue() == 1) {
                             skipArrowUp.setVisibility(VISIBLE);
                             skipArrowUp.setImageResource(R.drawable.arrow_up);
                         } else {
@@ -1057,7 +1092,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                             skipArrowUp.setVisibility(INVISIBLE);
                         }
 
-                        if (retrieval.isSkipMoveDownValue() == 1){
+                        if (retrieval.isSkipMoveDownValue() == 1) {
                             skipArrowDown.setVisibility(VISIBLE);
                             skipArrowDown.setImageResource(R.drawable.arrow_down);
                         } else {
@@ -1116,15 +1151,18 @@ public class OperatorViewActivity extends AppCompatActivity {
                             openSensorDC.setImageResource(R.drawable.shiber_open);
                         else openSensorDC.setImageResource(R.drawable.shiber_empty);
 
-                        if (retrieval.isCementDisFlapClosePosIndValue() == 1)
+                        if (retrieval.isCementDisFlapClosePosIndValue() == 1) {
                             closeSensorDC.setImageResource(R.drawable.shiber_open);
-                        else closeSensorDC.setImageResource(R.drawable.shiber_empty);
+                        } else {
+                            closeSensorDC.setImageResource(R.drawable.shiber_empty);
+                        }
 
                         //заслонки
-                        if (retrieval.isHopper11FlapOpenIndValue() == 1)
+                        if (retrieval.isHopper11FlapOpenIndValue() == 1) {
                             doser11.setImageResource(R.drawable.doser_open);
-                        else
+                        } else {
                             doser11.setImageResource(R.drawable.doser_close);
+                        }
                         if (retrieval.isHopper12FlapOpenIndValue() == 1)
                             doser12.setImageResource(R.drawable.doser_open);
                         else
@@ -1322,8 +1360,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                             transporterSelectBtn.setText("Водитель\n" + selectedTrans);
                             performance.setText(String.valueOf(retrieval.getScadaPerformanceValue()));
                             infoApp.setText(
-                                    "APP: "+ BuildConfig.VERSION_NAME +
-                                    "\nPLC: "+ retrieval.getFirmwareVersionValue()
+                                    "Сборка: "+ BuildConfig.VERSION_NAME +
+                                    "\nВерсия ПЛК: "+ retrieval.getFirmwareVersionValue() +
+                                    "\nВерсия БД: "+ DATABASE_VERSION +
+                                            "\nID Устройства: " + androidID
                             );
                         });
 
@@ -1336,7 +1376,6 @@ public class OperatorViewActivity extends AppCompatActivity {
         }).start();
     }
 
-    //TODO GET
     @SuppressLint({"ClickableViewAccessibility", "ResourceAsColor"})
     private void initActions() {
         recipesMenu.setOnClickListener(view -> {
@@ -1362,6 +1401,21 @@ public class OperatorViewActivity extends AppCompatActivity {
         touchLock.setOnClickListener(view -> {
             touchLockLayout.setVisibility(VISIBLE);
         });
+        infoRecipeCorrectionWater.setOnClickListener(view -> {
+            runOnUiThread(()->{
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Корректировка рецепта по воде");
+                builder.setMessage("Корректировка рецепта на первом замесе, при избыточном или недостаточном количестве воды в растворе." +
+                        "\n\nДля этого перед запуском партии оператор активирует опцию «Корректировка рецепта» " +
+                        "и отключает автоматическую выгрузку бетона из смесителя, после разгрузки дозаторов " +
+                        "следующая порция набрана будет только после разгрузки смесителя, поэтому у оператора " +
+                        "есть время на оценку показаний датчика тока количеству воды в растворе. " +
+                        "\n\nИзменения в рецепт вносятся после окончания работы таймера «время перемешивания», обратного отсчета до выгрузки смеси.");
+                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            });
+        });
         touchUnlock.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
@@ -1373,6 +1427,7 @@ public class OperatorViewActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+
             }
 
             @Override
@@ -1405,6 +1460,9 @@ public class OperatorViewActivity extends AppCompatActivity {
         });
         autoCorrectionShnekSelector.setOnClickListener(view -> {
             new CommandDispatcher(tagListManual.get(155)).writeSingleInvertedBoolRegister();
+        });
+        autoCorrectionInertOption.setOnClickListener(view -> {
+            new CommandDispatcher(tagListManual.get(169)).writeSingleInvertedBoolRegister();
         });
         closeDialog.setOnClickListener(view -> correctionDialog.hide());
         catalogsBtn.setOnClickListener(view -> {
@@ -1830,17 +1888,17 @@ public class OperatorViewActivity extends AppCompatActivity {
                     skipSendDown = false;
                 });
                 skipArrowDown.setOnClickListener(view -> {
-                    if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
-                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
-                        mPlayer.start();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Смеситель не запущен!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                        return;
-                    }
+//                    if (retrieval.isMixerRollersWorkIndicationValue() == 0) {
+//                        Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
+//                        mPlayer.start();
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//                        builder.setTitle("Предупреждение");
+//                        builder.setMessage("Смеситель не запущен!");
+//                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.show();
+//                        return;
+//                    }
                     skipArrowDown.setImageResource(R.drawable.arrow_down);
                     boolean value = true;
                     if (retrieval.isSkipMoveDownValue() == 1) value = false;
@@ -1891,61 +1949,80 @@ public class OperatorViewActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Фильтр", Toast.LENGTH_SHORT).show();
 
                 });
+
                 openMixer.setOnClickListener(view -> {
-                    new CommandDispatcher(tagListManual.get(21)).writeSingleInvertedBoolRegister();
+                    new Thread(() -> {
+                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
+                    }).start();
                 });
                 closeMixer.setOnClickListener(view -> {
-                    new CommandDispatcher(tagListManual.get(82)).writeSingleInvertedBoolRegister();
-                });
-                openMixer.setOnTouchListener((view, motionEvent) -> {
                     new Thread(() -> {
-                        switch (motionEvent.getAction()) {
-                            case MotionEvent.ACTION_DOWN: { //удержание
-                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
-                                break;
-                            }
-                            case MotionEvent.ACTION_UP: { // опускание
-                                try {
-                                    Thread.sleep(300);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                    }).start();
+                });
 
-                                break;
-                            }
-                        }
-                    }).start();
-                    return false;
-                });
-                closeMixer.setOnTouchListener((view, motionEvent) -> {
-                    new Thread(() -> {
-                        switch (motionEvent.getAction()) {
-                            case MotionEvent.ACTION_DOWN: { //удержание
-                                if (hydroGateOption)
-                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
-                                else
-                                    new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-                                break;
-                            }
-                            case MotionEvent.ACTION_UP: { // опускание
-                                try {
-                                    Thread.sleep(300);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                if (hydroGateOption)
-                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
-                                break;
-                            }
-                        }
-                    }).start();
-                    return false;
-                });
+//                openMixer.setOnTouchListener((view, motionEvent) -> {
+//                    switch (motionEvent.getAction()) {
+//                        case MotionEvent.ACTION_DOWN: { //удержание
+//                            new Thread(() -> {
+//                                new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
+//                                try {
+//                                    Thread.sleep(300);
+//                                } catch (InterruptedException ex) {
+//                                    ex.printStackTrace();
+//                                }
+//                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
+//                            }).start();
+//                            break;
+//                        }
+//                        case MotionEvent.ACTION_UP: { // опускание
+//                            new Thread(() -> {
+//                                try {
+//                                    Thread.sleep(300);
+//                                } catch (InterruptedException ex) {
+//                                    ex.printStackTrace();
+//                                }
+//                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+//                            }).start();
+//                            break;
+//                        }
+//                    }
+//                    return false;
+//                });
+//                closeMixer.setOnTouchListener((view, motionEvent) -> {
+//                    switch (motionEvent.getAction()) {
+//                            case MotionEvent.ACTION_DOWN: { //удержание
+////                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
+////                                else new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+//                                new Thread(() -> {
+//                                    new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+//                                    try {
+//                                        Thread.sleep(300);
+//                                    } catch (InterruptedException ex) {
+//                                        ex.printStackTrace();
+//                                    }
+//                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
+//                                }).start();
+//                                break;
+//                            }
+//                            case MotionEvent.ACTION_UP: { // опускание
+//                                try {
+//                                    Thread.sleep(300);
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
+//                                break;
+//                            }
+//                        }
+//                    return false;
+//                });
+
                 valveWater.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(83)).writeSingleInvertedBoolRegister();
                 });
 
-                //TODO: Попытка сделать защиту от случайногог нажатия
+                //TODO: Попытка сделать защиту от случайного нажатия
                 Handler handlerRunCycle = new Handler();
                 Runnable runCycle = () -> {
                     if (new StartAutoCycle().checkProc(this)) {
@@ -2002,6 +2079,11 @@ public class OperatorViewActivity extends AppCompatActivity {
                                     AlertDialog alertDialog = builder.create();
                                     alertDialog.setCancelable(false);
                                     alertDialog.show();
+                                    break;
+                                }
+                                if(!globalFactoryState) {
+                                    new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(1000);
+                                    dbUtilUpdate.updCurrentTable("state", "idle");
                                 }
                                 handlerRunCycle.postDelayed(runCycle, 2000);
                                 break;
@@ -2243,7 +2325,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     if (!ConnectionUtil.isWifiConnected(getApplicationContext())) {
                         runOnUiThread(()-> Toast.makeText(getApplicationContext(), "Отсутствует подлючение к сети WiFi", Toast.LENGTH_SHORT).show());
                     }
-                    if (!ConnectionUtil.isIpConnected("192.168.250.10")) {
+                    if (!ConnectionUtil.isIpConnected(configList.getPlcIP())) {
                         runOnUiThread(()-> Toast.makeText(getApplicationContext(), "Отсутствует соединение с PLC", Toast.LENGTH_SHORT).show());
                     }
                 }catch (Exception e){
@@ -2487,10 +2569,10 @@ public class OperatorViewActivity extends AppCompatActivity {
         titleWater1 = findViewById(R.id.titleWater1);
         titleWater2 = findViewById(R.id.titleWater2);
 
-        recepieBuncker4 = findViewById(R.id.recepieBuncker4);
+        recipeBuncker4 = findViewById(R.id.recepieBuncker4);
         doseBuncker4 = findViewById(R.id.doseBuncker4);
-        recepieBuncker1 = findViewById(R.id.recepieBuncker1);
-        recepieBuncker2 = findViewById(R.id.recepieBuncker2);
+        recipeBuncker1 = findViewById(R.id.recepieBuncker1);
+        recipeBuncker2 = findViewById(R.id.recepieBuncker2);
         doseBuncker1 = findViewById(R.id.doseBuncker1);
         doseBuncker2 = findViewById(R.id.doseBuncker2);
         doserChemy1 = findViewById(R.id.doserChemy1);
@@ -2536,7 +2618,9 @@ public class OperatorViewActivity extends AppCompatActivity {
         mCorrectionView = getLayoutInflater().inflate(R.layout.dialog_correction, null);
         mCorrectionBuilder.setView(mCorrectionView);
         correctionDialog = mCorrectionBuilder.create();
+        infoRecipeCorrectionWater = mCorrectionView.findViewById(R.id.infoRecipeCorrectionWater);
         autoCorrectionShnekSelector = mCorrectionView.findViewById(R.id.autoCorrectionShnekSelector);
+        autoCorrectionInertOption = mCorrectionView.findViewById(R.id.autoCorrectionInertOption);
         recepieCorrectionOption = mCorrectionView.findViewById(R.id.recepieCorrectionOption);
         closeDialog = mCorrectionView.findViewById(R.id.hideDialog);
     }
@@ -2627,5 +2711,3 @@ public class OperatorViewActivity extends AppCompatActivity {
         }
     }
 }
-
-

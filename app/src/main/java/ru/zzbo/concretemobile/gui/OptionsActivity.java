@@ -1,13 +1,10 @@
 package ru.zzbo.concretemobile.gui;
 
-import static ru.zzbo.concretemobile.utils.Constants.APP_PREFERENCES;
 import static ru.zzbo.concretemobile.utils.Constants.androidID;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
-import static ru.zzbo.concretemobile.utils.Constants.mSettings;
+import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +20,7 @@ import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -36,13 +34,15 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
+import ru.zzbo.concretemobile.db.helpers.ConfigBuilder;
+import ru.zzbo.concretemobile.models.ScadaConfig;
 import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.CryptoUtil;
+import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
-public class SystemConfigActivity extends AppCompatActivity {
+public class OptionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +75,16 @@ public class SystemConfigActivity extends AppCompatActivity {
         private EditTextPreference hardkeyETP;
         private Preference getLicence;
         private Preference saveBtn;
-        private Tag readedTag;
+        private Tag tagMac;
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.system_config_preferences, rootKey);
             configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(getContext()).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
 
-            new Thread(()->{
+            new Thread(() -> {
                 Tag current = new Tag(S7.S7AreaDB, 76, 0, 0, "String", false, 0, 0, 0, "", "", 0);
-                readedTag = new CommandDispatcher(current).readSingleRegister();
+                tagMac = new CommandDispatcher(current).readSingleRegister();
             }).start();
 
             Dialog dialogQR = new Dialog(getContext());
@@ -113,25 +114,57 @@ public class SystemConfigActivity extends AppCompatActivity {
 
             if (getLicence != null) {
                 getLicence.setOnPreferenceClickListener(e -> {
-                    boolean isLicence;
-                    try {
-                        isLicence = new CryptoUtil(hardkeyETP.getText()).decrypt().equals(readedTag.getStringValueIf().trim());
-                    } catch (Exception ex) {
-                        isLicence = false;
-                    }
-                    if (isLicence) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Проверка лицензии");
-                        builder.setMessage("Лицензия активирована!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    } else {
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            String fromGetKey = new CryptoUtil(new SimpleDateFormat("dd.MM.yyyy").format(new Date()) + ";" + readedTag.getStringValueIf()).encrypt();
-                            imageQR.setImageBitmap(generateQrCode(fromGetKey));
-                            dialogQR.show();
-                        });
+                    switch (exchangeLevel) {
+                        case 0: { //PLC
+                            if (tagMac == null) return true;
+                            boolean isLicence;
+                            try {
+                                isLicence = new CryptoUtil(hardkeyETP.getText()).decrypt().equals(tagMac.getStringValueIf().trim());
+                            } catch (Exception ex) {
+                                Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                                isLicence = false;
+                            }
+                            if (isLicence) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Проверка лицензии PLC");
+                                builder.setMessage("Лицензия активирована!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            } else {
+                                new Handler(Looper.getMainLooper()).post(() -> {
+                                    String fromGetKey = new CryptoUtil(
+                                            new SimpleDateFormat("dd.MM.yyyy").format(new Date()) +
+                                                    ";" + tagMac.getStringValueIf()).encrypt();
+                                    imageQR.setImageBitmap(generateQrCode(fromGetKey));
+                                    dialogQR.show();
+                                });
+                            }
+                            return true;
+                        }
+                        case 1: { //PC
+                            String req = OkHttpUtil.getPCConfig();
+                            ScadaConfig cfgPC = new Gson().fromJson(req, ScadaConfig.class);
+
+                            if (new CryptoUtil(hardkeyETP.getText()).decrypt().equals(
+                                    new CryptoUtil(cfgPC.getHardKey()).decrypt())
+                            ) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Проверка лицензии PC");
+                                builder.setMessage("Лицензия активирована!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            } else {
+                                new Handler(Looper.getMainLooper()).post(() -> {
+                                    String fromGetKey = new CryptoUtil(
+                                            new SimpleDateFormat("dd.MM.yyyy").format(new Date()) +
+                                                    ";" + new CryptoUtil(cfgPC.getHardKey()).decrypt()).encrypt();
+                                    imageQR.setImageBitmap(generateQrCode(fromGetKey));
+                                    dialogQR.show();
+                                });
+                            }
+                        }
                     }
                     return true;
                 });
@@ -164,7 +197,6 @@ public class SystemConfigActivity extends AppCompatActivity {
                         }
                     });
                     builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
-
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     return true;

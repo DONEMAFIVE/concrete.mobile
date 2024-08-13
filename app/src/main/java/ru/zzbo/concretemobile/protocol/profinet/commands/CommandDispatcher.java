@@ -12,6 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.ref.PhantomReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -80,7 +82,7 @@ public class CommandDispatcher {
     private void createConnection() {
         plcConnector = new S7Client();
         plcConnector.SetConnectionType(S7.S7_BASIC);
-        connectionState = plcConnector.ConnectTo(configList.getPlcIP(), Constants.RACK, Constants.SLOT);
+        connectionState = plcConnector.ConnectTo(configList.getPlcIP(), 0, 1);
     }
 
     private void closeConnection() {
@@ -92,7 +94,7 @@ public class CommandDispatcher {
             System.err.println("PLC connection lost ...");
             closeConnection();
             try {
-                Thread.sleep(200);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

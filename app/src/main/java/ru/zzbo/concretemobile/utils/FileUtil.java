@@ -2,7 +2,9 @@ package ru.zzbo.concretemobile.utils;
 
 import static com.blankj.utilcode.util.ActivityUtils.startActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -56,6 +58,24 @@ public class FileUtil {
         else return null;
     }
 
+    public String read(Context context, String path){
+        try {
+            InputStream isr = context.getAssets().open(path);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(isr));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            System.err.println(sb.toString());
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "empty file";
+    }
     //просто очистить содержимое указанного файла
     public void cleanFile(String path) {
         try {

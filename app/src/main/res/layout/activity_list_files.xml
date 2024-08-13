@@ -7,10 +7,21 @@
     android:orientation="vertical"
     tools:layout_editor_absoluteY="81dp">
 
+    <TextView
+        android:id="@+id/noListReports"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Список отчетов отсутствует"
+        android:textAlignment="center"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/reportListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
     </ListView>
 
 </LinearLayout>

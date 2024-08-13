@@ -11,8 +11,7 @@ import java.util.List;
 
 import ru.zzbo.concretemobile.db.DBTags;
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
-import ru.zzbo.concretemobile.models.Parameter;
+import ru.zzbo.concretemobile.db.helpers.ConfigBuilder;
 import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
 import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7Client;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;

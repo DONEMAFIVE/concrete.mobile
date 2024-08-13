@@ -1,4 +1,4 @@
-package ru.zzbo.concretemobile.db.builders;
+package ru.zzbo.concretemobile.db.helpers;
 
 import java.util.List;
 

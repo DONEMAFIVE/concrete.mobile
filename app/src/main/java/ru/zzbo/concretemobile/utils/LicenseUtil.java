@@ -1,10 +1,11 @@
 package ru.zzbo.concretemobile.utils;
 
+import static ru.zzbo.concretemobile.db.DBConstants.TABLE_NAME_CONFIG;
 import static ru.zzbo.concretemobile.utils.Constants.configList;
 import static ru.zzbo.concretemobile.utils.Constants.plcMac;
 
 import android.content.Context;
-import android.util.Log;
+
 import com.google.gson.Gson;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,14 +13,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
-import ru.zzbo.concretemobile.db.builders.ConfigBuilder;
+import ru.zzbo.concretemobile.db.helpers.ConfigBuilder;
 import ru.zzbo.concretemobile.models.DroidConfig;
 import ru.zzbo.concretemobile.models.ScadaConfig;
-import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
-import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
-import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 
 public class LicenseUtil {
 
@@ -40,33 +37,37 @@ public class LicenseUtil {
         return null;
     }
 
-    public static boolean chkLicense(Context context) {
-        try {
-            configList = new ConfigBuilder().buildScadaParameters(new DBUtilGet(context).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
-            String key = new CryptoUtil(configList.getHardKey()).decrypt().trim();
-            return key.equals(plcMac.getStringValueIf().substring(0,17));
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+    public static boolean chkLicense(Context context, int device) {
+        switch (device) {
+            case 0: { //PLC
+                try {
+                    String key = new CryptoUtil(configList.getHardKey()).decrypt().trim();
+                    return key.equals(plcMac.getStringValueIf().substring(0, 17));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            case 1: { //PC
+                try {
+                    String req = OkHttpUtil.getPCConfig();
+                    ScadaConfig cfgPC = new Gson().fromJson(req, ScadaConfig.class);
 
-    public static boolean chkPCLicense(Context context) {
-        try {
-            String req = OkHttpUtil.getPCConfig();
-            ScadaConfig cfgPC = new Gson().fromJson(req, ScadaConfig.class);
-            DroidConfig cfgDroid = new ConfigBuilder().buildScadaParameters(new DBUtilGet(context).getFromParameterTable(DBConstants.TABLE_NAME_CONFIG));
+                    String droidKey = new CryptoUtil(configList.getHardKey()).decrypt().trim();
+                    String pcKey = new CryptoUtil(cfgPC.getHardKey()).decrypt().trim();
 
-            String droidKey = cfgDroid.getHardKey();
-            String pcKey = cfgPC.getHardKey();
+//                    Toast.makeText(context, "droid: " + droidKey, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(context, "pc: " + pcKey,  Toast.LENGTH_LONG).show();
 
-            droidKey = new CryptoUtil(droidKey).decrypt().trim();
-            pcKey = new CryptoUtil(pcKey).decrypt().trim();
+                    return pcKey.equals(droidKey);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
 
-            return pcKey.equals(droidKey);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return false;
+            default: return false;
+
         }
     }
 }

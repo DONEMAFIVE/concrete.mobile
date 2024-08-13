@@ -52,8 +52,24 @@ public class Recepie {
     private float chemy3Shortage;
     private int pathToHumidity;
     private int preDosingWaterPercent;
-
-    public Recepie(int id, String date, String time, String name, String mark, String classPie, String description, float bunckerRecepie11, float bunckerRecepie12, float bunckerRecepie21, float bunckerRecepie22, float bunckerRecepie31, float bunckerRecepie32, float bunckerRecepie41, float bunckerRecepie42, float bunckerShortage11, float bunckerShortage12, float bunckerShortage21, float bunckerShortage22, float bunckerShortage31, float bunckerShortage32, float bunckerShortage41, float bunckerShortage42, float chemyRecepie1, float chemyShortage1, float chemyShortage2, float water1Recepie, float water2Recepie, float water1Shortage, float water2Shortage, float silosRecepie1, float silosRecepie2, float silosShortage1, float silosShortage2, float humidity11, float humidity12, float humidity21, float humidity22, float humidity31, float humidity32, float humidity41, float humidity42, String uniNumber, int timeMix, float chemy2Recepie, float chemy3Recepie, float chemy2Shortage, float chemy3Shortage, int pathToHumidity, int preDosingWaterPercent) {
+    private float fibra;
+    private float dDryCh;
+    private float amperageFluidity;
+    public Recepie(int id, String date, String time, String name, String mark, String classPie,
+                   String description, float bunckerRecepie11, float bunckerRecepie12,
+                   float bunckerRecepie21, float bunckerRecepie22, float bunckerRecepie31,
+                   float bunckerRecepie32, float bunckerRecepie41, float bunckerRecepie42,
+                   float bunckerShortage11, float bunckerShortage12, float bunckerShortage21,
+                   float bunckerShortage22, float bunckerShortage31, float bunckerShortage32,
+                   float bunckerShortage41, float bunckerShortage42, float chemyRecepie1,
+                   float chemyShortage1, float chemyShortage2, float water1Recepie,
+                   float water2Recepie, float water1Shortage, float water2Shortage,
+                   float silosRecepie1, float silosRecepie2, float silosShortage1,
+                   float silosShortage2, float humidity11, float humidity12, float humidity21,
+                   float humidity22, float humidity31, float humidity32, float humidity41,
+                   float humidity42, String uniNumber, int timeMix, float chemy2Recepie,
+                   float chemy3Recepie, float chemy2Shortage, float chemy3Shortage, int pathToHumidity,
+                   int preDosingWaterPercent, float fibra, float dDryCh, float amperageFluidity) {
         this.id = id;
         this.date = date;
         this.time = time;
@@ -104,9 +120,26 @@ public class Recepie {
         this.chemy3Shortage = chemy3Shortage;
         this.pathToHumidity = pathToHumidity;
         this.preDosingWaterPercent = preDosingWaterPercent;
+        this.fibra = fibra;
+        this.dDryCh = dDryCh;
+        this.amperageFluidity = amperageFluidity;
     }
 
-    public Recepie(String date, String time, String name, String mark, String classPie, String description, float bunckerRecepie11, float bunckerRecepie12, float bunckerRecepie21, float bunckerRecepie22, float bunckerRecepie31, float bunckerRecepie32, float bunckerRecepie41, float bunckerRecepie42, float bunckerShortage11, float bunckerShortage12, float bunckerShortage21, float bunckerShortage22, float bunckerShortage31, float bunckerShortage32, float bunckerShortage41, float bunckerShortage42, float chemyRecepie1, float chemyShortage1, float chemyShortage2, float water1Recepie, float water2Recepie, float water1Shortage, float water2Shortage, float silosRecepie1, float silosRecepie2, float silosShortage1, float silosShortage2, float humidity11, float humidity12, float humidity21, float humidity22, float humidity31, float humidity32, float humidity41, float humidity42, String uniNumber, int timeMix, float chemy2Recepie, float chemy3Recepie, float chemy2Shortage, float chemy3Shortage, int pathToHumidity, int preDosingWaterPercent) {
+    public Recepie(String date, String time, String name, String mark, String classPie,
+                   String description, float bunckerRecepie11, float bunckerRecepie12,
+                   float bunckerRecepie21, float bunckerRecepie22, float bunckerRecepie31,
+                   float bunckerRecepie32, float bunckerRecepie41, float bunckerRecepie42,
+                   float bunckerShortage11, float bunckerShortage12, float bunckerShortage21,
+                   float bunckerShortage22, float bunckerShortage31, float bunckerShortage32,
+                   float bunckerShortage41, float bunckerShortage42, float chemyRecepie1,
+                   float chemyShortage1, float chemyShortage2, float water1Recepie,
+                   float water2Recepie, float water1Shortage, float water2Shortage,
+                   float silosRecepie1, float silosRecepie2, float silosShortage1,
+                   float silosShortage2, float humidity11, float humidity12, float humidity21,
+                   float humidity22, float humidity31, float humidity32, float humidity41,
+                   float humidity42, String uniNumber, int timeMix, float chemy2Recepie,
+                   float chemy3Recepie, float chemy2Shortage, float chemy3Shortage,
+                   int pathToHumidity, int preDosingWaterPercent, float fibra, float dDryCh, float amperageFluidity) {
         this.date = date;
         this.time = time;
         this.name = name;
@@ -156,6 +189,9 @@ public class Recepie {
         this.chemy3Shortage = chemy3Shortage;
         this.pathToHumidity = pathToHumidity;
         this.preDosingWaterPercent = preDosingWaterPercent;
+        this.fibra = fibra;
+        this.dDryCh = dDryCh;
+        this.amperageFluidity = amperageFluidity;
     }
 
     public int getId() {
@@ -552,5 +588,29 @@ public class Recepie {
 
     public void setPreDosingWaterPercent(int preDosingWaterPercent) {
         this.preDosingWaterPercent = preDosingWaterPercent;
+    }
+
+    public float getFibra() {
+        return fibra;
+    }
+
+    public void setFibra(float fibra) {
+        this.fibra = fibra;
+    }
+
+    public float getdDryCh() {
+        return dDryCh;
+    }
+
+    public void setdDryCh(float dDryCh) {
+        this.dDryCh = dDryCh;
+    }
+
+    public float getAmperageFluidity() {
+        return amperageFluidity;
+    }
+
+    public void setAmperageFluidity(float amperageFluidity) {
+        this.amperageFluidity = amperageFluidity;
     }
 }

@@ -1,5 +1,8 @@
 package ru.zzbo.concretemobile.utils;
 
+import static ru.zzbo.concretemobile.utils.Constants.configList;
+import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -76,5 +79,22 @@ public class ConnectionUtil {
     public static String getIpDevice(Context context) {
         WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         return Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+    }
+
+    /**
+     * Возвращает наименование устройства, которое не прошло проверку на подключение
+     * если все устройтва прошли проверку возвращется NULL - означает отсутствие проблем подключения
+     * @param context
+     * @return
+     */
+    public static String getDeviceDisconnected(Context context) {
+        if (!ConnectionUtil.isWifiConnected(context)) return "WIFI";
+
+        switch (exchangeLevel) {
+            case 0: if (!ConnectionUtil.isIpConnected("192.168.250.10")) return "PLC"; break;
+            case 1: if (!ConnectionUtil.isIpConnected(configList.getScadaIP())) return "PC"; break;
+            default: return null;
+        }
+        return null;
     }
 }

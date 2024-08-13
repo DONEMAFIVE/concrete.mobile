@@ -101,6 +101,7 @@ public class EditOrderActivity extends AppCompatActivity {
                 org.addAll(new Gson().fromJson(OkHttpUtil.getOrganization(), new TypeToken<List<Organization>>(){}.getType()));
                 trans.addAll(new Gson().fromJson(OkHttpUtil.getTransporters(), new TypeToken<List<Transporter>>(){}.getType()));
                 recepies.addAll(new Gson().fromJson(OkHttpUtil.getRecipes(), new TypeToken<List<Recepie>>(){}.getType()));
+
             }  else {
                 org.addAll(new DBUtilGet(this).getOrgs());
                 trans.addAll(new DBUtilGet(this).getTrans());

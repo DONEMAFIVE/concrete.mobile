@@ -136,6 +136,7 @@
             android:text="Старт ДВ"
             android:textColor="@color/black"
             android:textSize="10sp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -1966,12 +1967,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/horizontalConveyer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="60dp">
 
             <Button
                 android:id="@+id/horLineStart"
                 android:layout_width="87dp"
-                android:layout_height="60dp"
+                android:layout_height="45dp"
                 android:layout_marginStart="45dp"
                 android:backgroundTint="#FFFFFF"
                 android:text="Старт"
@@ -1984,8 +1985,9 @@
             <Button
                 android:id="@+id/reverseConveyor"
                 android:layout_width="87dp"
-                android:layout_height="60dp"
+                android:layout_height="45dp"
                 android:layout_marginStart="348dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="#FFFFFF"
                 android:text="Реверс"
                 android:textColor="#000000"
@@ -2317,7 +2319,7 @@
         android:id="@+id/mainMenuDL"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#031F1F1F"
+        android:background="#D8000000"
         android:visibility="gone">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -3323,7 +3325,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#031F1F1F"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -3376,6 +3378,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

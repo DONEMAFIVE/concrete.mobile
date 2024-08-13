@@ -2,6 +2,7 @@ package ru.zzbo.concretemobile.gui.dialogs.uploaders;
 
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 import static ru.zzbo.concretemobile.utils.Constants.hydroGateOption;
+import static ru.zzbo.concretemobile.utils.Constants.retrieval;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.app.AlertDialog;
@@ -26,7 +27,7 @@ public class MixCapacityDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         EditText mixCapacity = new EditText(getActivity());
-        mixCapacity.setText("1");
+        mixCapacity.setText(String.valueOf(retrieval.getMixingCapacity()));
         mixCapacity.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

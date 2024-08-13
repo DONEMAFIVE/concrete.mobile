@@ -6,13 +6,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import ru.zzbo.concretemobile.gui.fragments.factory_config.CementFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.ChemyFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.DKFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.MixerFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.OtherFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.SkipLTFragment;
-import ru.zzbo.concretemobile.gui.fragments.factory_config.WaterFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.CementFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.ChemyFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.DKFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.MixerFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.OtherFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.SkipLTFragment;
+import ru.zzbo.concretemobile.gui.fragments.set_points.WaterFragment;
 
 /**
  * Адаптер фрагментов - переключение между вкладками в уставках

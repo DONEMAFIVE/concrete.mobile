@@ -1,13 +1,16 @@
 package ru.zzbo.concretemobile.protocol.profinet.commands;
 
+import static ru.zzbo.concretemobile.utils.Constants.globalFactoryState;
 import static ru.zzbo.concretemobile.utils.Constants.mPlayer;
 import static ru.zzbo.concretemobile.utils.Constants.retrieval;
+import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.widget.Toast;
 
 import ru.zzbo.concretemobile.R;
+import ru.zzbo.concretemobile.db.DBUtilUpdate;
 import ru.zzbo.concretemobile.utils.Constants;
 
 
@@ -56,7 +59,7 @@ public class StartAutoCycle {
             Toast.makeText(context, "На весах дозатора воды лежит материал. Разгрузите весы!", Toast.LENGTH_SHORT).show();
             Constants.mPlayer = MediaPlayer.create(context, R.raw.context_006_dw_not_empty);
             mPlayer.start();
-            return false;
+
         }
         if (retrieval.getMixCounterValue() != 0) {
             Toast.makeText(context, "Счетчик циклов не обнулен!", Toast.LENGTH_SHORT).show();

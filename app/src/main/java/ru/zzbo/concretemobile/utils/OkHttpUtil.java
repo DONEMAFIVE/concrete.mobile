@@ -26,7 +26,7 @@ public class OkHttpUtil {
         String url = "http://" + configList.getScadaIP() + ":5050/" + query;
         Request request = new Request.Builder().url(url).build();
         try (Response response = httpClient.newCall(request).execute()) {
-//            if (response.code() == 400) return null;
+            if (response.code() == 400) return null;
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             return response.body().string();
         }

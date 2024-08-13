@@ -3,14 +3,15 @@
 
     <PreferenceCategory app:title="@string/mixer_header">
 
-<!--        <EditTextPreference-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:dependency="discharge_conveyor"-->
-<!--            app:key="mixer_capacity"-->
-<!--            app:title="Объем смесителя"-->
-<!--            app:useSimpleSummaryProvider="true" />-->
-
+        <SwitchPreferenceCompat
+            android:id="@+id/humidity_mixer_sensor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="humidity_mixer_sensor"
+            app:title="Датчик влажности в смесителе" />
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <SwitchPreferenceCompat
             app:key="discharge_conveyor"
             app:title="Конвейер выгрузки" />
@@ -21,8 +22,26 @@
             app:title="Время выгрузки, сек"
             app:useSimpleSummaryProvider="true" />
 
-        <PreferenceCategory/>
+        <PreferenceCategory />
 
+        <SwitchPreferenceCompat
+            app:key="funnel_vibrator"
+            app:title="Вибратор воронки" />
+
+            <EditTextPreference
+                app:dependency="funnel_vibrator"
+                app:key="time_work_fv"
+                app:title="Время работы, сек"
+                app:useSimpleSummaryProvider="true" />
+            <EditTextPreference
+                app:dependency="funnel_vibrator"
+                app:key="time_pause_fv"
+                app:title="Время паузы, сек"
+                app:useSimpleSummaryProvider="true" />
+
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <SwitchPreferenceCompat
             app:key="impulse_discharge"
             app:title="Импульсная разгрузка смесителя" />
@@ -33,16 +52,20 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:key="close_shiber"
             app:dependency="impulse_discharge"
+            app:key="close_shiber"
             app:title="Закрытие шибера, сек"
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            app:key="count_open_shiber"
             app:dependency="impulse_discharge"
+            app:key="count_open_shiber"
             app:title="Кол-во открытий шибера, сек"
             app:useSimpleSummaryProvider="true" />
+
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <EditTextPreference
             app:key="oper_auto_greaser"
@@ -53,22 +76,32 @@
             app:key="pause_greaser"
             app:title="Пауза автосмазчика, сек"
             app:useSimpleSummaryProvider="true" />
-
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <EditTextPreference
             app:key="wait_discharge"
             app:title="Время до аварийного предупреждения ожидания разгрузки, сек"
             app:useSimpleSummaryProvider="true" />
-
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <SwitchPreferenceCompat
             app:key="hydro_gate"
             app:title="2-х катушечный привод" />
 
         <!--Откр. смесителя до середины-->
-        <PreferenceCategory/>
+        <PreferenceCategory />
 
         <SwitchPreferenceCompat
             app:key="open_middle_shiber"
             app:title="Откр. смесителя до середины" />
+
+        <SwitchPreferenceCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="use_sensor_middle_mixer"
+            app:title="по датчику" />
 
         <EditTextPreference
             app:dependency="open_middle_shiber"
@@ -82,19 +115,41 @@
             app:title="Пауза на середине, сек"
             app:useSimpleSummaryProvider="true" />
 
-        <PreferenceCategory/>
+        <PreferenceCategory />
+        <EditTextPreference
+            android:id="@+id/mixer_capacity"
+            android:defaultValue="0"
+            android:key="mixer_capacity"
+            android:title="Объем смесителя, м3"
+            app:useSimpleSummaryProvider="true" />
+
+        <PreferenceCategory
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <SwitchPreferenceCompat
+            android:id="@+id/no_sensor_shiber_shecker_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="no_sensor_shiber_shecker_open"
+            app:title="Использовать датчик открытого положения шибера" />
+
+        <SwitchPreferenceCompat
+            android:id="@+id/no_sensor_shiber_shecker_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:key="no_sensor_shiber_shecker_close"
+            app:title="Использовать датчик закрытого положения шибера" />
 
         <!--Сохранить-->
-        <PreferenceCategory
-            app:key="saveCategory">
+        <PreferenceCategory app:key="saveCategory">
             <Preference
                 app:icon="@android:drawable/ic_menu_save"
                 app:key="saveBtn"
                 app:title="Записать в PLC" />
         </PreferenceCategory>
 
-        <PreferenceCategory
-            android:key="pref_key_loading">
+        <PreferenceCategory android:key="pref_key_loading">
             <Preference android:widgetLayout="@layout/preference_loading_placeholder" />
         </PreferenceCategory>
 

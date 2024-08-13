@@ -182,7 +182,10 @@ public class EditRecipeActivity extends AppCompatActivity {
                             Float.parseFloat(String.valueOf(shortageChemy2.getText())),
                             0,
                             0,
-                            100
+                            100,
+                            0,
+                            0,
+                            0
                     );
                     if (recepie.getId() != 0) {
                         if (exchangeLevel == 1) {

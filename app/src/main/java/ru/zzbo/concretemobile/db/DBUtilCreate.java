@@ -2,6 +2,7 @@ package ru.zzbo.concretemobile.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class DBUtilCreate {
             String[] requests = new String(buffer).split(";");
             for (String query : requests) sqLiteDatabase.execSQL(query);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("EXECUTE SQL-FILE", e.getMessage());
         } finally {
             closeSession();

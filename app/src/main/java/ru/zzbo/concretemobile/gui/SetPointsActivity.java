@@ -1,6 +1,7 @@
 package ru.zzbo.concretemobile.gui;
 
 import static ru.zzbo.concretemobile.utils.Constants.answer;
+import static ru.zzbo.concretemobile.utils.Constants.factoryComplectation;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 import static ru.zzbo.concretemobile.utils.Constants.tagListMain;
@@ -21,12 +22,14 @@ import java.util.List;
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.adapters.FragmentAdditionalOptionsAdapter;
 import ru.zzbo.concretemobile.db.DBTags;
+import ru.zzbo.concretemobile.db.DBUtilGet;
+import ru.zzbo.concretemobile.db.helpers.FactoryComplectationBuilder;
 import ru.zzbo.concretemobile.protocol.profinet.collectors.DynamicTagBuilder;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.BlockMultiple;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 
-public class FactoryConfigActivity extends AppCompatActivity {
+public class SetPointsActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private TabLayout settingTabMenu;
     private FragmentAdditionalOptionsAdapter adapter;
@@ -43,6 +46,7 @@ public class FactoryConfigActivity extends AppCompatActivity {
         tagListMain = new DBTags(getApplicationContext()).getTags("tags_main");
         tagListManual = new DBTags(getApplicationContext()).getTags("tags_manual");
         tagListOptions = new DBTags(getApplicationContext()).getTags("tags_options");
+        factoryComplectation = new FactoryComplectationBuilder().parseList(new DBUtilGet(getApplicationContext()).getFromParameterTable("factory_complectation"));
 
         viewPager2 = findViewById(R.id.view_pager);
         settingTabMenu = findViewById(R.id.tabLayout);

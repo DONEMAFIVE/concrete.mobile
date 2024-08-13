@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import ru.zzbo.concretemobile.db.builders.StorageMillageBuilder;
+import ru.zzbo.concretemobile.db.helpers.StorageMillageBuilder;
 import ru.zzbo.concretemobile.db.dbStructures.DBInitializer;
 import ru.zzbo.concretemobile.db.models.StorageMillage;
 import ru.zzbo.concretemobile.models.Mix;
@@ -133,6 +133,10 @@ public class DBUtilInsert {
             cv.put("chemy3Shortage", recepie.getChemy3Shortage());
             cv.put("pathToHumidity", recepie.getPathToHumidity());
             cv.put("preDosingWaterPercent", recepie.getPreDosingWaterPercent());
+            cv.put("fibra", recepie.getFibra());
+            cv.put("dDryCh", recepie.getFibra());
+            cv.put("dDryCh", recepie.getFibra());
+            cv.put("amperageFluidity", recepie.getFibra());
 
             sqLiteDatabase.insert("recepies", null, cv);
         } finally {

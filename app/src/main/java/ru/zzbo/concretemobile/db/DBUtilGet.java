@@ -472,7 +472,10 @@ public class DBUtilGet {
                         cursor.getFloat(cursor.getColumnIndex("chemy2Shortage")),
                         cursor.getFloat(cursor.getColumnIndex("chemy3Shortage")),
                         cursor.getInt(cursor.getColumnIndex("pathToHumidity")),
-                        cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")))
+                        cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")),
+                        cursor.getInt(cursor.getColumnIndex("fibra")),
+                        cursor.getInt(cursor.getColumnIndex("dDryCh")),
+                        cursor.getInt(cursor.getColumnIndex("amperageFluidity")))
                 );
             }
 //            if (result.isEmpty()) {
@@ -542,14 +545,18 @@ public class DBUtilGet {
                             cursor.getFloat(cursor.getColumnIndex("chemy2Shortage")),
                             cursor.getFloat(cursor.getColumnIndex("chemy3Shortage")),
                             cursor.getInt(cursor.getColumnIndex("pathToHumidity")),
-                            cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent"))
+                            cursor.getInt(cursor.getColumnIndex("preDosingWaterPercent")),
+                            cursor.getInt(cursor.getColumnIndex("fibra")),
+                            cursor.getInt(cursor.getColumnIndex("dDryCh")),
+                            cursor.getInt(cursor.getColumnIndex("amperageFluidity"))
                     );
                 } else continue;
             }
         } finally {
             closeSession();
         }
-        return new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0);
+        return new Recepie(-1, "", "", "", "", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     @SuppressLint("Range")

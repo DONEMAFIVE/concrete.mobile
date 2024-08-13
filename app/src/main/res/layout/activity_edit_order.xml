@@ -6,30 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".gui.catalogs.EditOrderActivity">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="24dp">
-
-        <Button
-            android:id="@+id/saveOrder"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:layout_weight="0.3"
-            android:text="Сохранить и закрыть" />
-
-        <Button
-            android:id="@+id/close"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_margin="20dp"
-            android:layout_weight="0.3"
-            android:text="Завершить без сохранения" />
-
-    </TableRow>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -309,5 +285,29 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="24dp">
+
+        <Button
+            android:id="@+id/saveOrder"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:layout_weight="0.3"
+            android:text="Сохранить и закрыть" />
+
+        <Button
+            android:id="@+id/close"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="20dp"
+            android:layout_weight="0.3"
+            android:text="Завершить без сохранения" />
+
+    </TableRow>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

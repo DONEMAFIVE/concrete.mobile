@@ -46,7 +46,7 @@ import ru.zzbo.concretemobile.adapters.RecipeAdapter;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilInsert;
-import ru.zzbo.concretemobile.db.DatabaseHelper;
+import ru.zzbo.concretemobile.db.dbStructures.DatabaseHelper;
 import ru.zzbo.concretemobile.gui.catalogs.EditRecipeActivity;
 import ru.zzbo.concretemobile.models.Recepie;
 import ru.zzbo.concretemobile.protocol.profinet.com.sourceforge.snap7.moka7.S7;
@@ -177,7 +177,11 @@ public class RecipesActivity extends AppCompatActivity {
                     0,
                     0,
                     0,
-                    100);
+                    100,
+                    0,
+                    0,
+                    0
+            );
             finish();
             Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -393,6 +397,9 @@ public class RecipesActivity extends AppCompatActivity {
                             cursor.getFloat(cursor.getColumnIndex("Ch_3")),
                             cursor.getFloat(cursor.getColumnIndex("LackOf_ch_2")),
                             cursor.getFloat(cursor.getColumnIndex("LackOf_ch_3")),
+                            0,
+                            0,
+                            0,
                             0,
                             0
                     ));

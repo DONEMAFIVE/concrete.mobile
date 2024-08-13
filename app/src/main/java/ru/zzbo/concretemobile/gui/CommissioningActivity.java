@@ -41,7 +41,7 @@ public class CommissioningActivity extends AppCompatActivity {
 
     private void initActions() {
         configBtn.setOnClickListener(e -> {
-            Intent intent = new Intent(getApplicationContext(), SystemConfigActivity.class);
+            Intent intent = new Intent(getApplicationContext(), OptionsActivity.class);
             startActivity(intent);
         });
 
@@ -49,7 +49,7 @@ public class CommissioningActivity extends AppCompatActivity {
             if (Constants.exchangeLevel != 1) {
                 new Thread(() -> {
                     initAnswer();
-                    Intent intent = new Intent(getApplicationContext(), FactoryConfigActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), SetPointsActivity.class);
                     startActivity(intent);
                 }).start();
             }

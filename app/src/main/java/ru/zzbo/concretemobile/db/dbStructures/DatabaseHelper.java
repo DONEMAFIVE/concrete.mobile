@@ -1,4 +1,4 @@
-package ru.zzbo.concretemobile.db;
+package ru.zzbo.concretemobile.db.dbStructures;
 
 import android.content.Context;
 import android.database.SQLException;
@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import ru.zzbo.concretemobile.utils.Constants;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static String DB_NAME = "recipe.db";
     private static String DB_PATH = "";
@@ -20,7 +22,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private SQLiteDatabase mDataBase;
     private  Context mContext;
-    private boolean mNeedUpdate = false;
 
     public DatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -35,21 +36,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         this.mContext = context;
         copyDataBase();
         this.getReadableDatabase();
-    }
-
-    public static String getDbName() {
-        return DB_NAME;
-    }
-
-    public void updateDataBase() throws IOException {
-        if (mNeedUpdate) {
-            File dbFile = new File(DB_PATH + DB_NAME);
-            if (dbFile.exists()) dbFile.delete();
-
-            copyDataBase();
-
-            mNeedUpdate = false;
-        }
     }
 
     public boolean checkDataBase() {
@@ -115,6 +101,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) mNeedUpdate = true;
+        if (oldVersion < 2) {
+            // Добавление нового столбца в таблицу
+//            db.execSQL("ALTER TABLE mytable ADD COLUMN age INTEGER DEFAULT 0");
+        }
+        // Добавляйте дополнительные условия для последующих версий
+    }
+
+    public static int getDbVersion() {
+        return DB_VERSION;
     }
 }

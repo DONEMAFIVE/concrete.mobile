@@ -99,7 +99,11 @@ public class RecipeEditorDialog extends DialogFragment {
                         0,
                         0,
                         0,
-                        100);
+                        100,
+                        0,
+                        0,
+                        0
+                );
                 Intent intent = new Intent(getActivity().getApplicationContext(), EditRecipeActivity.class);
                 startActivity(intent);
             }

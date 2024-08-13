@@ -1,11 +1,13 @@
-package ru.zzbo.concretemobile.gui.fragments.factory_config;
+package ru.zzbo.concretemobile.gui.fragments.set_points;
 
-import static ru.zzbo.concretemobile.utils.Constants.answer;
+import static ru.zzbo.concretemobile.utils.Constants.optionsController;
+import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
@@ -21,61 +23,83 @@ import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class SkipLTFragment extends PreferenceFragmentCompat {
+    SwitchPreferenceCompat noLiftWater, noLiftCement, optionAlarmSensorSkipUp;
+    ListPreference liftAfter;
+    EditTextPreference delayLift, dischargeSkip, alarmStopSkip, dischargeLT;
+    Preference saveBtn;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.skip_lt_preferences, rootKey);
+        initFirst();
+        initThread();
+        initActions();
+    }
 
-        SwitchPreferenceCompat noLiftWater = findPreference("no_lift_water");
-        SwitchPreferenceCompat noLiftCement = findPreference("no_lift_cement");
+    private void initFirst() {
 
-        ListPreference liftAfter = findPreference("lift_after");
+        noLiftWater = findPreference("no_lift_water");
+        noLiftCement = findPreference("no_lift_cement");
+        optionAlarmSensorSkipUp = findPreference("option_alarm_sensor_skip_up");
 
-        EditTextPreference delayLift = findPreference("delay_lift");            //Время задержки подъема
-        EditTextPreference dischargeSkip = findPreference("discharge_skip");    //Время выгрузки скипа
-        EditTextPreference alarmStopSkip = findPreference("alarm_stop_skip");   //Время до аварийной остановки
-        EditTextPreference dischargeLT = findPreference("discharge_lt");        //Время выгрузки ЛТ
+        liftAfter = findPreference("lift_after");
 
-        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+        delayLift = findPreference("delay_lift");            //Время задержки подъема
+        dischargeSkip = findPreference("discharge_skip");    //Время выгрузки скипа
+        alarmStopSkip = findPreference("alarm_stop_skip");   //Время до аварийной остановки
+        dischargeLT = findPreference("discharge_lt");        //Время выгрузки ЛТ
 
-        Preference saveBtn = findPreference("saveBtn");
+        saveBtn = findPreference("saveBtn");
 
+        ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
+    }
+
+    private void initThread() {
         new Thread(() -> {
             try {
+                optionsController.initTags(getContext());
+                optionsController.readValues();
+
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    if (answer.get(14).getIntValueIf() == 1) liftAfter.setValueIndex(0);
-                    if (answer.get(15).getIntValueIf() == 1) liftAfter.setValueIndex(1);
+                    if (optionsController.getWaitForDropMixerClimbSkip() == 1)
+                        liftAfter.setValueIndex(0);
+                    if (optionsController.getWaitForBeginDropMixerClimbSkip() == 1)
+                        liftAfter.setValueIndex(1);
 
-                    float current = answer.get(88).getDIntValueIf();
-                    dischargeSkip.setText(String.valueOf(current / 1000));
+                    dischargeSkip.setText(String.valueOf((float) optionsController.getTimeDropSkip() / 1000));
 
-                    current = answer.get(25).getIntValueIf();
-                    if ((int) current == 12) {
+                    if (optionsController.getTypeTransporterDK() == 12) {
                         dischargeLT.setVisible(true);
                         //Время выгрузки ЛТ
-                        current = answer.get(108).getDIntValueIf();
-                        dischargeLT.setText(String.valueOf(current / 1000));
+                        dischargeLT.setText(String.valueOf((float) optionsController.getTimeWorkVerticalConveyor() / 1000));
                     } else dischargeLT.setVisible(false);
 
-                    current = answer.get(106).getDIntValueIf();
-                    delayLift.setText(String.valueOf(current / 1000));
+                    delayLift.setText(String.valueOf((float) optionsController.getTimeoutStartSkipToClimb() / 1000));
 
-                    if (answer.get(12).getIntValueIf() == 1) noLiftCement.setChecked(true);
-                    if (answer.get(13).getIntValueIf() == 1) noLiftWater.setChecked(true);
+                    noLiftCement.setChecked(optionsController.getWaitForDCLoadClimbSkip() == 1);
+                    noLiftWater.setChecked(optionsController.getWaitForDWLoadClimbSkip() == 1);
 
-                    current = answer.get(107).getDIntValueIf();
-                    alarmStopSkip.setText(String.valueOf(current / 1000));
+                    optionAlarmSensorSkipUp.setChecked(optionsController.getSensorAlarmUpSkip() == 1);
+                    alarmStopSkip.setText(String.valueOf((float) optionsController.getAlarmTimeClimbSkip() / 1000));
 
                 });
             } catch (Exception e12) {
                 e12.printStackTrace();
             }
         }).start();
+    }
+
+    private void initActions() {
+        delayLift.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        dischargeSkip.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        alarmStopSkip.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        dischargeLT.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+
 
         saveBtn.setOnPreferenceClickListener(e -> {
             new Thread(() -> {
                 try {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    ((PreferenceCategory) findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
                     findPreference("saveCategory").setVisible(false);
                     float timeSkipDrop = Float.parseFloat(dischargeSkip.getText());
                     float timeDelaySkipUp = Float.parseFloat(delayLift.getText());
@@ -88,17 +112,17 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
                     switch (liftAfter.findIndexOfValue(liftAfter.getValue())) {
-                        case 0:{
+                        case 0: {
                             new CommandDispatcher(tagListOptions.get(120)).writeSingleRegisterWithValue(true);
                             break;
                         }
-                        case 1:{
+                        case 1: {
                             new CommandDispatcher(tagListOptions.get(121)).writeSingleRegisterWithValue(true);
                             break;
                         }
                     }
 
-                    if (answer.get(25).getIntValueIf() == 12) {
+                    if (optionsController.getTypeTransporterDK() == 12) {
                         float timeDropLT = Float.parseFloat(dischargeLT.getText());
                         tag = tagListOptions.get(125);
                         timeDropLT *= 1000;
@@ -112,7 +136,6 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
 
-
                     new CommandDispatcher(tagListOptions.get(118)).writeSingleRegisterWithValue(noLiftCement.isChecked());
                     new CommandDispatcher(tagListOptions.get(119)).writeSingleRegisterWithValue(noLiftWater.isChecked());
 
@@ -123,10 +146,12 @@ public class SkipLTFragment extends PreferenceFragmentCompat {
                     tag.setDIntValueIf((long) timeSkipAlarm);
                     new CommandDispatcher(tag).writeSingleRegisterWithLock();
 
+                    new CommandDispatcher(tagListManual.get(188)).writeSingleRegisterWithValue(optionAlarmSensorSkipUp.isChecked());
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
                     findPreference("saveCategory").setVisible(true);
                 }
             }).start();

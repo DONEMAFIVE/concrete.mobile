@@ -2,9 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/dc_header">
-        <SwitchPreferenceCompat
-            app:key="auto_reset_dc"
-            app:title="Авто обнуление весов" />
 
         <EditTextPreference
             app:key="cement_count"

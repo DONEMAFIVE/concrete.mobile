@@ -5,7 +5,7 @@
 
         <SwitchPreferenceCompat
             app:key="auto_queue"
-            app:title="Автоматическая очередь"
+            app:title="Очередность выгрузки материалов"
             app:useSimpleSummaryProvider="true" />
 
         <SeekBarPreference

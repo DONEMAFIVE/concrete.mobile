@@ -25,17 +25,17 @@ public class ReportHMIActivity extends AppCompatActivity {
 
         ArrayList<String> reportHmiList = new ArrayList<>();
 
-        File f = new File(Environment.getExternalStorageDirectory() + "/IP_"+configList.getHmiIP()+"/datalog/");
+        File f = new File(Environment.getExternalStorageDirectory() + "/IP_" + configList.getHmiIP() + "/datalog/");
         f.mkdirs();
         File[] files = f.listFiles();
         if (files.length != 0) {
-            for (int i=0; i<files.length; i++) reportHmiList.add(files[i].getName());
+            for (int i = 0; i < files.length; i++) reportHmiList.add(files[i].getName());
         }
         mListView.setOnItemClickListener((adapterView, view, i, l) -> {
-            new FileUtil().openFileXlsx("IP_"+configList.getHmiIP()+"/datalog/"+reportHmiList.get(i));
+            new FileUtil().openFileXlsx("IP_" + configList.getHmiIP() + "/datalog/" + reportHmiList.get(i));
         });
 
-        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,android.R.id.text1, reportHmiList);
+        ArrayAdapter<String> mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, reportHmiList);
         mListView.setAdapter(mAdapter);
 
     }

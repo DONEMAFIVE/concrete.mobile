@@ -43,6 +43,7 @@ public class DynamicTagCollector {
         }
         tagList = tagListMain;
         tagCounter = tagListMain.size() + 1;
+
         DynamicTagBuilder dynamicTagCollector = new DynamicTagBuilder(tagList);
         dynamicTagCollector.buildSortedTags();
         tagRealAnswer = dynamicTagCollector.getTagRealAnswer();
@@ -116,6 +117,15 @@ public class DynamicTagCollector {
     private float chemy2Recipe = 0;             //Рецепт_Химия_1
     private float cement1Recipe = 0;            //Рецепт_Цемент_1
     private float cement2Recipe = 0;            //Рецепт_Цемент_2
+    private float shortageHopper11fact = 0;         //Недосып_Бункер_1_1_Факт
+    private float shortageHopper12fact = 0;         //Недосып_Бункер_1_2_Факт
+    private float shortageHopper21fact = 0;         //Недосып_Бункер_2_1_Факт
+    private float shortageHopper22fact = 0;         //Недосып_Бункер_2_2_Факт
+    private float shortageHopper31fact = 0;         //Недосып_Бункер_3_1_Факт
+    private float shortageHopper32fact = 0;         //Недосып_Бункер_3_2_Факт
+    private float shortageHopper41fact = 0;         //Недосып_Бункер_4_1_Факт
+    private float shortageHopper42fact = 0;         //Недосып_Бункер_4_2_Факт
+
     private float shortageHopper11 = 0;         //Недосып_Бункер_1_1
     private float shortageHopper12 = 0;         //Недосып_Бункер_1_2
     private float shortageHopper21 = 0;         //Недосып_Бункер_2_1
@@ -124,8 +134,11 @@ public class DynamicTagCollector {
     private float shortageHopper32 = 0;         //Недосып_Бункер_3_2
     private float shortageHopper41 = 0;         //Недосып_Бункер_4_1
     private float shortageHopper42 = 0;         //Недосып_Бункер_4_2
+
+
     private float shortageWater = 0;            //Недосып_Вода
     private float shortageChemy1 = 0;           //Недосып_Химия_1
+    private float shortageChemy2 = 0;           //Недосып_Химия_2
     private float volumeCurrentMixerLoad = 0;   //Объем_текущей_загрузки_смесителя
     private float weightCubeConcrete = 2360;    //Масса_одного_куба_бетона
     private float batchVolume = 0;              //Объем_партии
@@ -149,7 +162,6 @@ public class DynamicTagCollector {
     private float doseSilos2 = 0;               //Доза_Цемент_2
     private float doseChemy1 = 0;               //Доза_Химия_1
     private float doseChemy2 = 0;               //Доза_Химия_2
-    private int skipPosEndSensorCrashDown;      //Концевой аварийный датчик положения скипа - вниз
     private float shortageSilos1 = 0;           //Недосып_Цемент_1
     private float shortageSilos2 = 0;           //Недосып_Цемент_2
     private int vibroSilos1;                    //Вибратор_СЦ1
@@ -264,6 +276,39 @@ public class DynamicTagCollector {
     private int alarmSkipDoubleSensorCrash;         //  219;[Авария] - Одновременно сработали верхние и нижние концевые скипа ;53;298;0;DB;Int;0;0
     private int recepieCorrectOption;               //галочка на экране - корректировка рецепта
     private int autoCorrectShnekOption;             //галочка на экране - активация автоматической корректировки шнека
+
+    private int indicationSelfDF;                   //Индикация работы полуавтоматического режима работы дозатора фибры
+    private float doseFibra;                        //Фактически набранная доза вибратор (дозатор) фибра
+    private int autoCorrectionInertOpt;             //Галочка на экране - включена корректировка недосыпов у инертных
+
+    private int dDryChShnekIndication = 0;          //Индикация работы шнека дозатора сухой химии
+    private float recepieFibra;
+    private float recepieDDryCh;
+
+    private int alarmSensorSkipUp1;
+    private int alarmSensorSkipUp2;
+    private int alarmSensorSkipDown1;
+    private int alarmSensorSkipDown2;
+
+    private float humiditySensorInert = 0;
+
+    private int indicationVibroMixer = 0;           //индикация работы вибратора воронки смесителя
+    private int indicationShiberMixerOpening = 0;   //индикация команды открытия шибера
+    private int indicationShiberMixerClosing = 0;   //индикация команды закрытия шибера
+    private int dwplCounter = 0;
+    private int dwplReadyToSave = 0;                //метка для готовности к записи дозы ДВПЛ в учет
+    private float dwplRecepieMix = 0;               //рецепт ДВПЛ заданная влжность в смесителе
+    private float dwplDose = 0;                     //посчитанное количество набранной воды через ДВПЛ на замес
+
+    private int dispenserDropStatusDCh;             //статус разгрузки дозатора химии
+    private int dispenserDropStatusDW;              //статус разгрузки дозатора вода
+    private int dispenserDropStatusDC;              //статус разгрузки дозатора цемента
+    private int dispenserDropStatusDK;              //статус разгрузки дозатора ДК
+    private int mixerDropStatus;                    //статус разгрузки смесителя
+    private int indWaterMixBegin;                   //статус начала мокрого перемешивания
+    private float timerTimeDrop;                    //индикация таймер время перемешивания
+    private float timerTimeJobDropConv;             //индикация таймер работы конвейера выгрузки
+
     private double scadaPerformance = 0;
 
     public void getValuesFromPLC() {
@@ -286,7 +331,6 @@ public class DynamicTagCollector {
                 if (!lockStateRequests) answer = sortTagAnswer(request);
                 // === ответ от PLC сформирован в коллекции answer
 
-                //todo: от рефлексии при таком подходе пользы не будет
                 manualAutoMode = answer.get(1).getIntValueIf();
                 pendingProductionState = answer.get(2).getIntValueIf();
                 globalCrashFlag = answer.get(3).getIntValueIf();
@@ -357,17 +401,18 @@ public class DynamicTagCollector {
                 cement1Recipe = answer.get(74).getRealValueIf();
                 cement2Recipe = answer.get(75).getRealValueIf();
 
-                shortageHopper11 = answer.get(77).getRealValueIf();
-                shortageHopper12 = answer.get(78).getRealValueIf();
-                shortageHopper21 = answer.get(79).getRealValueIf();
-                shortageHopper22 = answer.get(80).getRealValueIf();
-                shortageHopper31 = answer.get(81).getRealValueIf();
-                shortageHopper32 = answer.get(82).getRealValueIf();
-                shortageHopper41 = answer.get(83).getRealValueIf();
-                shortageHopper42 = answer.get(84).getRealValueIf();
+                shortageHopper11fact = answer.get(77).getRealValueIf();
+                shortageHopper12fact = answer.get(78).getRealValueIf();
+                shortageHopper21fact = answer.get(79).getRealValueIf();
+                shortageHopper22fact = answer.get(80).getRealValueIf();
+                shortageHopper31fact = answer.get(81).getRealValueIf();
+                shortageHopper32fact = answer.get(82).getRealValueIf();
+                shortageHopper41fact = answer.get(83).getRealValueIf();
+                shortageHopper42fact = answer.get(84).getRealValueIf();
 
                 shortageWater = answer.get(85).getRealValueIf();
                 shortageChemy1 = answer.get(86).getRealValueIf();
+                shortageChemy2 = answer.get(87).getRealValueIf();
                 volumeCurrentMixerLoad = answer.get(89).getRealValueIf();
                 weightCubeConcrete = answer.get(90).getRealValueIf();
                 batchVolume = answer.get(91).getRealValueIf();
@@ -394,8 +439,18 @@ public class DynamicTagCollector {
 
                 doseChemy1 = answer.get(111).getRealValueIf();
                 doseChemy2 = answer.get(112).getRealValueIf();
-                skipPosEndSensorCrashDown = answer.get(114).getIntValueIf();
+
+                shortageHopper11 = answer.get(114).getRealValueIf();
+                shortageHopper12 = answer.get(116).getRealValueIf();
+                shortageHopper21 = answer.get(117).getRealValueIf();
+                shortageHopper22 = answer.get(118).getRealValueIf();
+                shortageHopper31 = answer.get(119).getRealValueIf();
+                shortageHopper32 = answer.get(120).getRealValueIf();
+                shortageHopper41 = answer.get(121).getRealValueIf();
+                shortageHopper42 = answer.get(165).getRealValueIf();
+
                 shortageSilos1 = answer.get(115).getRealValueIf();
+
                 vibroSilos1 = answer.get(122).getIntValueIf();
                 mixerClose = answer.get(123).getIntValueIf();
                 mixerHalfOpen = answer.get(124).getIntValueIf();
@@ -499,6 +554,38 @@ public class DynamicTagCollector {
                 alarmDCShiberError = answer.get(218).getIntValueIf();
                 alarmSkipDoubleSensorCrash = answer.get(219).getIntValueIf();
 
+                indicationSelfDF = answer.get(220).getIntValueIf();
+                doseFibra = answer.get(221).getRealValueIf();
+                autoCorrectionInertOpt = answer.get(222).getIntValueIf();
+                dDryChShnekIndication = answer.get(223).getIntValueIf();
+                recepieFibra = answer.get(224).getRealValueIf();
+                recepieDDryCh = answer.get(225).getRealValueIf();
+                humiditySensorInert = answer.get(226).getRealValueIf();
+                indicationVibroMixer = answer.get(228).getIntValueIf();
+
+                alarmSensorSkipUp1 = answer.get(229).getIntValueIf();
+                alarmSensorSkipUp2 = answer.get(230).getIntValueIf();
+                alarmSensorSkipDown1 = answer.get(231).getIntValueIf();
+                alarmSensorSkipDown2 = answer.get(232).getIntValueIf();
+
+                indicationShiberMixerOpening = answer.get(233).getIntValueIf();
+                indicationShiberMixerClosing = answer.get(234).getIntValueIf();
+                dwplCounter = answer.get(235).getIntValueIf();
+                dwplReadyToSave = answer.get(236).getIntValueIf();
+                dwplRecepieMix = answer.get(237).getRealValueIf();
+                dwplDose = answer.get(238).getRealValueIf();
+
+
+                dispenserDropStatusDCh = answer.get(239).getIntValueIf();
+                dispenserDropStatusDW = answer.get(240).getIntValueIf();
+                dispenserDropStatusDC = answer.get(241).getIntValueIf();
+                dispenserDropStatusDK = answer.get(242).getIntValueIf();
+                mixerDropStatus = answer.get(243).getIntValueIf();
+
+                indWaterMixBegin = answer.get(244).getIntValueIf();
+                timerTimeDrop = answer.get(245).getRealValueIf();
+                timerTimeJobDropConv = answer.get(246).getRealValueIf();
+
                 scadaPerformance = (double) System.currentTimeMillis() - m;
                 if (scadaPerformance > 15) System.out.println("performance: " + scadaPerformance);
 
@@ -570,14 +657,14 @@ public class DynamicTagCollector {
                 chemy2Recipe = retrieval.getChemy2RecipeValue();
                 cement1Recipe = retrieval.getCement1RecipeValue();
                 cement2Recipe = retrieval.getCement2RecipeValue();
-                shortageHopper11 = retrieval.getShortageHopper11Value();
-                shortageHopper12 = retrieval.getShortageHopper12Value();
-                shortageHopper21 = retrieval.getShortageHopper21Value();
-                shortageHopper22 = retrieval.getShortageHopper22Value();
-                shortageHopper31 = retrieval.getShortageHopper31Value();
-                shortageHopper32 = retrieval.getShortageHopper32Value();
-                shortageHopper41 = retrieval.getShortageHopper41Value();
-                shortageHopper42 = retrieval.getShortageHopper42Value();
+                shortageHopper11fact = retrieval.getShortageHopper11FactValue();
+                shortageHopper12fact = retrieval.getShortageHopper12FactValue();
+                shortageHopper21fact = retrieval.getShortageHopper21FactValue();
+                shortageHopper22fact = retrieval.getShortageHopper22FactValue();
+                shortageHopper31fact = retrieval.getShortageHopper31FactValue();
+                shortageHopper32fact = retrieval.getShortageHopper32FactValue();
+                shortageHopper41fact = retrieval.getShortageHopper41FactValue();
+                shortageHopper42fact = retrieval.getShortageHopper42FactValue();
                 shortageWater = retrieval.getShortageWaterValue();
                 shortageChemy1 = retrieval.getShortageChemy1Value();
                 volumeCurrentMixerLoad = retrieval.getVolumeCurrentMixerLoadValue();
@@ -603,7 +690,14 @@ public class DynamicTagCollector {
                 doseSilos2 = retrieval.getDoseSilos2Value();
                 doseChemy1 = retrieval.getDoseChemy1Value();
                 doseChemy2 = retrieval.getDoseChemy2Value();
-                skipPosEndSensorCrashDown = retrieval.isSkipPosEndSensorCrashDownValue();
+                shortageHopper11 = retrieval.getShortageHopper11Value();
+                shortageHopper12 = retrieval.getShortageHopper12Value();
+                shortageHopper21 = retrieval.getShortageHopper21Value();
+                shortageHopper22 = retrieval.getShortageHopper22Value();
+                shortageHopper31 = retrieval.getShortageHopper31Value();
+                shortageHopper32 = retrieval.getShortageHopper32Value();
+                shortageHopper41 = retrieval.getShortageHopper41Value();
+                shortageHopper42 = retrieval.getShortageHopper42Value();
                 shortageSilos1 = retrieval.getShortageSilos1Value();
                 shortageSilos2 = retrieval.getShortageSilos1Value();
                 vibroSilos1 = retrieval.isVibroSilos1Value();
@@ -716,6 +810,28 @@ public class DynamicTagCollector {
                 alarmMixerCloseErrorStopSkip = retrieval.getAlarmMixerCloseErrorStopSkipValue();
                 alarmDCShiberError = retrieval.getAlarmDCShiberErrorValue();
                 alarmSkipDoubleSensorCrash = retrieval.getAlarmSkipDoubleSensorCrashValue();
+
+                indicationSelfDF = retrieval.getIndicationSelfDFValue();
+                doseFibra = retrieval.getDoseFibraValue();
+                autoCorrectionInertOpt = retrieval.getAutoCorrectionInertOptValue();
+                dDryChShnekIndication = retrieval.getdDryChShnekIndicationValue();
+                recepieFibra = retrieval.getRecepieFibraValue();
+                recepieDDryCh = retrieval.getRecepieDDryChValue();
+                humiditySensorInert = retrieval.getHumiditySensorInertValue();
+                indicationVibroMixer = retrieval.getIndicationVibroMixerValue();
+//
+                alarmSensorSkipUp1 = retrieval.getAlarmSensorSkipUp1Value();
+                alarmSensorSkipUp2 = retrieval.getAlarmSensorSkipUp2Value();
+                alarmSensorSkipDown1 = retrieval.getAlarmSensorSkipDown1Value();
+                alarmSensorSkipDown2 = retrieval.getAlarmSensorSkipDown2Value();
+//
+                indicationShiberMixerOpening = retrieval.getIndicationShiberMixerOpeningValue();
+                indicationShiberMixerClosing = retrieval.getIndicationShiberMixerClosingValue();
+
+                dwplCounter = retrieval.getDwplCounterValue();
+                dwplReadyToSave = retrieval.getDwplReadyToSaveValue();
+                dwplRecepieMix = retrieval.getDwplRecepieMix();
+                dwplDose = retrieval.getDwplDose();
 
                 scadaPerformance = (double) System.currentTimeMillis() - m;
                 if (scadaPerformance > 15) System.out.println("performance: " + scadaPerformance);

@@ -1,12 +1,14 @@
-package ru.zzbo.concretemobile.gui.fragments.factory_config;
+package ru.zzbo.concretemobile.gui.fragments.set_points;
 
-import static ru.zzbo.concretemobile.utils.Constants.answer;
+import static ru.zzbo.concretemobile.utils.Constants.factoryComplectation;
+import static ru.zzbo.concretemobile.utils.Constants.optionsController;
 import static ru.zzbo.concretemobile.utils.Constants.tagListManual;
 import static ru.zzbo.concretemobile.utils.Constants.tagListOptions;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.InputType;
 import android.widget.Toast;
 
 import androidx.preference.EditTextPreference;
@@ -20,94 +22,49 @@ import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBConstants;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.db.DBUtilUpdate;
-import ru.zzbo.concretemobile.db.builders.FactoryComplectationBuilder;
+import ru.zzbo.concretemobile.db.helpers.FactoryComplectationBuilder;
 import ru.zzbo.concretemobile.models.MasterFactoryComplectation;
 import ru.zzbo.concretemobile.protocol.profinet.commands.CommandDispatcher;
 import ru.zzbo.concretemobile.protocol.profinet.models.Tag;
 import ru.zzbo.concretemobile.utils.LoadingPreference;
 
 public class WaterFragment extends PreferenceFragmentCompat {
+    SwitchPreferenceCompat autoResetDw, water2;
+    ListPreference typeDw;
+
+    EditTextPreference minWeight, timeDischarge, delayOnPumpDischarge, delayOffValveDischarge,
+            delayOnPumpPouring, delayOffValvePouring, delayDischarge;
+    Preference saveBtn;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.dw_preferences, rootKey);
+        initFirst();
+        initThread();
+        initActions();
+    }
 
-        SwitchPreferenceCompat autoResetDw = findPreference("auto_reset_dw");
-        SwitchPreferenceCompat water2 = findPreference("water2");
-        SwitchPreferenceCompat humidityMixerSensor = findPreference("humidity_mixer_sensor");
-        ListPreference typeDw = findPreference("type_dw");
-        EditTextPreference minWeight = findPreference("min_weight");
-        EditTextPreference timeDischarge = findPreference("time_discharge");
-        EditTextPreference delayOnPumpDischarge = findPreference("delay_on_pump_discharge");
-        EditTextPreference delayOffValveDischarge = findPreference("delay_off_valve_discharge");
-        EditTextPreference delayOnPumpPouring = findPreference("delay_on_pump_pouring");
-        EditTextPreference delayOffValvePouring = findPreference("delay_off_valve_pouring");
-        EditTextPreference delayDischarge = findPreference("delay_discharge");
-        Preference saveBtn = findPreference("saveBtn");
-        ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
-
-        new Thread(() -> {
-            try {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    FactoryComplectationBuilder configBuilder = new FactoryComplectationBuilder();
-                    MasterFactoryComplectation factoryComplectation = configBuilder.parseList(
-                            new DBUtilGet(getActivity()).getFromParameterTable("factory_complectation"));
-
-                    if (answer.get(69).getIntValueIf() == 1) autoResetDw.setChecked(true);
-
-                    water2.setChecked(factoryComplectation.isWater2());
-
-                    humidityMixerSensor.setChecked(factoryComplectation.isHumidityMixerSensor());
-
-                    typeDw.setValueIndex(answer.get(4).getIntValueIf());
-
-                    minWeight.setText(String.valueOf(answer.get(119).getRealValueIf()));
-
-                    float current = answer.get(81).getDIntValueIf();
-                    timeDischarge.setText(String.valueOf(current / 1000));
-
-                    current = answer.get(84).getDIntValueIf();
-                    delayOnPumpDischarge.setText(String.valueOf(current / 1000));
-
-                    current = answer.get(85).getDIntValueIf();
-                    delayOffValveDischarge.setText(String.valueOf(current / 1000));
-
-                    current = answer.get(99).getDIntValueIf();
-                    delayDischarge.setText(String.valueOf(current / 1000));
-
-                    current = answer.get(101).getDIntValueIf();
-                    delayOnPumpPouring.setText(String.valueOf(current / 1000));
-
-                    current = answer.get(102).getDIntValueIf();
-                    delayOffValvePouring.setText(String.valueOf(current / 1000));
-
-                });
-
-            } catch (NullPointerException ex) {
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    Toast.makeText(getContext(), "ДВ - Ошибка загрузки", Toast.LENGTH_SHORT).show();
-                });
-            }
-        }).start();
+    private void initActions() {
+        minWeight.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        timeDischarge.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayOnPumpDischarge.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayOffValveDischarge.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayOnPumpPouring.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayOffValvePouring.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
+        delayDischarge.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL));
 
         saveBtn.setOnPreferenceClickListener(e -> {
             //TODO собрать и записать в PLC
             new Thread(() -> {
                 try {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
+                    ((PreferenceCategory) findPreference("pref_key_loading")).addPreference(new LoadingPreference(getActivity()));
                     findPreference("saveCategory").setVisible(false);
 
                     new CommandDispatcher(tagListManual.get(104)).writeSingleRegisterWithValue(autoResetDw.isChecked());
 
-                   MasterFactoryComplectation factoryOptionList = new FactoryComplectationBuilder()
-                            .parseList(new DBUtilGet(getActivity())
-                                    .getFromParameterTable("factory_complectation"));
-
                     //TODO water2
-                    water2.setChecked(factoryOptionList.isWater2());
+                    water2.setChecked(factoryComplectation.isWater2());
 
-                    //TODO humidityMixerSensor
-                    humidityMixerSensor.setChecked(factoryOptionList.isHumidityMixerSensor());
 
                     Tag tag = tagListOptions.get(10);
                     boolean dispenserType1DW = false;
@@ -164,17 +121,59 @@ public class WaterFragment extends PreferenceFragmentCompat {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 } finally {
-                    ((PreferenceCategory)findPreference("pref_key_loading")).removeAll();
+                    ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
                     findPreference("saveCategory").setVisible(true);
                 }
 
             }).start();
 
             new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "water2", water2.isChecked() + "");
-            new DBUtilUpdate(getContext()).updateParameterTypeTable(DBConstants.TABLE_NAME_FACTORY_COMPLECTATION, "humidityMixerSensor", humidityMixerSensor.isChecked() + "");
             Toast.makeText(getContext(), "ДВ - Сохранено", Toast.LENGTH_SHORT).show();
             return true;
         });
+    }
 
+    private void initThread() {
+        new Thread(() -> {
+            try {
+                optionsController.initTags(getContext());
+                optionsController.readValues();
+
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    water2.setChecked(factoryComplectation.isWater2());
+
+                    typeDw.setValueIndex(optionsController.getTypeDispenserWater1());
+                    minWeight.setText(String.valueOf(optionsController.getWeightCountDownDW()));
+                    timeDischarge.setText(String.valueOf((float) optionsController.getTimeRunAfterMixWeightDW() / 1000));
+                    delayOnPumpDischarge.setText(String.valueOf((float) optionsController.getTimeoutOnPumpDropW() / 1000));
+                    delayOffValveDischarge.setText(String.valueOf((float) optionsController.getTimeoutOffPumpDropW() / 1000));
+                    delayDischarge.setText(String.valueOf((float) optionsController.getTimeoutDropDW() / 1000));
+                    delayOnPumpPouring.setText(String.valueOf((float) optionsController.getTimeoutStartPumpDW() / 1000));
+                    delayOffValvePouring.setText(String.valueOf((float) optionsController.getTimeoutStopPumpDW() / 1000));
+
+                });
+
+            } catch (NullPointerException ex) {
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    Toast.makeText(getContext(), "ДВ - Ошибка загрузки", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
+    }
+
+    private void initFirst() {
+        autoResetDw = findPreference("auto_reset_dw");
+        water2 = findPreference("water2");
+        typeDw = findPreference("type_dw");
+        minWeight = findPreference("min_weight");
+        timeDischarge = findPreference("time_discharge");
+        delayOnPumpDischarge = findPreference("delay_on_pump_discharge");
+        delayOffValveDischarge = findPreference("delay_off_valve_discharge");
+        delayOnPumpPouring = findPreference("delay_on_pump_pouring");
+        delayOffValvePouring = findPreference("delay_off_valve_pouring");
+        delayDischarge = findPreference("delay_discharge");
+        saveBtn = findPreference("saveBtn");
+
+        ((PreferenceCategory) findPreference("pref_key_loading")).removeAll();
     }
 }

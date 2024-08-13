@@ -41,7 +41,6 @@ public class ReflectionRetrieval {
     private int skipPosEndSensorUpValue;
     private int skipPosEndSensorDownValue;
     private int skipPosEndSensorCrashUpValue;
-    private int skipPosEndSensorCrashDownValue;
     private int skipMoveUpValue;
     private int skipMoveDownValue;
     private int aerationOnIndicationValue;
@@ -63,6 +62,16 @@ public class ReflectionRetrieval {
     private float cement1RecipeValue;
     private float cement2RecipeValue;
 
+    private float shortageHopper11FactValue;
+    private float shortageHopper12FactValue;
+    private float shortageHopper21FactValue;
+    private float shortageHopper22FactValue;
+    private float shortageHopper31FactValue;
+    private float shortageHopper32FactValue;
+    private float shortageHopper41FactValue;
+    private float shortageHopper42FactValue;
+
+
     private float shortageHopper11Value;
     private float shortageHopper12Value;
     private float shortageHopper21Value;
@@ -74,6 +83,7 @@ public class ReflectionRetrieval {
 
     private float shortageWaterValue;
     private float shortageChemy1Value;
+    private float shortageChemy2Value;
 
     private float shortageSilos1Value;
     private float shortageSilos2Value;
@@ -203,6 +213,24 @@ public class ReflectionRetrieval {
     private double scadaPerformanceValue;
     private int recepieCorrectOptionValue;
     private int autoCorrectShnekOptionValue;
+    private int indicationSelfDFValue = 0;
+    private float doseFibraValue = 0;
+    private int autoCorrectionInertOptValue = 0;
+    private int dDryChShnekIndicationValue = 0;
+    private float recepieFibraValue = 0;
+    private float recepieDDryChValue = 0;
+    private float humiditySensorInertValue;
+    private int indicationVibroMixerValue = 0;
+    private int alarmSensorSkipUp1Value;
+    private int alarmSensorSkipUp2Value;
+    private int alarmSensorSkipDown1Value;
+    private int alarmSensorSkipDown2Value;
+    private int indicationShiberMixerOpeningValue;
+    private int indicationShiberMixerClosingValue;
+    private int dwplCounterValue;
+    private int dwplReadyToSaveValue;
+    private float dwplRecepieMix;
+    private float dwplDose;
 
     //инициализация переменных
     public void getValues() {
@@ -339,9 +367,37 @@ public class ReflectionRetrieval {
             skipPosEndSensorCrashUpField.setAccessible(true);
             skipPosEndSensorCrashUpValue = (int) skipPosEndSensorCrashUpField.get(tagCollector);
 
-            Field skipPosEndSensorCrashDownField = tagCollector.getClass().getDeclaredField("skipPosEndSensorCrashDown");
-            skipPosEndSensorCrashDownField.setAccessible(true);
-            skipPosEndSensorCrashDownValue = (int) skipPosEndSensorCrashDownField.get(tagCollector);
+            Field shortageHopper11Field = tagCollector.getClass().getDeclaredField("shortageHopper11");
+            shortageHopper11Field.setAccessible(true);
+            shortageHopper11Value = (float) shortageHopper11Field.get(tagCollector);
+
+            Field shortageHopper12Field = tagCollector.getClass().getDeclaredField("shortageHopper12");
+            shortageHopper12Field.setAccessible(true);
+            shortageHopper12Value = (float) shortageHopper12Field.get(tagCollector);
+
+            Field shortageHopper21Field = tagCollector.getClass().getDeclaredField("shortageHopper21");
+            shortageHopper21Field.setAccessible(true);
+            shortageHopper21Value = (float) shortageHopper21Field.get(tagCollector);
+
+            Field shortageHopper22Field = tagCollector.getClass().getDeclaredField("shortageHopper22");
+            shortageHopper22Field.setAccessible(true);
+            shortageHopper22Value = (float) shortageHopper22Field.get(tagCollector);
+
+            Field shortageHopper31Field = tagCollector.getClass().getDeclaredField("shortageHopper31");
+            shortageHopper31Field.setAccessible(true);
+            shortageHopper31Value = (float) shortageHopper31Field.get(tagCollector);
+
+            Field shortageHopper32Field = tagCollector.getClass().getDeclaredField("shortageHopper32");
+            shortageHopper32Field.setAccessible(true);
+            shortageHopper32Value = (float) shortageHopper32Field.get(tagCollector);
+
+            Field shortageHopper41Field = tagCollector.getClass().getDeclaredField("shortageHopper41");
+            shortageHopper41Field.setAccessible(true);
+            shortageHopper41Value = (float) shortageHopper41Field.get(tagCollector);
+
+            Field shortageHopper42Field = tagCollector.getClass().getDeclaredField("shortageHopper42");
+            shortageHopper42Field.setAccessible(true);
+            shortageHopper42Value = (float) shortageHopper42Field.get(tagCollector);
 
             Field skipMoveUpField = tagCollector.getClass().getDeclaredField("skipMoveUp");
             skipMoveUpField.setAccessible(true);
@@ -428,37 +484,39 @@ public class ReflectionRetrieval {
             cement2RecipeField.setAccessible(true);
             cement2RecipeValue = (float) cement2RecipeField.get(tagCollector);
 
-            Field shortageHopper11Field = tagCollector.getClass().getDeclaredField("shortageHopper11");
-            shortageHopper11Field.setAccessible(true);
-            shortageHopper11Value = (float) shortageHopper11Field.get(tagCollector);
+            Field shortageHopper11FactField = tagCollector.getClass().getDeclaredField("shortageHopper11fact");
+            shortageHopper11FactField.setAccessible(true);
+            shortageHopper11FactValue = (float) shortageHopper11FactField.get(tagCollector);
 
-            Field shortageHopper12Field = tagCollector.getClass().getDeclaredField("shortageHopper12");
-            shortageHopper12Field.setAccessible(true);
-            shortageHopper12Value = (float) shortageHopper12Field.get(tagCollector);
+            Field shortageHopper12FactField = tagCollector.getClass().getDeclaredField("shortageHopper12fact");
+            shortageHopper12FactField.setAccessible(true);
+            shortageHopper12FactValue = (float) shortageHopper12FactField.get(tagCollector);
 
-            Field shortageHopper21Field = tagCollector.getClass().getDeclaredField("shortageHopper21");
-            shortageHopper21Field.setAccessible(true);
-            shortageHopper21Value = (float) shortageHopper21Field.get(tagCollector);
+            Field shortageHopper21FactField = tagCollector.getClass().getDeclaredField("shortageHopper21fact");
+            shortageHopper21FactField.setAccessible(true);
+            shortageHopper21FactValue = (float) shortageHopper21FactField.get(tagCollector);
 
-            Field shortageHopper22Field = tagCollector.getClass().getDeclaredField("shortageHopper22");
-            shortageHopper22Field.setAccessible(true);
-            shortageHopper22Value = (float) shortageHopper22Field.get(tagCollector);
+            Field shortageHopper22FactField = tagCollector.getClass().getDeclaredField("shortageHopper22fact");
+            shortageHopper22FactField.setAccessible(true);
+            shortageHopper22FactValue = (float) shortageHopper22FactField.get(tagCollector);
 
-            Field shortageHopper31Field = tagCollector.getClass().getDeclaredField("shortageHopper31");
-            shortageHopper31Field.setAccessible(true);
-            shortageHopper31Value = (float) shortageHopper31Field.get(tagCollector);
+            Field shortageHopper31FactField = tagCollector.getClass().getDeclaredField("shortageHopper31fact");
+            shortageHopper31FactField.setAccessible(true);
+            shortageHopper31FactValue = (float) shortageHopper31FactField.get(tagCollector);
 
-            Field shortageHopper32Field = tagCollector.getClass().getDeclaredField("shortageHopper32");
-            shortageHopper32Field.setAccessible(true);
-            shortageHopper32Value = (float) shortageHopper32Field.get(tagCollector);
+            Field shortageHopper32FactField = tagCollector.getClass().getDeclaredField("shortageHopper32fact");
+            shortageHopper32FactField.setAccessible(true);
+            shortageHopper32FactValue = (float) shortageHopper32FactField.get(tagCollector);
 
-            Field shortageHopper41Field = tagCollector.getClass().getDeclaredField("shortageHopper41");
-            shortageHopper41Field.setAccessible(true);
-            shortageHopper41Value = (float) shortageHopper41Field.get(tagCollector);
+            Field shortageHopper41FactField = tagCollector.getClass().getDeclaredField("shortageHopper41fact");
+            shortageHopper41FactField.setAccessible(true);
+            shortageHopper41FactValue = (float) shortageHopper41FactField.get(tagCollector);
 
-            Field shortageHopper42Field = tagCollector.getClass().getDeclaredField("shortageHopper42");
-            shortageHopper42Field.setAccessible(true);
-            shortageHopper42Value = (float) shortageHopper42Field.get(tagCollector);
+            Field shortageHopper42FactField = tagCollector.getClass().getDeclaredField("shortageHopper42fact");
+            shortageHopper42FactField.setAccessible(true);
+            shortageHopper42FactValue = (float) shortageHopper42FactField.get(tagCollector);
+
+
 
             Field shortageWaterField = tagCollector.getClass().getDeclaredField("shortageWater");
             shortageWaterField.setAccessible(true);
@@ -467,6 +525,10 @@ public class ReflectionRetrieval {
             Field shortageChemy1Field = tagCollector.getClass().getDeclaredField("shortageChemy1");
             shortageChemy1Field.setAccessible(true);
             shortageChemy1Value = (float) shortageChemy1Field.get(tagCollector);
+
+            Field shortageChemy2Field = tagCollector.getClass().getDeclaredField("shortageChemy2");
+            shortageChemy2Field.setAccessible(true);
+            shortageChemy2Value = (float) shortageChemy2Field.get(tagCollector);
 
             Field shortageSilos1Field = tagCollector.getClass().getDeclaredField("shortageSilos1");
             shortageSilos1Field.setAccessible(true);
@@ -920,6 +982,78 @@ public class ReflectionRetrieval {
             alarmSkipSensorErrorField.setAccessible(true);
             alarmSkipSensorValue = (int) alarmSkipSensorErrorField.get(tagCollector);
 
+            Field indicationSelfDFField = tagCollector.getClass().getDeclaredField("indicationSelfDF");
+            indicationSelfDFField.setAccessible(true);
+            indicationSelfDFValue = (int) indicationSelfDFField.get(tagCollector);
+
+            Field doseFieldField = tagCollector.getClass().getDeclaredField("doseFibra");
+            doseFieldField.setAccessible(true);
+            doseFibraValue = (float) doseFieldField.get(tagCollector);
+
+            Field autoCorrectionInertOptField = tagCollector.getClass().getDeclaredField("autoCorrectionInertOpt");
+            autoCorrectionInertOptField.setAccessible(true);
+            autoCorrectionInertOptValue = (int) autoCorrectionInertOptField.get(tagCollector);
+
+            Field dDryChShnekIndicationField = tagCollector.getClass().getDeclaredField("dDryChShnekIndication");
+            dDryChShnekIndicationField.setAccessible(true);
+            dDryChShnekIndicationValue = (int) dDryChShnekIndicationField.get(tagCollector);
+
+            Field recepieFibraField = tagCollector.getClass().getDeclaredField("recepieFibra");
+            recepieFibraField.setAccessible(true);
+            recepieFibraValue = (float) recepieFibraField.get(tagCollector);
+
+            Field recepieDDryChField = tagCollector.getClass().getDeclaredField("recepieDDryCh");
+            recepieDDryChField.setAccessible(true);
+            recepieDDryChValue = (float) recepieDDryChField.get(tagCollector);
+
+            Field humiditySensorInertField = tagCollector.getClass().getDeclaredField("humiditySensorInert");
+            humiditySensorInertField.setAccessible(true);
+            humiditySensorInertValue = (float) humiditySensorInertField.get(tagCollector);
+
+            Field indicationVibroMixerField = tagCollector.getClass().getDeclaredField("indicationVibroMixer");
+            indicationVibroMixerField.setAccessible(true);
+            indicationVibroMixerValue = (int) indicationVibroMixerField.get(tagCollector);
+
+            Field alarmSensorSkipUp1Field = tagCollector.getClass().getDeclaredField("alarmSensorSkipUp1");
+            alarmSensorSkipUp1Field.setAccessible(true);
+            alarmSensorSkipUp1Value = (int) alarmSensorSkipUp1Field.get(tagCollector);
+
+            Field alarmSensorSkipUp2Field = tagCollector.getClass().getDeclaredField("alarmSensorSkipUp2");
+            alarmSensorSkipUp2Field.setAccessible(true);
+            alarmSensorSkipUp2Value = (int) alarmSensorSkipUp2Field.get(tagCollector);
+
+            Field alarmSensorSkipDown1Field = tagCollector.getClass().getDeclaredField("alarmSensorSkipDown1");
+            alarmSensorSkipDown1Field.setAccessible(true);
+            alarmSensorSkipDown1Value = (int) alarmSensorSkipDown1Field.get(tagCollector);
+
+            Field alarmSensorSkipDown2Field = tagCollector.getClass().getDeclaredField("alarmSensorSkipDown2");
+            alarmSensorSkipDown2Field.setAccessible(true);
+            alarmSensorSkipDown2Value = (int) alarmSensorSkipDown2Field.get(tagCollector);
+
+            Field indicationShiberMixerOpeningField = tagCollector.getClass().getDeclaredField("indicationShiberMixerOpening");
+            indicationShiberMixerOpeningField.setAccessible(true);
+            indicationShiberMixerOpeningValue = (int) indicationShiberMixerOpeningField.get(tagCollector);
+
+            Field indicationShiberMixerClosingField = tagCollector.getClass().getDeclaredField("indicationShiberMixerClosing");
+            indicationShiberMixerClosingField.setAccessible(true);
+            indicationShiberMixerClosingValue = (int) indicationShiberMixerClosingField.get(tagCollector);
+
+            Field dwplCounterField = tagCollector.getClass().getDeclaredField("dwplCounter");
+            dwplCounterField.setAccessible(true);
+            dwplCounterValue = (int) dwplCounterField.get(tagCollector);
+
+            Field dwplReadyToSaveField = tagCollector.getClass().getDeclaredField("dwplReadyToSave");
+            dwplReadyToSaveField.setAccessible(true);
+            dwplReadyToSaveValue = (int) dwplReadyToSaveField.get(tagCollector);
+
+            Field dwplRecepieMixField = tagCollector.getClass().getDeclaredField("dwplRecepieMix");
+            dwplRecepieMixField.setAccessible(true);
+            dwplRecepieMix = (float) dwplRecepieMixField.get(tagCollector);
+
+            Field dwplDoseField = tagCollector.getClass().getDeclaredField("dwplDose");
+            dwplDoseField.setAccessible(true);
+            dwplDose = (float) dwplDoseField.get(tagCollector);
+
             Field scadaPerformanceField = tagCollector.getClass().getDeclaredField("scadaPerformance");
             scadaPerformanceField.setAccessible(true);
             scadaPerformanceValue = (Double) scadaPerformanceField.get(tagCollector);
@@ -1035,9 +1169,6 @@ public class ReflectionRetrieval {
         return skipPosEndSensorCrashUpValue;
     }
 
-    public int isSkipPosEndSensorCrashDownValue() {
-        return skipPosEndSensorCrashDownValue;
-    }
 
     public int isSkipMoveUpValue() {
         return skipMoveUpValue;
@@ -1057,6 +1188,66 @@ public class ReflectionRetrieval {
 
     public int isMixerNotEmptyValue() {
         return mixerNotEmptyValue;
+    }
+
+    public void setShortageHopper11Value(float shortageHopper11Value) {
+        this.shortageHopper11Value = shortageHopper11Value;
+    }
+
+    public float getShortageHopper12Value() {
+        return shortageHopper12Value;
+    }
+
+    public void setShortageHopper12Value(float shortageHopper12Value) {
+        this.shortageHopper12Value = shortageHopper12Value;
+    }
+
+    public float getShortageHopper21Value() {
+        return shortageHopper21Value;
+    }
+
+    public void setShortageHopper21Value(float shortageHopper21Value) {
+        this.shortageHopper21Value = shortageHopper21Value;
+    }
+
+    public float getShortageHopper22Value() {
+        return shortageHopper22Value;
+    }
+
+    public void setShortageHopper22Value(float shortageHopper22Value) {
+        this.shortageHopper22Value = shortageHopper22Value;
+    }
+
+    public float getShortageHopper31Value() {
+        return shortageHopper31Value;
+    }
+
+    public void setShortageHopper31Value(float shortageHopper31Value) {
+        this.shortageHopper31Value = shortageHopper31Value;
+    }
+
+    public float getShortageHopper32Value() {
+        return shortageHopper32Value;
+    }
+
+    public void setShortageHopper32Value(float shortageHopper32Value) {
+        this.shortageHopper32Value = shortageHopper32Value;
+    }
+
+    public float getShortageHopper41Value() {
+        return shortageHopper41Value;
+    }
+
+    public void setShortageHopper41Value(float shortageHopper41Value) {
+        this.shortageHopper41Value = shortageHopper41Value;
+    }
+
+    public float getShortageHopper42Value() {
+        return shortageHopper42Value;
+    }
+
+    public void setShortageHopper42Value(float shortageHopper42Value) {
+        this.shortageHopper42Value = shortageHopper42Value;
     }
 
     public float getHopper11RecipeValue() {
@@ -1107,36 +1298,36 @@ public class ReflectionRetrieval {
         return cement2RecipeValue;
     }
 
-    public float getShortageHopper11Value() {
-        return shortageHopper11Value;
+    public float getShortageHopper11FactValue() {
+        return shortageHopper11FactValue;
     }
 
-    public float getShortageHopper12Value() {
-        return shortageHopper12Value;
+    public float getShortageHopper12FactValue() {
+        return shortageHopper12FactValue;
     }
 
-    public float getShortageHopper21Value() {
-        return shortageHopper21Value;
+    public float getShortageHopper21FactValue() {
+        return shortageHopper21FactValue;
     }
 
-    public float getShortageHopper22Value() {
-        return shortageHopper22Value;
+    public float getShortageHopper22FactValue() {
+        return shortageHopper22FactValue;
     }
 
-    public float getShortageHopper31Value() {
-        return shortageHopper31Value;
+    public float getShortageHopper31FactValue() {
+        return shortageHopper31FactValue;
     }
 
-    public float getShortageHopper32Value() {
-        return shortageHopper32Value;
+    public float getShortageHopper32FactValue() {
+        return shortageHopper32FactValue;
     }
 
-    public float getShortageHopper41Value() {
-        return shortageHopper41Value;
+    public float getShortageHopper41FactValue() {
+        return shortageHopper41FactValue;
     }
 
-    public float getShortageHopper42Value() {
-        return shortageHopper42Value;
+    public float getShortageHopper42FactValue() {
+        return shortageHopper42FactValue;
     }
 
     public float getShortageWaterValue() {
@@ -1504,10 +1695,6 @@ public class ReflectionRetrieval {
         this.skipPosEndSensorCrashUpValue = skipPosEndSensorCrashUpValue;
     }
 
-    public void setSkipPosEndSensorCrashDownValue(int skipPosEndSensorCrashDownValue) {
-        this.skipPosEndSensorCrashDownValue = skipPosEndSensorCrashDownValue;
-    }
-
     public void setSkipMoveUpValue(int skipMoveUpValue) {
         this.skipMoveUpValue = skipMoveUpValue;
     }
@@ -1580,36 +1767,36 @@ public class ReflectionRetrieval {
         this.cement2RecipeValue = cement2RecipeValue;
     }
 
-    public void setShortageHopper11Value(float shortageHopper11Value) {
-        this.shortageHopper11Value = shortageHopper11Value;
+    public void setShortageHopper11FactValue(float shortageHopper11FactValue) {
+        this.shortageHopper11FactValue = shortageHopper11FactValue;
     }
 
-    public void setShortageHopper12Value(float shortageHopper12Value) {
-        this.shortageHopper12Value = shortageHopper12Value;
+    public void setShortageHopper12FactValue(float shortageHopper12FactValue) {
+        this.shortageHopper12FactValue = shortageHopper12FactValue;
     }
 
-    public void setShortageHopper21Value(float shortageHopper21Value) {
-        this.shortageHopper21Value = shortageHopper21Value;
+    public void setShortageHopper21FactValue(float shortageHopper21FactValue) {
+        this.shortageHopper21FactValue = shortageHopper21FactValue;
     }
 
-    public void setShortageHopper22Value(float shortageHopper22Value) {
-        this.shortageHopper22Value = shortageHopper22Value;
+    public void setShortageHopper22FactValue(float shortageHopper22FactValue) {
+        this.shortageHopper22FactValue = shortageHopper22FactValue;
     }
 
-    public void setShortageHopper31Value(float shortageHopper31Value) {
-        this.shortageHopper31Value = shortageHopper31Value;
+    public void setShortageHopper31FactValue(float shortageHopper31FactValue) {
+        this.shortageHopper31FactValue = shortageHopper31FactValue;
     }
 
-    public void setShortageHopper32Value(float shortageHopper32Value) {
-        this.shortageHopper32Value = shortageHopper32Value;
+    public void setShortageHopper32FactValue(float shortageHopper32FactValue) {
+        this.shortageHopper32FactValue = shortageHopper32FactValue;
     }
 
-    public void setShortageHopper41Value(float shortageHopper41Value) {
-        this.shortageHopper41Value = shortageHopper41Value;
+    public void setShortageHopper41FactValue(float shortageHopper41FactValue) {
+        this.shortageHopper41FactValue = shortageHopper41FactValue;
     }
 
-    public void setShortageHopper42Value(float shortageHopper42Value) {
-        this.shortageHopper42Value = shortageHopper42Value;
+    public void setShortageHopper42FactValue(float shortageHopper42FactValue) {
+        this.shortageHopper42FactValue = shortageHopper42FactValue;
     }
 
     public void setShortageWaterValue(float shortageWaterValue) {
@@ -2172,6 +2359,586 @@ public class ReflectionRetrieval {
         return autoCorrectShnekOptionValue;
     }
 
+    public int getManualAutoModeValue() {
+        return manualAutoModeValue;
+    }
+
+    public int getPendingProductionStateValue() {
+        return pendingProductionStateValue;
+    }
+
+    public int getGlobalCrashFlagValue() {
+        return globalCrashFlagValue;
+    }
+
+    public int getHopper11FlapOpenIndValue() {
+        return hopper11FlapOpenIndValue;
+    }
+
+    public int getHopper12FlapOpenIndValue() {
+        return hopper12FlapOpenIndValue;
+    }
+
+    public int getHopper21FlapOpenIndValue() {
+        return hopper21FlapOpenIndValue;
+    }
+
+    public int getHopper22FlapOpenIndValue() {
+        return hopper22FlapOpenIndValue;
+    }
+
+    public int getHopper31FlapOpenIndValue() {
+        return hopper31FlapOpenIndValue;
+    }
+
+    public int getHopper32FlapOpenIndValue() {
+        return hopper32FlapOpenIndValue;
+    }
+
+    public int getHopper41FlapOpenIndValue() {
+        return hopper41FlapOpenIndValue;
+    }
+
+    public int getHopper42FlapOpenIndValue() {
+        return hopper42FlapOpenIndValue;
+    }
+
+    public int getWaterDisFlapOpenIndValue() {
+        return waterDisFlapOpenIndValue;
+    }
+
+    public int getCementDisFlapOpenIndValue() {
+        return cementDisFlapOpenIndValue;
+    }
+
+    public int getCementDisFlapOpenPosIndValue() {
+        return cementDisFlapOpenPosIndValue;
+    }
+
+    public int getCementDisFlapClosePosIndValue() {
+        return cementDisFlapClosePosIndValue;
+    }
+
+    public int getChemyDisFlapOpenIndValue() {
+        return chemyDisFlapOpenIndValue;
+    }
+
+    public int getHorConveyorOnIndValue() {
+        return horConveyorOnIndValue;
+    }
+
+    public int getWaterPumpOnIndValue() {
+        return waterPumpOnIndValue;
+    }
+
+    public int getValveWaterBunckerValue() {
+        return valveWaterBunckerValue;
+    }
+
+    public int getChemy1PumpOnIndValue() {
+        return chemy1PumpOnIndValue;
+    }
+
+    public int getChemy2PumpOnIndValue() {
+        return chemy2PumpOnIndValue;
+    }
+
+    public int getCement1AugerOnIndValue() {
+        return cement1AugerOnIndValue;
+    }
+
+    public int getCement2AugerOnIndValue() {
+        return cement2AugerOnIndValue;
+    }
+
+    public void setCement2AugerOnIndValue(int cement2AugerOnIndValue) {
+        this.cement2AugerOnIndValue = cement2AugerOnIndValue;
+    }
+
+    public int getSilosCementFilterValue() {
+        return silosCementFilterValue;
+    }
+
+    public int getCement1SiloLevelSensorUpValue() {
+        return cement1SiloLevelSensorUpValue;
+    }
+
+    public int getCement1SiloLevelSensorDownValue() {
+        return cement1SiloLevelSensorDownValue;
+    }
+
+    public int getCement2SiloLevelSensorUpValue() {
+        return cement2SiloLevelSensorUpValue;
+    }
+
+    public int getCement2SiloLevelSensorDownValue() {
+        return cement2SiloLevelSensorDownValue;
+    }
+
+    public int getWaterOverflowSensorValue() {
+        return waterOverflowSensorValue;
+    }
+
+    public int getChemyOverflowSensorValue() {
+        return chemyOverflowSensorValue;
+    }
+
+    public int getSkipPosEndSensorUpValue() {
+        return skipPosEndSensorUpValue;
+    }
+
+    public int getSkipPosEndSensorDownValue() {
+        return skipPosEndSensorDownValue;
+    }
+
+    public int getSkipPosEndSensorCrashUpValue() {
+        return skipPosEndSensorCrashUpValue;
+    }
+
+    public float getShortageHopper11Value() {
+        return shortageHopper11Value;
+    }
+
+    public int getSkipMoveUpValue() {
+        return skipMoveUpValue;
+    }
+
+    public int getSkipMoveDownValue() {
+        return skipMoveDownValue;
+    }
+
+    public int getAerationOnIndicationValue() {
+        return aerationOnIndicationValue;
+    }
+
+    public int getMixerRollersWorkIndicationValue() {
+        return mixerRollersWorkIndicationValue;
+    }
+
+    public int getMixerWindowViewOpenSensorValue() {
+        return mixerWindowViewOpenSensorValue;
+    }
+
+    public int getMixerNotEmptyValue() {
+        return mixerNotEmptyValue;
+    }
+
+    public int getMixerCloseValue() {
+        return mixerCloseValue;
+    }
+
+    public int getMixerHalfOpenValue() {
+        return mixerHalfOpenValue;
+    }
+
+    public int getMixerOpenValue() {
+        return mixerOpenValue;
+    }
+
+    public int getAutoDropChckerValue() {
+        return autoDropChckerValue;
+    }
+
+    public int getDropImpulseChckerValue() {
+        return dropImpulseChckerValue;
+    }
+
+    public int getVibroSilos1Value() {
+        return vibroSilos1Value;
+    }
+
+    public int getVibroDispenserDCValue() {
+        return vibroDispenserDCValue;
+    }
+
+    public int getWeightsReadyReadValue() {
+        return weightsReadyReadValue;
+    }
+
+    public int getVibroColdBunckersIndicationValue() {
+        return vibroColdBunckersIndicationValue;
+    }
+
+    public void setFibraWeightSensorValue(float fibraWeightSensorValue) {
+        this.fibraWeightSensorValue = fibraWeightSensorValue;
+    }
+
+    public int getSelfDKStateValue() {
+        return selfDKStateValue;
+    }
+
+    public int getSelfDChStateValue() {
+        return selfDChStateValue;
+    }
+
+    public int getSelfDCStateValue() {
+        return selfDCStateValue;
+    }
+
+    public int getSelfDWStateValue() {
+        return selfDWStateValue;
+    }
+
+    public int getSilosSelectorValue() {
+        return silosSelectorValue;
+    }
+
+    public void setMotoClockHorConveyorValue(int motoClockHorConveyorValue) {
+        this.motoClockHorConveyorValue = motoClockHorConveyorValue;
+    }
+
+    public void setMotoClockVertConvValue(int motoClockVertConvValue) {
+        this.motoClockVertConvValue = motoClockVertConvValue;
+    }
+
+    public void setMotoClockSkipValue(int motoClockSkipValue) {
+        this.motoClockSkipValue = motoClockSkipValue;
+    }
+
+    public void setMotoClockMixerValue(int motoClockMixerValue) {
+        this.motoClockMixerValue = motoClockMixerValue;
+    }
+
+    public void setMotoClockShnek1Value(int motoClockShnek1Value) {
+        this.motoClockShnek1Value = motoClockShnek1Value;
+    }
+
+    public void setMotoClockShnek2Value(int motoClockShnek2Value) {
+        this.motoClockShnek2Value = motoClockShnek2Value;
+    }
+
+    public void setMotoClockShnek3Value(int motoClockShnek3Value) {
+        this.motoClockShnek3Value = motoClockShnek3Value;
+    }
+
+    public void setMotoClockValveWaterValue(int motoClockValveWaterValue) {
+        this.motoClockValveWaterValue = motoClockValveWaterValue;
+    }
+
+    public void setMotoClockPumpWaterValue(int motoClockPumpWaterValue) {
+        this.motoClockPumpWaterValue = motoClockPumpWaterValue;
+    }
+
+    public void setMotoClockPumpChemy1Value(int motoClockPumpChemy1Value) {
+        this.motoClockPumpChemy1Value = motoClockPumpChemy1Value;
+    }
+
+    public void setMotoClockPumpChemy2Value(int motoClockPumpChemy2Value) {
+        this.motoClockPumpChemy2Value = motoClockPumpChemy2Value;
+    }
+
+    public void setMotoClockOilStationValue(int motoClockOilStationValue) {
+        this.motoClockOilStationValue = motoClockOilStationValue;
+    }
+
+    public void setAlarmMixerShiberOpennedValue(int alarmMixerShiberOpennedValue) {
+        this.alarmMixerShiberOpennedValue = alarmMixerShiberOpennedValue;
+    }
+
+    public void setAlarmMixerThermalProtectionValue(int alarmMixerThermalProtectionValue) {
+        this.alarmMixerThermalProtectionValue = alarmMixerThermalProtectionValue;
+    }
+
+    public void setAlarmSkipThermalProtectionValue(int alarmSkipThermalProtectionValue) {
+        this.alarmSkipThermalProtectionValue = alarmSkipThermalProtectionValue;
+    }
+
+    public void setAlarmDKThermalProtectionValue(int alarmDKThermalProtectionValue) {
+        this.alarmDKThermalProtectionValue = alarmDKThermalProtectionValue;
+    }
+
+    public void setAlarmMixerWindowOpennedValue(int alarmMixerWindowOpennedValue) {
+        this.alarmMixerWindowOpennedValue = alarmMixerWindowOpennedValue;
+    }
+
+    public void setAlarmTimeDosingDoser11FaultValue(int alarmTimeDosingDoser11FaultValue) {
+        this.alarmTimeDosingDoser11FaultValue = alarmTimeDosingDoser11FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser12FaultValue(int alarmTimeDosingDoser12FaultValue) {
+        this.alarmTimeDosingDoser12FaultValue = alarmTimeDosingDoser12FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser21FaultValue(int alarmTimeDosingDoser21FaultValue) {
+        this.alarmTimeDosingDoser21FaultValue = alarmTimeDosingDoser21FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser22FaultValue(int alarmTimeDosingDoser22FaultValue) {
+        this.alarmTimeDosingDoser22FaultValue = alarmTimeDosingDoser22FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser31FaultValue(int alarmTimeDosingDoser31FaultValue) {
+        this.alarmTimeDosingDoser31FaultValue = alarmTimeDosingDoser31FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser32FaultValue(int alarmTimeDosingDoser32FaultValue) {
+        this.alarmTimeDosingDoser32FaultValue = alarmTimeDosingDoser32FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser41FaultValue(int alarmTimeDosingDoser41FaultValue) {
+        this.alarmTimeDosingDoser41FaultValue = alarmTimeDosingDoser41FaultValue;
+    }
+
+    public void setAlarmTimeDosingDoser42FaultValue(int alarmTimeDosingDoser42FaultValue) {
+        this.alarmTimeDosingDoser42FaultValue = alarmTimeDosingDoser42FaultValue;
+    }
+
+    public void setWarningAutoModeNotActivatedValue(int warningAutoModeNotActivatedValue) {
+        this.warningAutoModeNotActivatedValue = warningAutoModeNotActivatedValue;
+    }
+
+    public void setWarningMixerNotEmptyValue(int warningMixerNotEmptyValue) {
+        this.warningMixerNotEmptyValue = warningMixerNotEmptyValue;
+    }
+
+    public void setWarningAutoDropDisableValue(int warningAutoDropDisableValue) {
+        this.warningAutoDropDisableValue = warningAutoDropDisableValue;
+    }
+
+    public void setAlarmWeightDKNotEmptyValue(int alarmWeightDKNotEmptyValue) {
+        this.alarmWeightDKNotEmptyValue = alarmWeightDKNotEmptyValue;
+    }
+
+    public void setAlarmDCWeightNotEmptyValue(int alarmDCWeightNotEmptyValue) {
+        this.alarmDCWeightNotEmptyValue = alarmDCWeightNotEmptyValue;
+    }
+
+    public void setAlarmDWWeightNotEmptyValue(int alarmDWWeightNotEmptyValue) {
+        this.alarmDWWeightNotEmptyValue = alarmDWWeightNotEmptyValue;
+    }
+
+    public void setAlarmDChWeightNotEmptyValue(int alarmDChWeightNotEmptyValue) {
+        this.alarmDChWeightNotEmptyValue = alarmDChWeightNotEmptyValue;
+    }
+
+    public void setAlarmDKCalibrateErrorValue(int alarmDKCalibrateErrorValue) {
+        this.alarmDKCalibrateErrorValue = alarmDKCalibrateErrorValue;
+    }
+
+    public void setAlarmDCCalibrateErrorValue(int alarmDCCalibrateErrorValue) {
+        this.alarmDCCalibrateErrorValue = alarmDCCalibrateErrorValue;
+    }
+
+    public void setAlarmDWCalibrateErrorValue(int alarmDWCalibrateErrorValue) {
+        this.alarmDWCalibrateErrorValue = alarmDWCalibrateErrorValue;
+    }
+
+    public void setAlarmDChCalibrateErrorValue(int alarmDChCalibrateErrorValue) {
+        this.alarmDChCalibrateErrorValue = alarmDChCalibrateErrorValue;
+    }
+
+    public void setAlarmShnekThermalDefenceValue(int alarmShnekThermalDefenceValue) {
+        this.alarmShnekThermalDefenceValue = alarmShnekThermalDefenceValue;
+    }
+
+    public void setAlarmMixerDropErrorValue(int alarmMixerDropErrorValue) {
+        this.alarmMixerDropErrorValue = alarmMixerDropErrorValue;
+    }
+
+    public void setWarningAutoPowerOffMixerDisabledValue(int warningAutoPowerOffMixerDisabledValue) {
+        this.warningAutoPowerOffMixerDisabledValue = warningAutoPowerOffMixerDisabledValue;
+    }
+
+    public void setAlarmMixerEngineNotStartedValue(int alarmMixerEngineNotStartedValue) {
+        this.alarmMixerEngineNotStartedValue = alarmMixerEngineNotStartedValue;
+    }
+
+    public void setWarningConveyorUploadNotStartedValue(int warningConveyorUploadNotStartedValue) {
+        this.warningConveyorUploadNotStartedValue = warningConveyorUploadNotStartedValue;
+    }
+
+    public void setAlarmOverflowChemyValue(int alarmOverflowChemyValue) {
+        this.alarmOverflowChemyValue = alarmOverflowChemyValue;
+    }
+
+    public void setAlarmOverflowWaterValue(int alarmOverflowWaterValue) {
+        this.alarmOverflowWaterValue = alarmOverflowWaterValue;
+    }
+
+    public void setAlarmOverFlowDKValue(int alarmOverFlowDKValue) {
+        this.alarmOverFlowDKValue = alarmOverFlowDKValue;
+    }
+
+    public void setAlarmMixerCloseErrorStopSkipValue(int alarmMixerCloseErrorStopSkipValue) {
+        this.alarmMixerCloseErrorStopSkipValue = alarmMixerCloseErrorStopSkipValue;
+    }
+
+    public void setAlarmDCShiberErrorValue(int alarmDCShiberErrorValue) {
+        this.alarmDCShiberErrorValue = alarmDCShiberErrorValue;
+    }
+
+    public int getAlarmSkipSensorValue() {
+        return alarmSkipSensorValue;
+    }
+
+    public void setAlarmSkipSensorValue(int alarmSkipSensorValue) {
+        this.alarmSkipSensorValue = alarmSkipSensorValue;
+    }
+
+    public void setScadaPerformanceValue(double scadaPerformanceValue) {
+        this.scadaPerformanceValue = scadaPerformanceValue;
+    }
+
+    public void setRecepieCorrectOptionValue(int recepieCorrectOptionValue) {
+        this.recepieCorrectOptionValue = recepieCorrectOptionValue;
+    }
+
+    public void setAutoCorrectShnekOptionValue(int autoCorrectShnekOptionValue) {
+        this.autoCorrectShnekOptionValue = autoCorrectShnekOptionValue;
+    }
+
+    public int getIndicationSelfDFValue() {
+        return indicationSelfDFValue;
+    }
+
+    public void setIndicationSelfDFValue(int indicationSelfDFValue) {
+        this.indicationSelfDFValue = indicationSelfDFValue;
+    }
+
+    public float getDoseFibraValue() {
+        return doseFibraValue;
+    }
+
+    public void setDoseFibraValue(float doseFibraValue) {
+        this.doseFibraValue = doseFibraValue;
+    }
+
+    public int getAutoCorrectionInertOptValue() {
+        return autoCorrectionInertOptValue;
+    }
+
+    public void setAutoCorrectionInertOptValue(int autoCorrectionInertOptValue) {
+        this.autoCorrectionInertOptValue = autoCorrectionInertOptValue;
+    }
+
+    public int getdDryChShnekIndicationValue() {
+        return dDryChShnekIndicationValue;
+    }
+
+    public void setdDryChShnekIndicationValue(int dDryChShnekIndicationValue) {
+        this.dDryChShnekIndicationValue = dDryChShnekIndicationValue;
+    }
+
+    public float getRecepieFibraValue() {
+        return recepieFibraValue;
+    }
+
+    public void setRecepieFibraValue(float recepieFibraValue) {
+        this.recepieFibraValue = recepieFibraValue;
+    }
+
+    public float getRecepieDDryChValue() {
+        return recepieDDryChValue;
+    }
+
+    public void setRecepieDDryChValue(float recepieDDryChValue) {
+        this.recepieDDryChValue = recepieDDryChValue;
+    }
+
+    public float getHumiditySensorInertValue() {
+        return humiditySensorInertValue;
+    }
+
+    public void setHumiditySensorInertValue(float humiditySensorInertValue) {
+        this.humiditySensorInertValue = humiditySensorInertValue;
+    }
+
+    public int getIndicationVibroMixerValue() {
+        return indicationVibroMixerValue;
+    }
+
+    public void setIndicationVibroMixerValue(int indicationVibroMixerValue) {
+        this.indicationVibroMixerValue = indicationVibroMixerValue;
+    }
+
+    public int getAlarmSensorSkipUp1Value() {
+        return alarmSensorSkipUp1Value;
+    }
+
+    public void setAlarmSensorSkipUp1Value(int alarmSensorSkipUp1Value) {
+        this.alarmSensorSkipUp1Value = alarmSensorSkipUp1Value;
+    }
+
+    public int getAlarmSensorSkipUp2Value() {
+        return alarmSensorSkipUp2Value;
+    }
+
+    public void setAlarmSensorSkipUp2Value(int alarmSensorSkipUp2Value) {
+        this.alarmSensorSkipUp2Value = alarmSensorSkipUp2Value;
+    }
+
+    public int getAlarmSensorSkipDown1Value() {
+        return alarmSensorSkipDown1Value;
+    }
+
+    public void setAlarmSensorSkipDown1Value(int alarmSensorSkipDown1Value) {
+        this.alarmSensorSkipDown1Value = alarmSensorSkipDown1Value;
+    }
+
+    public int getAlarmSensorSkipDown2Value() {
+        return alarmSensorSkipDown2Value;
+    }
+
+    public void setAlarmSensorSkipDown2Value(int alarmSensorSkipDown2Value) {
+        this.alarmSensorSkipDown2Value = alarmSensorSkipDown2Value;
+    }
+
+    public int getIndicationShiberMixerOpeningValue() {
+        return indicationShiberMixerOpeningValue;
+    }
+
+    public void setIndicationShiberMixerOpeningValue(int indicationShiberMixerOpeningValue) {
+        this.indicationShiberMixerOpeningValue = indicationShiberMixerOpeningValue;
+    }
+
+    public int getIndicationShiberMixerClosingValue() {
+        return indicationShiberMixerClosingValue;
+    }
+
+    public void setIndicationShiberMixerClosingValue(int indicationShiberMixerClosingValue) {
+        this.indicationShiberMixerClosingValue = indicationShiberMixerClosingValue;
+    }
+
+    public int getDwplCounterValue() {
+        return dwplCounterValue;
+    }
+
+    public void setDwplCounterValue(int dwplCounterValue) {
+        this.dwplCounterValue = dwplCounterValue;
+    }
+
+    public int getDwplReadyToSaveValue() {
+        return dwplReadyToSaveValue;
+    }
+
+    public void setDwplReadyToSaveValue(int dwplReadyToSaveValue) {
+        this.dwplReadyToSaveValue = dwplReadyToSaveValue;
+    }
+
+    public float getDwplRecepieMix() {
+        return dwplRecepieMix;
+    }
+
+    public void setDwplRecepieMix(float dwplRecepieMix) {
+        this.dwplRecepieMix = dwplRecepieMix;
+    }
+
+    public float getDwplDose() {
+        return dwplDose;
+    }
+
+    public void setDwplDose(float dwplDose) {
+        this.dwplDose = dwplDose;
+    }
+
+    public float getShortageChemy2Value() {
+        return shortageChemy2Value;
+    }
+
+    public void setShortageChemy2Value(float shortageChemy2Value) {
+        this.shortageChemy2Value = shortageChemy2Value;
+    }
+
     @Override
     public String toString() {
         return "ReflectionRetrieval{" +
@@ -2208,7 +2975,7 @@ public class ReflectionRetrieval {
                 ", skipPosEndSensorUpValue=" + skipPosEndSensorUpValue +
                 ", skipPosEndSensorDownValue=" + skipPosEndSensorDownValue +
                 ", skipPosEndSensorCrashUpValue=" + skipPosEndSensorCrashUpValue +
-                ", skipPosEndSensorCrashDownValue=" + skipPosEndSensorCrashDownValue +
+                ", skipPosEndSensorCrashDownValue=" + shortageHopper11Value +
                 ", skipMoveUpValue=" + skipMoveUpValue +
                 ", skipMoveDownValue=" + skipMoveDownValue +
                 ", aerationOnIndicationValue=" + aerationOnIndicationValue +
@@ -2228,14 +2995,14 @@ public class ReflectionRetrieval {
                 ", chemy2RecipeValue=" + chemy2RecipeValue +
                 ", cement1RecipeValue=" + cement1RecipeValue +
                 ", cement2RecipeValue=" + cement2RecipeValue +
-                ", shortageHopper11Value=" + shortageHopper11Value +
-                ", shortageHopper12Value=" + shortageHopper12Value +
-                ", shortageHopper21Value=" + shortageHopper21Value +
-                ", shortageHopper22Value=" + shortageHopper22Value +
-                ", shortageHopper31Value=" + shortageHopper31Value +
-                ", shortageHopper32Value=" + shortageHopper32Value +
-                ", shortageHopper41Value=" + shortageHopper41Value +
-                ", shortageHopper42Value=" + shortageHopper42Value +
+                ", shortageHopper11Value=" + shortageHopper11FactValue +
+                ", shortageHopper12Value=" + shortageHopper12FactValue +
+                ", shortageHopper21Value=" + shortageHopper21FactValue +
+                ", shortageHopper22Value=" + shortageHopper22FactValue +
+                ", shortageHopper31Value=" + shortageHopper31FactValue +
+                ", shortageHopper32Value=" + shortageHopper32FactValue +
+                ", shortageHopper41Value=" + shortageHopper41FactValue +
+                ", shortageHopper42Value=" + shortageHopper42FactValue +
                 ", shortageWaterValue=" + shortageWaterValue +
                 ", shortageChemy1Value=" + shortageChemy1Value +
                 ", shortageSilos1Value=" + shortageSilos1Value +
