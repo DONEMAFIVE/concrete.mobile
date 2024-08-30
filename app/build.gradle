@@ -11,7 +11,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdk 32
         versionCode 1
-        versionName "1.1.4"   //todo здесь устанавливается версия приложения
+        versionName "1.1.5"   //todo здесь устанавливается версия приложения
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilInsert;
@@ -54,9 +57,25 @@ public class OrganizationActivity extends AppCompatActivity {
 
     private void initActions() {
         personaChecker.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(),
-                    "При активации опции Физическое лицо заполняется только поле - Название организации",
-                    Toast.LENGTH_SHORT).show();
+            if (personaChecker.isChecked()) {
+                orgNameField.setEnabled(false);
+                innField.setEnabled(false);
+                kppField.setEnabled(false);
+                okpoField.setEnabled(false);
+                phoneField.setEnabled(false);
+                addressField.setEnabled(false);
+                contactNameField.setEnabled(false);
+                contactPhoneField.setEnabled(false);
+            } else {
+                orgNameField.setEnabled(true);
+                innField.setEnabled(true);
+                kppField.setEnabled(true);
+                okpoField.setEnabled(true);
+                phoneField.setEnabled(true);
+                addressField.setEnabled(true);
+                contactNameField.setEnabled(true);
+                contactPhoneField.setEnabled(true);
+            }
         });
 
         saveBtn.setOnClickListener(view -> {
@@ -156,9 +175,7 @@ public class OrganizationActivity extends AppCompatActivity {
             }).start();
 
             super.onBackPressed();
-            Toast.makeText(getApplicationContext(),
-                    "Организация " + editedOrganization.getOrganizationName() + " удалена",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Организация " + editedOrganization.getOrganizationName() + " удалена", Toast.LENGTH_SHORT).show();
         });
         closeBtn.setOnClickListener(view -> {
             super.onBackPressed();
@@ -168,7 +185,7 @@ public class OrganizationActivity extends AppCompatActivity {
     private void initUI() {
         organizationIDField = findViewById(R.id.organizationIDField);
         personaChecker = findViewById(R.id.personaChecker);
-        dateCreateField = findViewById(R.id.typeOrganizationField);
+        dateCreateField = findViewById(R.id.dateCreateField);
         headNameField = findViewById(R.id.nameOrganizationField);
         orgNameField = findViewById(R.id.orgNameField);
         innField = findViewById(R.id.innField);
@@ -189,6 +206,8 @@ public class OrganizationActivity extends AppCompatActivity {
     }
 
     private void initFieldsUI() {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        dateCreateField.setText(format.format(new Date()));
         organizationIDField.setText(String.valueOf(editedOrganization.getId()));
         headNameField.setText(String.valueOf(editedOrganization.getOrganizationHeadName()));
         orgNameField.setText(String.valueOf(editedOrganization.getOrganizationName()));
@@ -202,5 +221,25 @@ public class OrganizationActivity extends AppCompatActivity {
         commentField.setText(String.valueOf(editedOrganization.getId()));
 
         personaChecker.setChecked(editedOrganization.getPersona() == 1);
+
+        if (personaChecker.isChecked()) {
+            orgNameField.setEnabled(false);
+            innField.setEnabled(false);
+            kppField.setEnabled(false);
+            okpoField.setEnabled(false);
+            phoneField.setEnabled(false);
+            addressField.setEnabled(false);
+            contactNameField.setEnabled(false);
+            contactPhoneField.setEnabled(false);
+        } else {
+            orgNameField.setEnabled(true);
+            innField.setEnabled(true);
+            kppField.setEnabled(true);
+            okpoField.setEnabled(true);
+            phoneField.setEnabled(true);
+            addressField.setEnabled(true);
+            contactNameField.setEnabled(true);
+            contactPhoneField.setEnabled(true);
+        }
     }
 }

@@ -130,7 +130,6 @@ public class OrganizationsActivity extends AppCompatActivity {
         // Редактирование 
         OrganizationAdapter.EditOrgClickListener editOrgClickListener = (org, position) -> {
             editedOrganization = organizations.get(position);
-            Toast.makeText(getApplicationContext(), org.getOrganizationName(), Toast.LENGTH_SHORT).show();
             finish();
             Intent intent = new Intent(getApplicationContext(), OrganizationActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

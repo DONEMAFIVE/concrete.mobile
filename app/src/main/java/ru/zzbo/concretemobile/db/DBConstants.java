@@ -2,7 +2,7 @@ package ru.zzbo.concretemobile.db;
 
 public class DBConstants {
     public static String DATABASE_NAME = "source.db";
-    public static int DATABASE_VERSION = 2;
+    public static int DATABASE_VERSION = 3;
 
     //таблица configs
     public static String TABLE_NAME_CONFIG = "config";

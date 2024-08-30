@@ -1,5 +1,6 @@
 package ru.zzbo.concretemobile.gui.catalogs;
 
+import static ru.zzbo.concretemobile.utils.Constants.PERMISSION_STORAGE;
 import static ru.zzbo.concretemobile.utils.Constants.editedTransporter;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
 
@@ -16,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import ru.zzbo.concretemobile.R;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilInsert;
@@ -28,6 +32,7 @@ public class TransporterActivity extends AppCompatActivity {
     private EditText transporterIDField;
     private CheckBox personaChecker;
     private EditText regNumberAutoField;
+    private EditText dateCreateField;
     private EditText orgNameField;
     private EditText innField;
     private EditText driverNameField;
@@ -51,9 +56,21 @@ public class TransporterActivity extends AppCompatActivity {
 
     private void initActions() {
         personaChecker.setOnClickListener(view -> {
-            Toast.makeText(getApplicationContext(),
-                    "При активации опции Физическое лицо заполняется только поле - Регистрационный номер авто",
-                    Toast.LENGTH_SHORT).show();
+            if (personaChecker.isChecked()) {
+                orgNameField.setEnabled(false);
+                innField.setEnabled(false);
+                driverNameField.setEnabled(false);
+                phoneDriverField.setEnabled(false);
+                markAutoField.setEnabled(false);
+                addressOrgField.setEnabled(false);
+            } else {
+                orgNameField.setEnabled(true);
+                innField.setEnabled(true);
+                driverNameField.setEnabled(true);
+                phoneDriverField.setEnabled(true);
+                markAutoField.setEnabled(true);
+                addressOrgField.setEnabled(true);
+            }
         });
 
         saveBtn.setOnClickListener(view -> {
@@ -161,6 +178,7 @@ public class TransporterActivity extends AppCompatActivity {
         transporterIDField = findViewById(R.id.transporterIDField);
         personaChecker = findViewById(R.id.personaChecker);
         regNumberAutoField = findViewById(R.id.regNumberAutoField);
+        dateCreateField = findViewById(R.id.dateCreateField);
         orgNameField = findViewById(R.id.orgNameField);
         innField = findViewById(R.id.innField);
         driverNameField = findViewById(R.id.driverNameField);
@@ -177,6 +195,8 @@ public class TransporterActivity extends AppCompatActivity {
     private void initFieldsUI() {
         transporterIDField.setText(String.valueOf(editedTransporter.getId()));
         regNumberAutoField.setText(String.valueOf(editedTransporter.getRegNumberAuto()));
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        dateCreateField.setText(format.format(new Date()));
         orgNameField.setText(String.valueOf(editedTransporter.getOrganizationName()));
         innField.setText(String.valueOf(editedTransporter.getInn()));
         driverNameField.setText(String.valueOf(editedTransporter.getDriverName()));
@@ -185,6 +205,22 @@ public class TransporterActivity extends AppCompatActivity {
         addressOrgField.setText(String.valueOf(editedTransporter.getAddress()));
         commentField.setText(String.valueOf(editedTransporter.getComment()));
         personaChecker.setChecked(editedTransporter.getPersona() == 1);
+
+        if (personaChecker.isChecked()) {
+            orgNameField.setEnabled(false);
+            innField.setEnabled(false);
+            driverNameField.setEnabled(false);
+            phoneDriverField.setEnabled(false);
+            markAutoField.setEnabled(false);
+            addressOrgField.setEnabled(false);
+        } else {
+            orgNameField.setEnabled(true);
+            innField.setEnabled(true);
+            driverNameField.setEnabled(true);
+            phoneDriverField.setEnabled(true);
+            markAutoField.setEnabled(true);
+            addressOrgField.setEnabled(true);
+        }
     }
 
 }

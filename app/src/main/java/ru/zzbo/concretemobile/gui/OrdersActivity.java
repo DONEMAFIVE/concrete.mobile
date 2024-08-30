@@ -416,6 +416,7 @@ public class OrdersActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), EditOrderActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+            mAddNewFab.hide();
         });
 
         // Фильтр

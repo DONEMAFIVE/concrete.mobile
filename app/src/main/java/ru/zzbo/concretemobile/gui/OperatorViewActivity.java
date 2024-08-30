@@ -915,6 +915,12 @@ public class OperatorViewActivity extends AppCompatActivity {
                             globalFactoryState = false;
                         }
 
+                        if (retrieval.getIndicationShiberMixerOpeningValue() == 1) openMixer.setImageResource(R.drawable.arrow_down);
+                        else openMixer.setImageResource(R.drawable.arrow_down_off);
+
+                        if (retrieval.getIndicationShiberMixerClosingValue() == 1) closeMixer.setImageResource(R.drawable.arrow_up);
+                        else closeMixer.setImageResource(R.drawable.arrow_up_off);
+
                         recepieCorrectionOption.setChecked(retrieval.getRecepieCorrectOptionValue() == 1);
                         autoCorrectionShnekSelector.setChecked(retrieval.getAutoCorrectShnekOptionValue() == 1);
                         autoCorrectionInertOption.setChecked(retrieval.getAutoCorrectionInertOptValue() == 1);
@@ -1604,109 +1610,197 @@ public class OperatorViewActivity extends AppCompatActivity {
                     alertDialog.show();
                 });
 
-                doser11.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(2)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser11.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(2)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser11.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(2)).writeSingleRegisterWithValue(false);
+                            doser11.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser12.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(3)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser12.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(3)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser12.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(3)).writeSingleRegisterWithValue(false);
+                            doser12.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser21.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(4)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser21.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(4)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser21.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(4)).writeSingleRegisterWithValue(false);
+                            doser21.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser22.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(5)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser22.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(5)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser22.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(5)).writeSingleRegisterWithValue(false);
+                            doser22.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser31.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(6)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser31.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(6)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser31.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(6)).writeSingleRegisterWithValue(false);
+                            doser31.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser32.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(7)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser32.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(7)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser32.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(7)).writeSingleRegisterWithValue(false);
+                            doser32.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser41.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(8)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser41.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(8)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser41.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(8)).writeSingleRegisterWithValue(false);
+                            doser41.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doser42.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(9)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doser42.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(9)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doser42.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(9)).writeSingleRegisterWithValue(false);
+                            doser42.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
 
                 doserDispenserWater.setOnClickListener(view -> {
@@ -1720,7 +1814,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                         alertDialog.show();
                         return;
                     }
-                    if (!globalModeState){
+                    if (!globalModeState) {
                         new CommandDispatcher(tagListManual.get(10)).writeSingleInvertedBoolRegister();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1780,90 +1874,159 @@ public class OperatorViewActivity extends AppCompatActivity {
                         alertDialog.show();
                     }
                 });
-                horLineStart.setOnClickListener(view -> {
-                    if (retrieval.isSkipPosEndSensorUpValue() == 1) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Скип вверху!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                        return;
+
+                horLineStart.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            horLineStart.setBackgroundColor(Color.GREEN);
+                            if (retrieval.isSkipPosEndSensorUpValue() == 1) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Скип вверху!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                return false;
+                            }
+                            if (!globalModeState) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Горизонтальный конвейер");
+                                builder.setMessage("Вкл/выкл горизонтальный конвейер?");
+                                builder.setPositiveButton("Да", (dialog, id) -> new CommandDispatcher(tagListManual.get(13)).writeSingleInvertedBoolRegister());
+                                builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            horLineStart.setBackgroundColor(Color.WHITE);
+                            break;
                     }
-                    if (!globalModeState) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setTitle("Горизонтальный конвейер");
-                        builder.setMessage("Вкл/выкл горизонтальный конвейер?");
-                        builder.setPositiveButton("Да", (dialog, id) -> new CommandDispatcher(tagListManual.get(13)).writeSingleInvertedBoolRegister());
-                        builder.setNegativeButton("Нет", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    }
+                    return true;
                 });
-                pumpWater.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(14)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+
+                pumpWater.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(14)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            pumpWater.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(14)).writeSingleRegisterWithValue(false);
+                            pumpWater.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doserChemy1.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(15)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+
+                doserChemy1.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(15)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doserChemy1.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(15)).writeSingleRegisterWithValue(false);
+                            doserChemy1.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doserChemy2.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(16)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doserChemy2.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(16)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doserChemy2.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(16)).writeSingleRegisterWithValue(false);
+                            doserChemy2.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doserShnek1.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(18)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+
+                doserShnek1.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(18)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doserShnek1.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(18)).writeSingleRegisterWithValue(false);
+                            doserShnek1.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
-                doserShnek2.setOnClickListener(view -> {
-                    if (!globalModeState) {
-                        new CommandDispatcher(tagListManual.get(19)).writeSingleInvertedBoolRegister();
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                        builder.setIcon(R.drawable.warning);
-                        builder.setTitle("Предупреждение");
-                        builder.setMessage("Включите ручной режим!");
-                        builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                doserShnek2.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!globalModeState) {
+                                new CommandDispatcher(tagListManual.get(19)).writeSingleRegisterWithValue(true);
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Включите ручной режим!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            doserShnek2.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            new CommandDispatcher(tagListManual.get(19)).writeSingleRegisterWithValue(false);
+                            doserShnek2.setImageResource(R.drawable.doser_close);
+                            break;
                     }
+                    return true;
                 });
 
                 skipArrowUp.setOnClickListener(view -> {
@@ -1916,7 +2079,9 @@ public class OperatorViewActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Аэрация", Toast.LENGTH_LONG).show();
                     return true;
                 });
+
                 startMixerEngine.setOnClickListener(view -> {
+                    startMixerEngine.setBackgroundColor(Color.GREEN);
                     if (retrieval.isCementDisFlapOpenIndValue() == 1){
                         Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.warning_005_dc_open);
                         mPlayer.start();
@@ -1931,6 +2096,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     }
                     new CommandDispatcher(tagListManual.get(25)).writeSingleInvertedBoolRegister();
                 });
+
                 vibroSilos.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(80)).writeSingleInvertedBoolRegister();
                     Toast.makeText(getApplicationContext(), "Вибратор", Toast.LENGTH_SHORT).show();
@@ -1950,73 +2116,51 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                 });
 
-                openMixer.setOnClickListener(view -> {
-                    new Thread(() -> {
-                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
-                    }).start();
+                openMixer.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (factoryOptionList.isDropConveyor() && retrieval.getConveyorDropValue() != 1) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setIcon(R.drawable.warning);
+                                builder.setTitle("Предупреждение");
+                                builder.setMessage("Запустите конвейер выгрузки!");
+                                builder.setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                            }
+                            new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
+                            openMixer.setImageResource(R.drawable.arrow_down);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            if (factoryOptionList.isHydroGate()) {
+                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                            }
+                            openMixer.setImageResource(R.drawable.arrow_down_off);
+                            break;
+                    }
+                    return true;
                 });
-                closeMixer.setOnClickListener(view -> {
-                    new Thread(() -> {
-                        new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-                    }).start();
+                closeMixer.setOnTouchListener((v, event) -> {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            if (!factoryOptionList.isHydroGate()) {
+                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
+                            } else {
+                                new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
+                            }
+                            closeMixer.setImageResource(R.drawable.arrow_up);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            if (factoryOptionList.isHydroGate()) {
+                                new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
+                            }
+                            closeMixer.setImageResource(R.drawable.arrow_up_off);
+                            break;
+                    }
+                    return true;
                 });
-
-//                openMixer.setOnTouchListener((view, motionEvent) -> {
-//                    switch (motionEvent.getAction()) {
-//                        case MotionEvent.ACTION_DOWN: { //удержание
-//                            new Thread(() -> {
-//                                new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
-//                                try {
-//                                    Thread.sleep(300);
-//                                } catch (InterruptedException ex) {
-//                                    ex.printStackTrace();
-//                                }
-//                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(true);
-//                            }).start();
-//                            break;
-//                        }
-//                        case MotionEvent.ACTION_UP: { // опускание
-//                            new Thread(() -> {
-//                                try {
-//                                    Thread.sleep(300);
-//                                } catch (InterruptedException ex) {
-//                                    ex.printStackTrace();
-//                                }
-//                                new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-//                            }).start();
-//                            break;
-//                        }
-//                    }
-//                    return false;
-//                });
-//                closeMixer.setOnTouchListener((view, motionEvent) -> {
-//                    switch (motionEvent.getAction()) {
-//                            case MotionEvent.ACTION_DOWN: { //удержание
-////                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
-////                                else new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-//                                new Thread(() -> {
-//                                    new CommandDispatcher(tagListManual.get(21)).writeSingleRegisterWithValue(false);
-//                                    try {
-//                                        Thread.sleep(300);
-//                                    } catch (InterruptedException ex) {
-//                                        ex.printStackTrace();
-//                                    }
-//                                    new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(true);
-//                                }).start();
-//                                break;
-//                            }
-//                            case MotionEvent.ACTION_UP: { // опускание
-//                                try {
-//                                    Thread.sleep(300);
-//                                } catch (InterruptedException e) {
-//                                    e.printStackTrace();
-//                                }
-//                                if (hydroGateOption) new CommandDispatcher(tagListManual.get(82)).writeSingleRegisterWithValue(false);
-//                                break;
-//                            }
-//                        }
-//                    return false;
-//                });
 
                 valveWater.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(83)).writeSingleInvertedBoolRegister();
@@ -2065,32 +2209,33 @@ public class OperatorViewActivity extends AppCompatActivity {
 
                 runCycleBtn.setOnTouchListener((arg0, arg1) -> {
                     switch (arg1.getAction()) {
-                            case MotionEvent.ACTION_DOWN:
-                                runClickCount++;
-                                if (runClickCount == 3) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                    builder.setTitle("Подсказка");
-                                    builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 2-x секунд");
-                                    builder.setIcon(R.drawable.play);
-                                    builder.setPositiveButton("OK", (dialog, id) -> {
-                                        runClickCount = 0;
-                                        dialog.dismiss();
-                                    });
-                                    AlertDialog alertDialog = builder.create();
-                                    alertDialog.setCancelable(false);
-                                    alertDialog.show();
-                                    break;
-                                }
-                                if(!globalFactoryState) {
-                                    new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(1000);
-                                    dbUtilUpdate.updCurrentTable("state", "idle");
-                                }
-                                handlerRunCycle.postDelayed(runCycle, 2000);
+                        case MotionEvent.ACTION_DOWN:
+                            runClickCount++;
+                            if (runClickCount == 3) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle("Подсказка");
+                                builder.setMessage("Для запуска цикла, удерживайте кнопку в течении 2-x секунд");
+                                builder.setIcon(R.drawable.play);
+                                builder.setPositiveButton("OK", (dialog, id) -> {
+                                    runClickCount = 0;
+                                    dialog.dismiss();
+                                });
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.setCancelable(false);
+                                alertDialog.show();
                                 break;
-                            case MotionEvent.ACTION_UP:
-                                handlerRunCycle.removeCallbacks(runCycle);
-                                break;
-                        }
+                            }
+                            if (!globalFactoryState) {
+                                new CommandDispatcher(tagListManual.get(71)).writeSingleFrontBoolRegister(1000);
+                                dbUtilUpdate.updCurrentTable("state", "idle");
+                            }
+                            handlerRunCycle.postDelayed(runCycle, 2000);
+                            break;
+                        case MotionEvent.ACTION_UP:
+                        case MotionEvent.ACTION_CANCEL:
+                            handlerRunCycle.removeCallbacks(runCycle);
+                            break;
+                    }
                     return true;
                 });
                 stopCycle.setOnClickListener(view -> {
@@ -2121,6 +2266,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                 });
 
                 startSelfDK.setOnClickListener(view -> {
+                    startSelfDK.setBackgroundColor(Color.GREEN);
                     new CommandDispatcher(tagListManual.get(110)).writeSingleInvertedBoolRegister();
                 });
                 startSelfCement.setOnClickListener(view -> {
@@ -2132,6 +2278,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                 startSelfWater.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(113)).writeSingleInvertedBoolRegister();
                 });
+
                 runVerticalConv.setOnClickListener(view -> {
                     if (!animationMixerState) {
                         Constants.mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.alarm_024_not_start_mixer);
@@ -2147,11 +2294,10 @@ public class OperatorViewActivity extends AppCompatActivity {
                     }
                     new CommandDispatcher(tagListManual.get(115)).writeSingleInvertedBoolRegister();
                 });
+
                 incrementWater.setOnClickListener(view -> {
-                    if (exchangeLevel == 1)
-                        new Thread(() -> new CommandDispatcher(135).writeValue("true")).start();
-                    else
-                        new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
+                    if (exchangeLevel == 1) new Thread(() -> new CommandDispatcher(135).writeValue("true")).start();
+                    else new CommandDispatcher(tagListManual.get(135)).writeSingleFrontBoolRegister(200);
                 });
                 decrementWater.setOnClickListener(view -> {
                     if (exchangeLevel == 1)
@@ -2159,6 +2305,7 @@ public class OperatorViewActivity extends AppCompatActivity {
                     else
                         new CommandDispatcher(tagListManual.get(136)).writeSingleFrontBoolRegister(200);
                 });
+
                 autoDropChecker.setOnClickListener(view -> {
                     new CommandDispatcher(tagListManual.get(156)).writeSingleInvertedBoolRegister();
                     //todo: тут смена статуса на окончание для индикации "готово к разгрузке"

@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS 'orders' (
 );
 
 INSERT INTO 'users' ('id', 'userName', 'dateCreation', 'login', 'password', 'accessLevel') VALUES
-(1, 'Оператор', '01.09.2022', 'operator', '68d3460cda2cc5ff11b2511a44aa213abc083f93e6719bbd00fe9f61a86a8f26', 0),
+(1, 'Оператор', '01.09.2022', 'operator', '68d3460cda2cc5ff11b2511a44aa213abc083f93e6719bbd00fe9f61a86a8f26', 3),
 (2, 'Диспетчер', '01.09.2022', 'dispatcher', 'c3e36aed52f1ba2d3b832711459cb3305c7f463b707003b7f9b6dc7b8563eaa6', 1),
 (3, 'Пуско-наладчик', '01.09.2022', 'engineer', '6eea2d12d6e4d99b6ba1623c7574332024e91021ad56efbde4d92ee068ae5fc7', 2),
 (4, 'Администратор', '01.09.2022', 'admin', '7a3ba4c33876d50db08a1cc613e649351ed213a326a328ab9a00e5e2d621b978', 3);

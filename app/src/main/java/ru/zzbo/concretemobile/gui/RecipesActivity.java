@@ -206,7 +206,6 @@ public class RecipesActivity extends AppCompatActivity {
         // Редактирование рецепта
         RecipeAdapter.EditRecipeClickListener editRecipeClickListener = (recipe, position) -> {
             editedRecepie = recepies.get(position);
-            Toast.makeText(getApplicationContext(), recipe.getMark(), Toast.LENGTH_SHORT).show();
             finish();
             Intent intent = new Intent(getApplicationContext(), EditRecipeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

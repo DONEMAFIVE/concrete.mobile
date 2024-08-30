@@ -128,12 +128,12 @@
                     android:textAlignment="textEnd" />
 
                 <EditText
-                    android:id="@+id/typeOrganizationField"
+                    android:id="@+id/dateCreateField"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:inputType="date"
-                    android:text="01.01.22" />
+                    android:focusable="false"
+                    android:inputType="date" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingEnd="20dp"
-                    android:text="ФИО Руководителя организации:"
+                    android:text="ФИО Руководителя:"
                     android:textAlignment="textEnd" />
 
                 <EditText

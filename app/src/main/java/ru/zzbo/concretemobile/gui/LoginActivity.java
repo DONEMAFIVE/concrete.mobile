@@ -249,7 +249,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Если первый запуск, открываем окно с настройками.
         if (configList.getFirstRun().equals("true")) {
-            Toast.makeText(getApplicationContext(), "Первый запуск", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Первый запуск", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getApplicationContext(), OptionsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);

@@ -275,7 +275,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private void initUI() {
         recipeIDField = findViewById(R.id.recipeIDField);
-        dateCreateField = findViewById(R.id.typeOrganizationField);
+        dateCreateField = findViewById(R.id.dateCreateField);
         recipeNameField = findViewById(R.id.recipeNameField);
         recipeMarkField = findViewById(R.id.recepieMarkField);
         recipeClassField = findViewById(R.id.recepieClassField);

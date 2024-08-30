@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +43,6 @@ public class TransporterEditorDialog extends DialogFragment {
                     if (i1 > 0) {
                         Transporter selectedTrans = transporterList.get(i1 - 1);
                         editedTransporter = selectedTrans;
-                        Toast.makeText(getActivity(), selectedTrans.getRegNumberAuto(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity(), TransporterActivity.class);
                         startActivity(intent);
                     } else {

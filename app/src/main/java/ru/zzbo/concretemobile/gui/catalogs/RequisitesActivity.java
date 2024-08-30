@@ -44,7 +44,7 @@ public class RequisitesActivity extends AppCompatActivity {
     }
 
     private void initialUI() {
-        typeOrganizationField = findViewById(R.id.typeOrganizationField);
+        typeOrganizationField = findViewById(R.id.dateCreateField);
         nameOrganizationField = findViewById(R.id.nameOrganizationField);
         innField = findViewById(R.id.innField);
         headNameField = findViewById(R.id.headNameField);

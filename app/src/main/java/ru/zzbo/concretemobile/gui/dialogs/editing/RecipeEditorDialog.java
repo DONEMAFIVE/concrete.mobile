@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +43,6 @@ public class RecipeEditorDialog extends DialogFragment {
             if (i1 > 0) {
                 Recepie rec = recepieList.get(i1 - 1);
                 editedRecepie = rec;
-                Toast.makeText(getActivity(), rec.getMark(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity().getApplicationContext(), EditRecipeActivity.class);
                 startActivity(intent);
             } else {

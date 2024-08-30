@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +43,6 @@ public class OrganizationEditorDialog extends DialogFragment {
                     if (i1 > 0) {
                         Organization selectedOrg = organizationList.get(i1 - 1);
                         editedOrganization = selectedOrg;
-                        Toast.makeText(getActivity(), selectedOrg.getOrganizationName(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getActivity().getApplicationContext(), OrganizationActivity.class);
                         startActivity(intent);
                     } else {

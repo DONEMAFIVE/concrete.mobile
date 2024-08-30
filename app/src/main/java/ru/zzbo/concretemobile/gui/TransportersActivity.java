@@ -2,7 +2,6 @@ package ru.zzbo.concretemobile.gui;
 
 import static ru.zzbo.concretemobile.utils.Constants.editedTransporter;
 import static ru.zzbo.concretemobile.utils.Constants.exchangeLevel;
-import static ru.zzbo.concretemobile.utils.Constants.selectedOrg;
 import static ru.zzbo.concretemobile.utils.Constants.selectedTrans;
 
 import android.content.Intent;
@@ -11,20 +10,17 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +29,6 @@ import ru.zzbo.concretemobile.adapters.TransporterAdapter;
 import ru.zzbo.concretemobile.db.DBUtilDelete;
 import ru.zzbo.concretemobile.db.DBUtilGet;
 import ru.zzbo.concretemobile.gui.catalogs.TransporterActivity;
-import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.models.Transporter;
 import ru.zzbo.concretemobile.utils.OkHttpUtil;
 
@@ -129,7 +124,6 @@ public class TransportersActivity extends AppCompatActivity {
         // Редактирование 
         TransporterAdapter.EditOrgClickListener editOrgClickListener = (org, position) -> {
             editedTransporter = transporters.get(position);
-            Toast.makeText(getApplicationContext(), org.getRegNumberAuto(), Toast.LENGTH_SHORT).show();
             finish();
             Intent intent = new Intent(getApplicationContext(), TransporterActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
